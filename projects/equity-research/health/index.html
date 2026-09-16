@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qe — data health</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
+   ?theme=light|dark previews one theme without remembering it. */
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css"><link rel="stylesheet" href="../static/demo.css">
+</head>
+<body>
+
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
+  <nav aria-label="Pages">
+    <a href="../index.html" class="">Overview</a>
+    <a href="../screener/" class="">Screener</a>
+    <a href="../model/" class="">Model</a>
+    <a href="../research/" class="">Research</a>
+    <a href="../health/" class="active">Health</a><a href="../sql/">SQL</a><a href="../about/">About</a>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-16 from the live 18.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<main>
+
+
+<header class="page-intro">
+  <div class="intro-text">
+    <p class="eyebrow">Operations &middot; nightly writer 18:30, retry 22:30</p>
+    <h1>Data health</h1>
+    <p class="lede">Freshness, fetch outcomes, the options backfill and the run ledger, read
+    straight from the database. This page still renders, degraded, while a writer holds the
+    lock.</p>
+  </div>
+</header>
+
+
+
+<section class="panel">
+  <header class="panel-head">
+    <div><h2>Status</h2><p class="panel-sub">The facts that say whether last night's run did its job.</p></div>
+  </header>
+  <div class="tiles wide">
+    <div class="tile">
+      <span class="t-label">Database file</span>
+      <span class="t-value">18.3 GB</span>
+      <span class="t-sub mono">qe.duckdb &middot; modified 2026-09-15 22:34</span>
+    </div>
+    
+    <div class="tile">
+      <span class="t-label">Prices as of</span>
+      <span class="t-value">2026-09-15</span>
+      <span class="t-sub">last fetch 2026-09-15</span>
+    </div>
+    <div class="tile">
+      <span class="t-label">Latest scored day</span>
+      <span class="t-value">2026-09-15</span>
+      <span class="t-sub"><span class="badge badge-live">live</span>
+        &middot; 49 predictions</span>
+    </div>
+    <div class="tile">
+      <span class="t-label">Live record</span>
+      <span class="t-value">50<span class="se">live days</span></span>
+      <span class="t-sub">1 backfilled &mdash; not evidence</span>
+    </div>
+    <div class="tile">
+      <span class="t-label">Fetches, trailing 7 days</span>
+      <span class="t-value">25,408</span>
+      <span class="t-sub">80.9% ok</span>
+    </div>
+    
+  </div>
+</section>
+
+
+<div class="cards">
+  <section class="card">
+    <h2>Freshness</h2>
+    <table class="kv">
+      <tr><td>Prices</td><td class="mono">2026-09-15</td></tr>
+      <tr><td>Indicators</td><td class="mono">2026-09-15</td></tr>
+      <tr><td>Targets</td><td class="mono">2026-09-14</td></tr>
+      <tr><td>Signals</td><td class="mono">2026-09-15</td></tr>
+      <tr><td>Predictions</td><td class="mono">2026-09-15</td></tr>
+      <tr><td>Last fetch</td><td class="mono">2026-09-15</td></tr>
+    </table>
+    <p class="note">Anchored on prices; indicators and targets legitimately lag (targets by the
+    horizon, since a target needs the next bar).</p>
+  </section>
+
+  <section class="card">
+    <h2>Universes</h2>
+    <table class="data">
+      <thead><tr><th>Universe</th><th>Last date</th><th class="num">Symbols</th><th></th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="mono">liquid500</td>
+        <td class="mono nowrap">2026-09-15</td>
+        <td class="mono num">1,879</td>
+        <td></td>
+      </tr>
+      
+      <tr>
+        <td class="mono">smallcap1000</td>
+        <td class="mono nowrap">2026-07-24</td>
+        <td class="mono num">4,232</td>
+        <td>
+          <span class="badge badge-warn">stale vs prices</span></td>
+      </tr>
+      
+      </tbody>
+    </table>
+    <p class="note">Only liquid500 is maintained by the nightly job; other universes go stale by
+    design. Symbol counts are distinct members over the whole history.</p>
+  </section>
+
+  <section class="card">
+    <h2>Fetch outcomes <small>trailing 7 days of log</small></h2>
+    <table class="data">
+      <thead><tr><th>Outcome</th><th class="num">Count</th><th class="num">Share</th></tr></thead>
+      <tbody>
+      
+      <tr><td class="mono">ok</td><td class="mono num">20,543</td>
+          <td class="mono num muted">80.9%</td></tr>
+      
+      <tr><td class="mono">adjustment_suspect</td><td class="mono num">3,128</td>
+          <td class="mono num muted">12.3%</td></tr>
+      
+      <tr><td class="mono">network_error</td><td class="mono num">1,162</td>
+          <td class="mono num muted">4.6%</td></tr>
+      
+      <tr><td class="mono">partial_bar_refused</td><td class="mono num">454</td>
+          <td class="mono num muted">1.8%</td></tr>
+      
+      <tr><td class="mono">not_served</td><td class="mono num">121</td>
+          <td class="mono num muted">0.5%</td></tr>
+      
+      </tbody>
+    </table>
+    <p class="note">Every fetch outcome is logged, so "nothing was silently dropped" is a query
+    rather than a hope. Options-chain fetches share this log with prices.</p>
+  </section>
+
+  <section class="card">
+    <h2>Option chains <small>Phase Q weekly backfill</small></h2>
+    <div class="tile">
+      <span class="t-label">Member-weeks summarised</span>
+      <span class="t-value">156,826<span class="se">of 278,566 scheduled</span></span>
+      
+      <div class="meter accent" role="progressbar" aria-label="Options backfill coverage" aria-valuenow="56.3" aria-valuemin="0" aria-valuemax="100"><span style="width: 56.3%"></span></div>
+      <div class="meter-label"><span>56.3% of the 2016&ndash;2026 schedule</span><span>Q3 test runs at 95%</span></div>
+      
+    </div>
+    <table class="kv">
+      <tr><td>With a served chain / usable IV</td><td class="mono">151,900 / 151,705</td></tr>
+      <tr><td>Weeks covered</td><td class="mono">503 &middot; 2010-02-01 &rarr; 2026-09-04</td></tr>
+      <tr><td>Last fetched</td><td class="mono">2026-09-11 10:35</td></tr>
+    </table>
+    <p class="note">Newest weeks are fetched first; the registered Q3 test runs once, when at
+    least 95% of scheduled member-weeks carry a row.</p>
+  </section>
+
+  <section class="card wide">
+    <h2>Recent runs <small>fits, pre-registrations and research runs &mdash; the nightly scoring job logs to logs/daily.log, not here</small></h2>
+    <div class="tablewrap scroll">
+    <table class="data">
+      <thead><tr><th>Started</th><th>Stage</th><th>Status</th><th>Finished</th><th>Commit</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-10 09:23</td>
+        <td class="mono">research</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-09-10 09:23</td>
+        <td class="mono">f66894fd</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-10 09:23</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-10 09:23</td>
+        <td class="mono">f66894fd</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-10 09:13</td>
+        <td class="mono">research</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-09-10 09:13</td>
+        <td class="mono">67c5de05</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-10 09:11</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-10 09:11</td>
+        <td class="mono">67c5de05</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-09 22:05</td>
+        <td class="mono">research</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-09-09 22:05</td>
+        <td class="mono">d5fe203e</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-09 22:04</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-09 22:04</td>
+        <td class="mono">d5fe203e</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 21:18</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-08-11 21:18</td>
+        <td class="mono">1e706574</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 20:55</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-08-11 20:55</td>
+        <td class="mono">0175c7f5</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 13:01</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 13:04</td>
+        <td class="mono">f6d2378d</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 13:00</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 13:01</td>
+        <td class="mono">f6d2378d</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:59</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 13:00</td>
+        <td class="mono">f6d2378d</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:56</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:57</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:55</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:56</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:54</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:54</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:53</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:54</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:51</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:52</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:51</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:51</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:49</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:50</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:48</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:49</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-08-11 12:47</td>
+        <td class="mono">fit</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-08-11 12:47</td>
+        <td class="mono">3040f627</td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </section>
+</div>
+
+
+</main>
+<footer><span>Snapshot of the qe research browser exported 2026-09-16. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+
+</body>
+</html>

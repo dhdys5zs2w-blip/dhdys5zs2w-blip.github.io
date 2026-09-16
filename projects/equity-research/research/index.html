@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qe — research ledger</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
+   ?theme=light|dark previews one theme without remembering it. */
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css"><link rel="stylesheet" href="../static/demo.css">
+</head>
+<body>
+
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
+  <nav aria-label="Pages">
+    <a href="../index.html" class="">Overview</a>
+    <a href="../screener/" class="">Screener</a>
+    <a href="../model/" class="">Model</a>
+    <a href="../research/" class="active">Research</a>
+    <a href="../health/" class="">Health</a><a href="../sql/">SQL</a><a href="../about/">About</a>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-16 from the live 18.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<main>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
+
+<header class="page-intro">
+  <div class="intro-text">
+    <p class="eyebrow">Forking-paths ledger &middot; 14 registrations &middot; 4 blocks with results</p>
+    <h1>Research ledger</h1>
+    <p class="lede">Every block was registered &mdash; hypothesis, statistic and decision rule
+    fixed in a committed document &mdash; before it ran. What was committed to comes first; what
+    came out is below it. Nothing here is live evidence.</p>
+    <p class="note">Every block that ran is listed, including the ones that tested a return no
+    execution could take &mdash; that is what a forking-paths ledger is for, and dropping them
+    would be the selective reporting it exists to prevent. But only one leg is reported as a
+    <em>result</em> anywhere else on this site: the implementable one, open t+1 to open t+2. The
+    credited close-to-close return the record books is an accounting convention, not a strategy.</p>
+  </div>
+</header>
+
+<section class="panel" id="s-summary">
+  <header class="panel-head">
+    <div>
+      <h2>Blocks at a glance</h2>
+      <p class="panel-sub">Each finished block: the question it registered, the verdict its own
+      decision rule produced, and where and when that rule was fixed.</p>
+    </div>
+    <div class="panel-tags"><span class="badge badge-backtest">backtest</span></div>
+  </header>
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Block</th><th>Question</th><th>Verdict</th><th>Registered</th><th>Ran</th><th class="num">Statistics</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-P1">P1</a></td>
+      <td>Is the record&#39;s booked close-to-close return still there when the position is entered at the next open and closed that same session (the intraday leg only)?
+        <span class="sub mono">docs/pre-registered-P.md</span></td>
+      <td><span class="verdict neg" title="long_book_attainable_bps / all">NOT ATTAINABLE</span> </td>
+      <td class="mono small nowrap">2026-09-09 22:04<span class="sub">commit d5fe203e</span></td>
+      <td class="mono small nowrap">2026-09-09 22:05<span class="sub">run b9ca7ceb</span></td>
+      <td class="num mono">4</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-P2">P2</a></td>
+      <td>Does the edge depend on the market regime — volatility, trend, or cross-sectional dispersion?
+        <span class="sub mono">docs/pre-registered-P.md</span></td>
+      <td><span class="verdict pos" title="regime_test / dispersion">dispersion: REGIME-DEPENDENT</span> <span class="verdict " title="regime_test / trend">trend: not detected</span> <span class="verdict pos" title="regime_test / vol">vol: REGIME-DEPENDENT</span> </td>
+      <td class="mono small nowrap">2026-09-09 22:04<span class="sub">commit d5fe203e</span></td>
+      <td class="mono small nowrap">2026-09-09 22:05<span class="sub">run b9ca7ceb</span></td>
+      <td class="num mono">23</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-P3">P3</a></td>
+      <td>Does an execution one day behind the signal — next open to the open after — earn the edge? This is the only leg the platform reports as a result.
+        <span class="sub mono">docs/pre-registered-P3.md</span></td>
+      <td><span class="verdict pos" title="implementable_over_credited / all">IMPLEMENTABLE</span> </td>
+      <td class="mono small nowrap">2026-09-10 09:23<span class="sub">commit f66894fd</span></td>
+      <td class="mono small nowrap">2026-09-10 09:23<span class="sub">run 5669786b</span></td>
+      <td class="num mono">7</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-Q0">Q0</a></td>
+      <td>Are the vendor&#39;s option chains complete enough on delisted names to build survivorship-free implied-volatility features?
+        <span class="sub mono">docs/pre-registered-Q.md</span></td>
+      <td><span class="verdict pos" title="atm_iv_usable / served">PASS</span> </td>
+      <td class="mono small nowrap">2026-09-10 09:11<span class="sub">commit 67c5de05</span></td>
+      <td class="mono small nowrap">2026-09-10 09:13<span class="sub">run d8a761a6</span></td>
+      <td class="num mono">3</td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  <p class="caveat"><span class="badge badge-backtest">backtest</span> The frozen
+model scored on dates it never traded, after the fact. A description of the
+holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
+</section>
+
+<section class="panel" id="s-registrations">
+  <header class="panel-head">
+    <div>
+      <h2>Pre-registrations</h2>
+      <p class="panel-sub">14 blocks, oldest first: the document, the items
+      committed to, and the commit that fixed them before anything ran.</p>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Registered</th><th>Document</th><th>Items committed to</th><th>Note</th><th>Commit</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="mono small nowrap">2026-07-26 12:50</td>
+      <td class="mono small">docs/pre-registered-diagnostics.md</td>
+      <td><ol class="compact small"><li>D1 fold failure breakdown (a: too few tested folds vs b: tested and inconsistent)</li><li>D2 per-cell expectancy of last 5 test windows + drop-the-best-fold FDR robustness</li><li>D3 true holdout: fit through 2015-12-31, portfolio 2016-01-01 onward, both combiners</li><li>D4 tail-focused binning [0,2,5,15,50,85,95,98,100], original gates, no recency</li><li>D5 GBM benchmark (Phase F), depth-3, same folds and purge, diagnostic only</li></ol></td>
+      <td class="small">did the gates over-filter? five diagnostics, no gate tuning in response</td>
+      <td class="mono small">7428ff043a</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-03 15:16</td>
+      <td class="mono small">docs/pre-registered-gbm-gates.md</td>
+      <td><ol class="compact small"><li>G1 permutation null on the GBM (within-date shuffled targets, full walk-forward, both horizons)</li><li>G2 frozen-map GBM: fit through 2015-12-31, no refit, score 2016-2026</li><li>G3 determinism: pin sklearn threading for bit-reproducible runs</li><li>G4 turnover-aware construction: rank buffering (enter top 10%, exit below top 30%), GBM and combo engine at h=5</li></ol></td>
+      <td class="small">GBM must clear the same gates as the combo engine; Phase G parked until G1 clears</td>
+      <td class="mono small">0b37450fa5</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-03 16:37</td>
+      <td class="mono small">docs/pre-registered-gbm-robustness.md</td>
+      <td><ol class="compact small"><li>H1 h=1 rank buffering with a 20/30/40% exit-threshold sweep</li><li>H2 four independent frozen cutoffs (2013/2015/2017/2019), forward IC gross turnover year-by-year</li><li>H3 decay check on the frozen GBM: year-by-year IC and spread, plus drop-the-best-year</li><li>H4 feature attribution: within-date permutation importance and split-value distribution, fast state vs slow characteristics</li></ol></td>
+      <td class="small">is the frozen GBM result a construction artifact, does it decay, and is it timing or a factor tilt?</td>
+      <td class="mono small">e112951a1c</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-03 16:53</td>
+      <td class="mono small">docs/pre-registered-gbm-economics.md</td>
+      <td><ol class="compact small"><li>J1 factor attribution vs market/low-vol/momentum/trend/size (value unavailable: no fundamentals)</li><li>J2 extended-period frozen models through 2005 and 2007, crisis inside the holdout</li><li>J3 long/short leg decomposition, long-only beta, short-book feasibility, borrow cost at 0.5% and 3%</li></ol></td>
+      <td class="small">is the frozen h=1 GBM alpha or repackaged low-vol/trend, does it survive 2008, and is the short book tradeable? Phase G decided on this.</td>
+      <td class="mono small">da34d5d393</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-03 21:08</td>
+      <td class="mono small">docs/pre-registered-verifications.md</td>
+      <td><ol class="compact small"><li>K1 explicit inputs and reconciliation of the long-only market regression</li><li>K2 J1 re-run with 60-month reversal (value) and dollar volume (size)</li></ol></td>
+      <td class="small">verify the J3(b) long-only regression arithmetic; re-run J1 with value and size proxies. Phase G conditional on both.</td>
+      <td class="mono small">427be91c71</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-10 11:32</td>
+      <td class="mono small">docs/pre-registered-L.md</td>
+      <td><ol class="compact small"><li>L2 arity-3 permutation null: shared shuffle, selection-GBM refit, re-selection, map fit on primary binning (hard gate)</li><li>L3 triple selection from the frozen 2015 GBM, K=30, leaf-path gain statistic</li><li>L4 arity-3 fit through 2015-12-31, primary D4 tail vector, full gate stack</li><li>L4b robustness arm, widened tails, reported not decision-bearing</li><li>L5 out-of-sample 2016-2026 head-to-head vs frozen GBM, buffered decile construction, identical dates, then STOP</li></ol></td>
+      <td class="small">Phase L: GBM-guided arity-3 combinations (plan docs/phase-L-plan.md)</td>
+      <td class="mono small">e9b8696daa</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-10 12:30</td>
+      <td class="mono small">docs/pre-registered-L2b.md</td>
+      <td><ol class="compact small"><li>L2b Arm A: 10 arity-3 replicate nulls, seeds 43-52, full pipeline incl. shuffled selection</li><li>L2b Arm B: 5 arity-2 control nulls, seeds 42-46, same window/binning/gates, no selection</li><li>L2b decision: leak check, cause attribution, and the measured-noise-floor L4 gate per the doc</li></ol></td>
+      <td class="small">L2b: replicate nulls + control arm after the L2 gate failure</td>
+      <td class="mono small">f2ae541e0b</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-10 16:10</td>
+      <td class="mono small">docs/pre-registered-L2c.md</td>
+      <td><ol class="compact small"><li>L2c code gate: L0 reproduction re-run under default fdr_pool=all must still pass</li><li>L2c battery: 11 arity-3 + 5 arity-2 nulls, same seeds as L2b, under fdr_pool=floors, pass = 0 accepted in all 16 and passed_fdr &lt;= 5 per draw</li><li>L2c continuation: L3/L4/L5 per pre-registered-L.md with fdr_pool=floors and the noise-floor L4 gate</li></ol></td>
+      <td class="small">L2c: FDR-pool fix + verification battery after the L2b cause finding</td>
+      <td class="mono small">a642d99175</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-11 12:27</td>
+      <td class="mono small">docs/pre-registered-M.md</td>
+      <td><ol class="compact small"><li>M2 null battery: 11 shuffle-paired arity-3+arity-2 couples through 2024-12-31, tier readouts, leak check both halves, noise floor = max per tier</li><li>M3: 2024-cutoff selection/baseline GBM + 2-way parent fit + arity-3 primary and arm, tiers live only above their null floors</li><li>M4: holdout 2025+ books incl. equal-weight blend (decision-bearing), expectancy-weighted variant under the fixed promotion rule, veto overlay, min 60 comparison dates else unpowered, then STOP</li><li>M5: conditional inactive shadow book</li></ol></td>
+      <td class="small">Phase M: tail-cell acceptance rebuild at 2024 cutoff (plan approved; two adversarial review rounds folded in)</td>
+      <td class="mono small">1c8702f333</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-11 20:55</td>
+      <td class="mono small">docs/pre-registered-N1.md</td>
+      <td><ol class="compact small"><li>N1 sign-split recency readout: parent-map negative FDR cells, H=2025-01-01..2026-08-07, permutation-calibrated pooled signed edge at 95th pct, evidence floors 100 dates / 30 episodes</li><li>descriptive era table reported, decides nothing</li></ol></td>
+      <td class="small">N1: does the downside-state edge survive in untouched data (gates the Phase N watcher)</td>
+      <td class="mono small">0175c7f51f</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-08-11 21:18</td>
+      <td class="mono small">docs/pre-registered-O1.md</td>
+      <td><ol class="compact small"><li>O1 coverage gate: SIZE-usable reports, 80pct all / 60pct delisted symbol-months, 2016-2026 window</li><li>O1 falsification regression: corrected MKT + true SIZE and VALUE on the K1 selection series, NW lag 5, alpha t threshold 1.5 fixed</li><li>descriptive columns incl. old spec on identical dates (C8 quantification), decide nothing</li></ol></td>
+      <td class="small">O1: the named falsification test, review-hardened second draft</td>
+      <td class="mono small">1e706574ef</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-09 22:04</td>
+      <td class="mono small">docs/pre-registered-P.md</td>
+      <td><ol class="compact small"><li>P1 attainable-entry verdict</li><li>P2 regime map with 200-draw null</li><li>P2 BH q=0.10 over three variables</li></ol></td>
+      <td class="small">Phase P: attainable return and regime map of frozen GBM 09d8c916</td>
+      <td class="mono small">d5fe203ecd</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-10 09:11</td>
+      <td class="mono small">docs/pre-registered-Q.md</td>
+      <td><ol class="compact small"><li>Q0 coverage gate (delisted chains &gt;= 60%, ATM IV usable &gt;= 90%)</li><li>Q2 null battery 200 draws</li><li>Q3 incremental rank IC, four features, BH q=0.10</li></ol></td>
+      <td class="small">Phase Q: implied volatility as new cross-sectional information</td>
+      <td class="mono small">67c5de05fc</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-10 09:23</td>
+      <td class="mono small">docs/pre-registered-P3.md</td>
+      <td><ol class="compact small"><li>P3 implementable open-to-open verdict (IMPLEMENTABLE / PARTIAL / NOT IMPLEMENTABLE)</li></ol></td>
+      <td class="small">Phase P3: one-day-lagged execution at the open, correction of P1&#39;s interpretation</td>
+      <td class="mono small">f66894fda4</td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<div id="s-results">
+
+
+<section class="panel" id="block-P1">
+  <header class="panel-head">
+    <div>
+      <h2>Block P1</h2>
+      <p class="panel-sub">Is the record&#39;s booked close-to-close return still there when the position is entered at the next open and closed that same session (the intraday leg only)?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict neg">NOT ATTAINABLE</span>
+      <span class="muted">4 statistics &middot; run <span class="mono">b9ca7ceb</span> &middot; 2026-09-09 22:05</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="live_attainable_bps">live attainable bps</td>
+      <td class="mono small">live</td>
+      <td class="mono num" data-v="-12.536059636574501">-12.536</td>
+      <td class="mono num" data-v="12.737259225419349">12.737</td>
+      <td class="mono num" data-v="15">15</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="live_credited_bps">live credited bps</td>
+      <td class="mono small">live</td>
+      <td class="mono num" data-v="0.19049855711647268">0.190</td>
+      <td class="mono num" data-v="9.814837829540716">9.815</td>
+      <td class="mono num" data-v="15">15</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="0.42104577300730905">0.421</td>
+      <td class="mono num" data-v="1.421138729015756">1.421</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        <span class="verdict neg">NOT ATTAINABLE</span>
+        <span class="muted">ratio=0.113</span> <span class="muted">overnight_share=0.887</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="3.73332705538481">3.733</td>
+      <td class="mono num" data-v="1.7899578424839435">1.790</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-P.md</span>
+    at commit <span class="mono">d5fe203e</span>, 2026-09-09 22:04.</p>
+  
+</section>
+
+
+<section class="panel" id="block-P2">
+  <header class="panel-head">
+    <div>
+      <h2>Block P2</h2>
+      <p class="panel-sub">Does the edge depend on the market regime — volatility, trend, or cross-sectional dispersion?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">dispersion: REGIME-DEPENDENT</span><span class="verdict ">trend: not detected</span><span class="verdict pos">vol: REGIME-DEPENDENT</span>
+      <span class="muted">23 statistics &middot; run <span class="mono">b9ca7ceb</span> &middot; 2026-09-09 22:05</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">dispersion:high</td>
+      <td class="mono num" data-v="1.6806349740915862">1.681</td>
+      <td class="mono num" data-v="2.1815449734918992">2.182</td>
+      <td class="mono num" data-v="1615">1615</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">dispersion:low</td>
+      <td class="mono num" data-v="-1.8691822409523102">-1.869</td>
+      <td class="mono num" data-v="1.6085887801499175">1.609</td>
+      <td class="mono num" data-v="437">437</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">dispersion:mid</td>
+      <td class="mono num" data-v="-1.2115085992687655">-1.212</td>
+      <td class="mono num" data-v="2.0699292198730888">2.070</td>
+      <td class="mono num" data-v="633">633</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">trend:above</td>
+      <td class="mono num" data-v="-0.3309403506472561">-0.331</td>
+      <td class="mono num" data-v="1.0810643914343996">1.081</td>
+      <td class="mono num" data-v="2236">2236</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">trend:below</td>
+      <td class="mono num" data-v="4.165903172765902">4.166</td>
+      <td class="mono num" data-v="6.569580158046171">6.570</td>
+      <td class="mono num" data-v="449">449</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">vol:high</td>
+      <td class="mono num" data-v="4.165168715831014">4.165</td>
+      <td class="mono num" data-v="4.168566878464018">4.169</td>
+      <td class="mono num" data-v="733">733</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">vol:low</td>
+      <td class="mono num" data-v="-2.9780519500041116">-2.978</td>
+      <td class="mono num" data-v="1.330915518829628">1.331</td>
+      <td class="mono num" data-v="1063">1063</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_attainable_bps">long book attainable bps</td>
+      <td class="mono small">vol:mid</td>
+      <td class="mono num" data-v="1.3983222212315676">1.398</td>
+      <td class="mono num" data-v="2.326750710454603">2.327</td>
+      <td class="mono num" data-v="889">889</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">dispersion:high</td>
+      <td class="mono num" data-v="5.493435609365091">5.493</td>
+      <td class="mono num" data-v="2.752432151082958">2.752</td>
+      <td class="mono num" data-v="1615">1615</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">dispersion:low</td>
+      <td class="mono num" data-v="0.25452039720430863">0.255</td>
+      <td class="mono num" data-v="1.9714841788042015">1.971</td>
+      <td class="mono num" data-v="437">437</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">dispersion:mid</td>
+      <td class="mono num" data-v="1.6443273633575233">1.644</td>
+      <td class="mono num" data-v="2.5293247019125755">2.529</td>
+      <td class="mono num" data-v="633">633</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">trend:above</td>
+      <td class="mono num" data-v="3.278524432308058">3.279</td>
+      <td class="mono num" data-v="1.387740684755035">1.388</td>
+      <td class="mono num" data-v="2236">2236</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">trend:below</td>
+      <td class="mono num" data-v="5.998223859838308">5.998</td>
+      <td class="mono num" data-v="8.18279818112362">8.183</td>
+      <td class="mono num" data-v="449">449</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">vol:high</td>
+      <td class="mono num" data-v="6.314659766909603">6.315</td>
+      <td class="mono num" data-v="5.229404770707524">5.229</td>
+      <td class="mono num" data-v="733">733</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">vol:low</td>
+      <td class="mono num" data-v="0.0024427025921545165">0.002</td>
+      <td class="mono num" data-v="1.688681977767971">1.689</td>
+      <td class="mono num" data-v="1063">1063</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_credited_bps">long book credited bps</td>
+      <td class="mono small">vol:mid</td>
+      <td class="mono num" data-v="6.066075300009018">6.066</td>
+      <td class="mono num" data-v="2.9836238640861223">2.984</td>
+      <td class="mono num" data-v="889">889</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_pct95_bps">null pct95 bps</td>
+      <td class="mono small">overall</td>
+      <td class="mono num" data-v="1.1404489384560528">1.140</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_difference_bps">regime difference bps</td>
+      <td class="mono small">dispersion:high-low</td>
+      <td class="mono num" data-v="5.238915212160782">5.239</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">null_pct95=1.930</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_difference_bps">regime difference bps</td>
+      <td class="mono small">trend:above-below</td>
+      <td class="mono num" data-v="-2.7196994275302506">-2.720</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">null_pct95=2.803</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_difference_bps">regime difference bps</td>
+      <td class="mono small">vol:high-low</td>
+      <td class="mono num" data-v="6.312217064317449">6.312</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">null_pct95=2.038</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_test">regime test</td>
+      <td class="mono small">dispersion</td>
+      <td class="mono num" data-v="0.004975124378109453">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        <span class="verdict pos">REGIME-DEPENDENT</span>
+        <span class="muted">q_value=0.007</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_test">regime test</td>
+      <td class="mono small">trend</td>
+      <td class="mono num" data-v="0.9303482587064676">0.930</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        <span class="verdict ">not detected</span>
+        <span class="muted">q_value=0.930</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="regime_test">regime test</td>
+      <td class="mono small">vol</td>
+      <td class="mono num" data-v="0.004975124378109453">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        <span class="verdict pos">REGIME-DEPENDENT</span>
+        <span class="muted">q_value=0.007</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-P.md</span>
+    at commit <span class="mono">d5fe203e</span>, 2026-09-09 22:04.</p>
+  
+</section>
+
+
+<section class="panel" id="block-P3">
+  <header class="panel-head">
+    <div>
+      <h2>Block P3</h2>
+      <p class="panel-sub">Does an execution one day behind the signal — next open to the open after — earn the edge? This is the only leg the platform reports as a result.</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">IMPLEMENTABLE</span>
+      <span class="muted">7 statistics &middot; run <span class="mono">5669786b</span> &middot; 2026-09-10 09:23</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="implementable_over_credited">implementable over credited</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="1.3031738547128349">1.303</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        <span class="verdict pos">IMPLEMENTABLE</span>
+        <span class="muted">ci_excludes_zero=1.000</span> <span class="muted">floor=0.500</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">credited</td>
+      <td class="mono num" data-v="3.7849312800258494">3.785</td>
+      <td class="mono num" data-v="1.771243591023515">1.771</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">implementable</td>
+      <td class="mono num" data-v="4.9324234860144704">4.932</td>
+      <td class="mono num" data-v="1.8251761981572159">1.825</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">intraday</td>
+      <td class="mono num" data-v="0.43604676976798984">0.436</td>
+      <td class="mono num" data-v="1.414993008902664">1.415</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">overnight_credited</td>
+      <td class="mono num" data-v="3.3778372126537417">3.378</td>
+      <td class="mono num" data-v="0.9276385968666652">0.928</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">overnight_fresh_next_book</td>
+      <td class="mono num" data-v="3.360336158058589">3.360</td>
+      <td class="mono num" data-v="0.9454862201251645">0.945</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        <span class="muted">descriptive=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">overnight_next</td>
+      <td class="mono num" data-v="4.295466022374639">4.295</td>
+      <td class="mono num" data-v="0.9805886648454627">0.981</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-P3.md</span>
+    at commit <span class="mono">f66894fd</span>, 2026-09-10 09:23.</p>
+  
+</section>
+
+
+<section class="panel" id="block-Q0">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q0</h2>
+      <p class="panel-sub">Are the vendor&#39;s option chains complete enough on delisted names to build survivorship-free implied-volatility features?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">PASS</span>
+      <span class="muted">3 statistics &middot; run <span class="mono">d8a761a6</span> &middot; 2026-09-10 09:13</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="atm_iv_usable">atm iv usable</td>
+      <td class="mono small">served</td>
+      <td class="mono num" data-v="1.0">1.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="218">218</td>
+      <td class="small">
+        <span class="verdict pos">PASS</span>
+        <span class="muted">gate=0.900</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="deep_history_served">deep history served</td>
+      <td class="mono small">2010-2013</td>
+      <td class="mono num" data-v="1.0">1.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="10">10</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delisted_chain_coverage">delisted chain coverage</td>
+      <td class="mono small">delisted</td>
+      <td class="mono num" data-v="0.9333333333333333">0.933</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="120">120</td>
+      <td class="small">
+        
+        <span class="muted">gate=0.600</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-Q.md</span>
+    at commit <span class="mono">67c5de05</span>, 2026-09-10 09:11.</p>
+  
+</section>
+
+</div>
+
+</main>
+<footer><span>Snapshot of the qe research browser exported 2026-09-16. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+
+</body>
+</html>

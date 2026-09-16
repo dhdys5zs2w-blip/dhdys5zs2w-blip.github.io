@@ -1,0 +1,73 @@
+/* Portfolio-demo additions layered over qe.css: the banner under the top nav, the SQL console
+ * and the About page. Colours come from the app's own tokens so both themes work. */
+.demo-banner {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem 1rem;
+  padding: 0.45rem var(--gutter); font-size: 0.82rem; line-height: 1.4;
+  background: var(--accent-soft); color: var(--ink-2); border-bottom: 1px solid var(--line);
+}
+.demo-banner .demo-tag {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); white-space: nowrap;
+}
+.demo-banner > span:not(.demo-tag) { flex: 1 1 28rem; min-width: 0; }
+.demo-banner a { white-space: nowrap; font-weight: 500; }
+.demo-banner .demo-back { color: var(--muted); }
+footer .mono { opacity: 0.8; }
+
+/* ---- SQL console ---- */
+.sql-layout { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 1.2rem; align-items: start; }
+@media (max-width: 860px) { .sql-layout { grid-template-columns: 1fr; } }
+.sql-editor {
+  width: 100%; min-height: 9rem; resize: vertical; font-family: var(--font-mono); font-size: 0.9rem;
+  line-height: 1.5; padding: 0.7rem 0.85rem; background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius); tab-size: 2;
+}
+.sql-editor:focus { outline: none; box-shadow: var(--focus); border-color: var(--accent); }
+.sql-toolbar { display: flex; flex-wrap: wrap; gap: 0.5rem 0.8rem; align-items: center; margin: 0.6rem 0 0.9rem; }
+.sql-toolbar .status { color: var(--muted); font-size: 0.82rem; }
+.sql-toolbar .status.err { color: var(--neg); }
+.btn {
+  font: inherit; font-size: 0.86rem; font-weight: 500; padding: 0.42rem 0.9rem; cursor: pointer;
+  background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: var(--radius);
+}
+.btn:disabled { opacity: 0.55; cursor: default; }
+.btn.ghost { background: var(--panel); color: var(--ink-2); border-color: var(--line); }
+.btn.ghost:hover:not(:disabled) { color: var(--ink); border-color: var(--muted); }
+.sql-result { overflow: auto; max-height: 34rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+.sql-result table { border-collapse: collapse; width: 100%; font-size: 0.84rem; }
+.sql-result th, .sql-result td { padding: 0.32rem 0.6rem; border-bottom: 1px solid var(--line-2); text-align: left; white-space: nowrap; }
+.sql-result th { position: sticky; top: 0; background: var(--panel-2); color: var(--muted); font-weight: 600; font-size: 0.74rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.sql-result td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.sql-result .empty { padding: 1.2rem; color: var(--muted); }
+.sql-side h3 { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0.2rem 0 0.5rem; }
+.sql-side .examples { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1.2rem; }
+.sql-side .examples button {
+  font: inherit; font-size: 0.84rem; text-align: left; padding: 0.4rem 0.6rem; cursor: pointer;
+  background: var(--panel); color: var(--ink-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.sql-side .examples button:hover { color: var(--ink); border-color: var(--accent); }
+.sql-side details { border: 1px solid var(--line-2); border-radius: var(--radius); padding: 0.3rem 0.6rem; margin-bottom: 0.35rem; background: var(--panel); }
+.sql-side summary { cursor: pointer; font-family: var(--font-mono); font-size: 0.84rem; color: var(--ink); }
+.sql-side summary .n { color: var(--muted); font-size: 0.76rem; margin-left: 0.4rem; }
+.sql-side details p { margin: 0.35rem 0; font-size: 0.8rem; color: var(--ink-2); line-height: 1.4; }
+.sql-side details ul { margin: 0.2rem 0 0.4rem; padding-left: 1rem; font-size: 0.78rem; color: var(--muted); columns: 1; }
+.sql-side details li { font-family: var(--font-mono); }
+.sql-progress { height: 4px; background: var(--line-2); border-radius: 2px; overflow: hidden; margin: 0.5rem 0; }
+.sql-progress > div { height: 100%; width: 0; background: var(--accent); transition: width 0.2s; }
+
+/* ---- About page ---- */
+.about { max-width: 66rem; }
+.about .lede { font-size: 1.05rem; color: var(--ink-2); max-width: 70ch; }
+.about h2 { margin-top: 1.8rem; }
+.about .facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.6rem; margin: 0.8rem 0 1rem; }
+.about .facts-grid .tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.6rem 0.8rem; }
+.about pre { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.8rem 1rem; overflow-x: auto; font-size: 0.8rem; line-height: 1.45; }
+.about table.compare td, .about table.compare th { vertical-align: top; }
+.about .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1rem 2rem; }
+.about ol li, .about ul li { margin-bottom: 0.35rem; }
+
+/* the demo adds two links to the top nav; let it wrap on phones instead of overflowing */
+@media (max-width: 760px) {
+  .topnav nav { flex-wrap: wrap; }
+  .demo-banner > span:not(.demo-tag) { flex-basis: 100%; }
+}

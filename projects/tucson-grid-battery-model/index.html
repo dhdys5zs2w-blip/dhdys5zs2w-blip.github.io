@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tucson Grid & Battery Model — Ben Meyer</title>
+<meta name="description" content="Ben Meyer's study of what battery storage does to Tucson's grid peak, using a year of public hourly demand data: explore the year and size a battery yourself.">
+<link rel="stylesheet" href="../../assets/case-study.css">
+<style>
+/* page-specific rules only */
+.chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 12px 8px 6px; box-shadow: var(--shadow); margin: 14px 0 6px; }
+.chart-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; padding: 0 8px 6px; }
+.chart-head h3 { margin: 0; font-size: 1rem; }
+.chart { width: 100%; height: 340px; }
+.chart.short { height: 300px; }
+.chart-note { font-size: 0.86rem; color: var(--muted); margin: 6px 8px 4px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.seg button { font: inherit; font-size: 0.78rem; line-height: 1.2; padding: 5px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
+.seg button:hover { color: var(--text); }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+.presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); gap: 14px 24px; margin: 16px 0 6px; }
+.ctl label, .ctl .lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 0.86rem; color: var(--muted); margin-bottom: 6px; }
+.ctl output { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.ctl input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
+.ctl.off { opacity: 0.45; }
+.facts.sim { margin: 18px 0 6px; }
+.fact .n small { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+.delta { display: block; font-size: 0.9rem; font-weight: 600; margin-top: 2px; }
+.delta.good { color: var(--ok); }
+.delta.bad { color: var(--warn-ink); }
+details.tv { margin: 6px 8px 4px; font-size: 0.86rem; color: var(--muted); }
+details.tv summary { cursor: pointer; }
+details.tv .tablewrap { margin-top: 8px; }
+details.tv table.data { font-size: 0.82rem; }
+.shots.wide { grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); }
+.callout.warn[hidden] { display: none; }
+.sel { font: inherit; font-size: 0.82rem; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+@media (max-width: 640px) { .chart { height: 300px; } .chart.short { height: 270px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Tucson Grid &amp; Battery Model</b></span></nav>
+  <header class="cs-head">
+    <p class="eyebrow"><span class="badge data-app">Energy study</span><span>Sep 2026</span></p>
+    <h1>What does battery storage do to Tucson&rsquo;s grid peak?</h1>
+    <p class="lede">A year of hourly electricity demand for the Tucson balancing authority, from public federal data, and the question I put to it: how much of the summer peak could batteries remove, whether four-hour or eight-hour storage is the better buy, and whether a storage project would pay under realistic prices. Explore the year below, then size a battery yourself and watch the peak move.</p>
+    <div class="chips"><span>Energy research</span><span>Public data</span><span>Scenario analysis</span><span>Interactive model</span><span>Built with Claude Code</span></div>
+  </header>
+
+  <section class="facts" aria-label="Key numbers from the data">
+    <div class="fact"><span class="n"><span id="f-peak">3,448</span> <small>MW</small></span><span class="l" id="f-peak-l">annual peak · Aug 6, 2025, hour ending 6 pm</span></div>
+    <div class="fact"><span class="n"><span id="f-energy">14,465</span> <small>GWh</small></span><span class="l" id="f-energy-l">GWh of demand over the 8,753 metered hours</span></div>
+    <div class="fact"><span class="n"><span id="f-ratio">2.09</span><small>×</small></span><span class="l" id="f-ratio-l">peak-to-average ratio (average 1,653 MW)</span></div>
+    <div class="fact"><span class="n"><span id="f-h90">56</span> <small>hours</small></span><span class="l" id="f-h90-l">hours at or above 90% of the peak (≥ 3,103 MW)</span></div>
+    <div class="fact"><span class="n"><span id="f-min">763</span> <small>MW</small></span><span class="l" id="f-min-l">lowest hour · Mar 8, hour ending 1 pm (4.5× below the peak)</span></div>
+  </section>
+
+  <section class="prose">
+    <h2>The question</h2>
+    <p>A grid is built for its worst hour. Tucson&rsquo;s demand more than quadruples between a mild March afternoon and a hot August evening, and only a few dozen hours a year come anywhere near the top. Batteries are the obvious tool for a peak that sharp: charge when demand is low, discharge through the evening. I wanted to know how far that goes before it stops working, whether longer-duration storage is worth its premium, and what a standalone storage project in this market would actually return.</p>
+  </section>
+
+  <section>
+    <h2>Explore the year</h2>
+    <div class="prose">
+      <p>Hourly demand reported to the U.S. Energy Information Administration for calendar 2025 &mdash; 8,753 of the year&rsquo;s 8,760 hours &mdash; parsed and charted in your browser from a 240 KB file. Nothing here talks to a server.</p>
+    </div>
+    <div class="ctas"><a class="btn ghost" href="data/tepc_2025_hourly.csv" download>Download the data (240 KB)</a></div>
+    <div class="callout warn" id="load-error" hidden></div>
+    <noscript><div class="callout warn">The charts and the battery simulator need JavaScript. The data link above and the figures below still work.</div></noscript>
+
+    <div class="chart-card">
+      <div class="chart-head"><h3>Every hour of 2025</h3></div>
+      <div class="chart" id="chart-year" role="img" aria-label="Line chart of hourly demand for the whole of 2025 with a zoom slider"></div>
+      <p class="chart-note" id="year-note">Drag the slider to zoom. Demand passed 3,000 MW in 120 hours, all in summer; the floor of the year is 763 MW in March.</p>
+      <details class="tv"><summary>Table view: the year by month</summary><div class="tablewrap"><table class="data" id="tbl-months"></table></div></details>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head"><h3>Average day, by month</h3><div class="seg" id="month-btns" role="group" aria-label="Choose the month to highlight"></div></div>
+      <div class="chart" id="chart-monthly" role="img" aria-label="Average hourly demand profile for each month; the selected month is highlighted"></div>
+      <p class="chart-note" id="month-readout"></p>
+      <p class="chart-note">The grey lines are the other eleven months. The shaded band is the utility&rsquo;s summer on-peak window, 3–7 pm.</p>
+      <details class="tv"><summary>Table view: average MW by hour and month</summary><div class="tablewrap"><table class="data" id="tbl-prof"></table></div></details>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-head"><h3>Load-duration curve</h3><div class="seg" id="ldc-btns" role="group" aria-label="Zoom the load-duration curve"><button type="button" data-z="all" aria-pressed="true">All hours</button><button type="button" data-z="top400">Top 400</button><button type="button" data-z="top100">Top 100</button></div></div>
+      <div class="chart" id="chart-ldc" role="img" aria-label="Load-duration curve: the year's hours ranked from highest to lowest demand, as metered and after the simulated battery"></div>
+      <p class="chart-note">Every hour of the year ranked from highest to lowest. The orange line is the same year after the battery configured below; the left edge is what a grid has to be built for.</p>
+      <details class="tv"><summary>Table view: demand at selected ranks</summary><div class="tablewrap"><table class="data" id="tbl-ldc"></table></div></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>Size a battery</h2>
+    <div class="prose">
+      <p>Each day the battery flattens the top of the demand curve with the energy it holds, then refills in that day&rsquo;s cheapest hours. The default is the fleet of roughly 600 MW of four-hour storage that Arizona&rsquo;s utility had already committed to when I ran the study; it takes the annual peak from 3,448 MW to 2,969 MW, the same answer the study&rsquo;s model gives. Switch the duration between four and eight hours to see the finding below: up to about 300 MW the two are identical, because power rather than energy is the binding constraint. Above that, eight-hour storage keeps taking a megawatt off the peak for every megawatt installed while four-hour storage falls steadily behind.</p>
+    </div>
+
+    <div class="card">
+      <div class="presets"><span class="note">Presets:</span>
+        <div class="seg" id="presets">
+          <button type="button" data-p="600" data-e="2400" data-rte="88" data-mode="daily" data-dur="4">Committed fleet · 600 MW / 2,400 MWh</button>
+          <button type="button" data-p="100" data-e="400" data-rte="88" data-mode="daily" data-dur="4">One project · 100 MW / 400 MWh</button>
+          <button type="button" data-p="900" data-e="3600" data-rte="88" data-mode="daily" data-dur="4">Committed + 300 MW · 900 MW / 3,600 MWh</button>
+          <button type="button" data-p="600" data-e="2400" data-rte="88" data-mode="target" data-target="3000" data-dur="4">Committed fleet, only above 3,000 MW</button>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="ctl"><label for="p-mw">Power <output id="p-mw-v" for="p-mw">600 MW</output></label><input type="range" id="p-mw" min="0" max="1500" step="10" value="600"></div>
+        <div class="ctl"><span class="lbl">Duration</span><div class="seg" id="dur-btns" role="group" aria-label="Storage duration"><button type="button" data-dur="4" aria-pressed="true">4-hour</button><button type="button" data-dur="8">8-hour</button><button type="button" data-dur="0">Custom</button></div></div>
+        <div class="ctl"><label for="e-mwh">Energy <output id="e-mwh-v" for="e-mwh">2,400 MWh</output></label><input type="range" id="e-mwh" min="0" max="12000" step="10" value="2400"></div>
+        <div class="ctl"><label for="rte">Round-trip efficiency <output id="rte-v" for="rte">88%</output></label><input type="range" id="rte" min="0" max="100" step="1" value="88"></div>
+        <div class="ctl"><span class="lbl">Dispatch rule</span><div class="seg" id="mode-btns" role="group" aria-label="Dispatch rule"><button type="button" data-mode="daily" aria-pressed="true">Shave every day</button><button type="button" data-mode="target">Only above a target</button></div></div>
+        <div class="ctl off" id="target-wrap"><label for="target">Target peak <output id="target-v" for="target">3,000 MW</output></label><input type="range" id="target" min="1500" max="3500" step="10" value="3000" disabled></div>
+      </div>
+      <p class="note" id="sim-note"></p>
+    </div>
+
+    <div class="facts sim" aria-label="Simulator results">
+      <div class="fact"><span class="n"><span id="r-peak-before">3,448</span> <small>MW</small></span><span class="l" id="r-peak-before-l">MW peak as metered · Aug 6, hour ending 6 pm</span></div>
+      <div class="fact"><span class="n"><span id="r-peak-after">—</span> <small>MW</small></span><span class="delta" id="r-cut"></span><span class="l">peak after the battery</span></div>
+      <div class="fact"><span class="n"><span id="r-mwh">—</span></span><span class="l" id="r-mwh-l">MWh discharged over the year</span></div>
+      <div class="fact"><span class="n"><span id="r-cycles">—</span></span><span class="l">equivalent full cycles (MWh discharged ÷ energy rating)</span></div>
+      <div class="fact"><span class="n"><span id="r-days">—</span></span><span class="l">days on which the battery discharged</span></div>
+      <div class="fact"><span class="n"><span id="r-h90">—</span> <small>hours</small></span><span class="l" id="r-h90-l">hours at or above 90% of the as-metered peak (56 before the battery)</span></div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-head"><h3>The ten highest days, before and after</h3></div>
+        <div class="chart short" id="chart-top" role="img" aria-label="Dot plot of the ten highest daily peaks, as metered and after the battery"></div>
+        <p class="chart-note">Ranked by their as-metered peak. Click a day to see it hour by hour.</p>
+        <details class="tv"><summary>Table view</summary><div class="tablewrap"><table class="data" id="tbl-top"></table></div></details>
+      </div>
+      <div class="chart-card">
+        <div class="chart-head"><h3>One day, hour by hour</h3><label class="note" for="day-select">Day <select class="sel" id="day-select"></select></label></div>
+        <div class="chart short" id="chart-day" role="img" aria-label="Hourly demand on the selected day, as metered and after the battery, with the discharge and recharge bands"></div>
+        <p class="chart-note" id="day-readout"></p>
+        <details class="tv"><summary>Table view</summary><div class="tablewrap"><table class="data" id="tbl-day"></table></div></details>
+      </div>
+    </div>
+    <div class="prose">
+      <p class="note">The energy balances: discharging a MWh means drawing back 1 &divide; efficiency MWh from the grid, capped by the charger&rsquo;s power rating, so the battery can never give the grid more than it took. Drag the efficiency to zero and the battery does nothing at all. Simplifications: each day stands alone and the battery starts it full; the day&rsquo;s demand is known in advance; losses are one round-trip factor; no degradation, reserves or transmission limits. The &ldquo;only above a target&rdquo; rule shows how few days of dispatch the same peak reduction actually needs.</p>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2>What I found</h2>
+    <ul>
+      <li><b>Each battery is worth less than the last.</b> Beyond the committed fleet, the first 100 MW of eight-hour storage removes a full 100 MW of peak; the first 100 MW of four-hour storage removes only 50. Past roughly 900 MW of four-hour storage the batteries need to refill so much overnight that the valley rises to meet the shaved plateau and the annual peak stops falling.</li>
+      <li><b>Duration matters more than nameplate.</b> Eight-hour storage holds its value for far longer, which changes what a utility should be buying.</li>
+      <li><b>A standalone project pencils out, narrowly.</b> A 100 MW / 400 MWh battery earning a fixed monthly payment from the utility returns about 10% unlevered and 14% with debt under base assumptions, helped by a transferable 30% tax credit. Across the plausible range of contract prices and equipment costs the return runs from under 5% to nearly 18%, and it clears a 9% hurdle only when the equipment is cheap and the contract generous.</li>
+      <li><b>Home batteries only help if they are coordinated.</b> Fleets on a fixed evening schedule empty before the true peak; coordinated dispatch keeps flattening the top of the day as the fleet grows.</li>
+    </ul>
+  </section>
+
+  <section class="shots wide" aria-label="Figures from the study">
+    <figure><img src="figures/fig1_daily_shape.png" alt="Line chart of average hourly demand for January, April, August and October against the record day, Aug 6, 2025" loading="lazy"><figcaption>The grid through the day: four months&rsquo; average days against the record day, Aug 6, 2025.</figcaption></figure>
+    <figure><img src="figures/gfig2_capacity_value.png" alt="Two panels: cumulative annual peak reduction from added 4-hour and 8-hour storage, and the peak cut by each successive 100 MW block" loading="lazy"><figcaption>Diminishing returns: what each added block of storage does to the peak, four-hour against eight-hour. Shaded bands are published industry ranges the model was checked against.</figcaption></figure>
+    <figure><img src="figures/gfig3_sensitivity.png" alt="Heatmap of unlevered return for a 100 MW / 400 MWh tolled battery across four contract prices and four installed costs" loading="lazy"><figcaption>Project returns across contract price and equipment cost, with the 9% hurdle marked.</figcaption></figure>
+  </section>
+
+  <section class="prose">
+    <h2>What it shows</h2>
+    <ul>
+      <li>Research from public data: knowing which sources exist, what they can and cannot answer, and how to make them comparable.</li>
+      <li>Energy and investment economics: capacity value, duration, contract structure, tax credits and sensitivity to the assumptions that matter.</li>
+      <li>Presenting a model honestly, with its simplifications stated and a way for the reader to test the conclusions themselves.</li>
+    </ul>
+    <p class="note">One year of demand, not a forecast; the dispatch is an idealisation and the project economics use benchmark costs rather than quotes.</p>
+  </section>
+
+  <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
+</div>
+<script src="../../assets/vendor/echarts.min.js"></script>
+<script src="app.js"></script>
+</body></html>

@@ -1,0 +1,10 @@
+# The site is unlisted, not private: anyone with the link can read it, but it
+# should not appear in search results. That is enforced by the
+# <meta name="robots" content="noindex, nofollow"> tag on every page
+# (see tools/add_noindex.py).
+#
+# Crawling is deliberately ALLOWED here. A "Disallow: /" would stop crawlers
+# fetching the pages at all, so they would never read the noindex tag, and the
+# URL could still be listed from an external link. Do not add one.
+User-agent: *
+Allow: /

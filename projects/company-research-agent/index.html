@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company Research Agent — Ben Meyer</title>
+<meta name="description" content="A due-diligence method Ben Meyer designed to keep private-company research from anchoring on early numbers, packaged as a repeatable Claude Code workflow over public filings and patents.">
+<link rel="stylesheet" href="../../assets/case-study.css">
+<style>
+/* page-specific rules only */
+.prose ol.rules { list-style: none; padding-left: 0; counter-reset: rule; }
+.prose ol.rules li { position: relative; padding-left: 2.2rem; margin: 0 0 12px; }
+.prose ol.rules li::before {
+  counter-increment: rule; content: counter(rule);
+  position: absolute; left: 0; top: 0.15em; width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-size: 0.78rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 14px 0 6px; }
+.parts .card { padding: 14px 16px; }
+.parts h3 { margin: 0 0 6px; font-size: 1rem; }
+.parts p { margin: 0; font-size: 0.9rem; }
+.parts .wall { border-left: 3px solid var(--accent); }
+
+/* worked example */
+.tier { display:inline-block; padding:1px 7px; border-radius:999px; font-size:0.72rem; font-weight:600;
+        letter-spacing:.02em; white-space:nowrap; }
+.tier.observed { background:#d9ead3; color:#274e13; }
+.tier.inferred { background:#d0e0e3; color:#0c343d; }
+.tier.analog   { background:#fff2cc; color:#7f6000; }
+.tier.guess    { background:#f4cccc; color:#990000; }
+@media (prefers-color-scheme: dark) {
+  .tier.observed { background:#1f3520; color:#b7e1a1; }
+  .tier.inferred { background:#16323a; color:#a8d8e4; }
+  .tier.analog   { background:#3a3016; color:#f0c36d; }
+  .tier.guess    { background:#3d1f1f; color:#f3a9a9; }
+}
+.caption { font-size:0.9rem; color:var(--muted); line-height:1.55; }
+.screen-card { padding:20px 22px; }
+.screen-card .call { font-size:1.02rem; margin:0 0 14px; }
+.screen-card h4 { margin:16px 0 6px; font-size:0.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.screen-card ul, .screen-card ol { margin:0; padding-left:1.15rem; }
+.screen-card li { margin:0 0 5px; font-size:0.93rem; }
+.tornado { display:grid; grid-template-columns:minmax(118px,1.4fr) 76px minmax(90px,3fr) 52px; gap:5px 10px;
+           align-items:center; font-size:0.85rem; min-width:352px; }
+.tornado .lbl { color:var(--text); line-height:1.25; }
+.tornado .bar { background:var(--surface-2); border-radius:4px; height:15px; position:relative; overflow:hidden; }
+.tornado .bar i { display:block; height:100%; border-radius:4px; background:var(--accent); }
+.tornado .bar i.zero { background:var(--border); }
+.tornado .amt { font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--muted); text-align:right; font-size:0.8rem; }
+.tornado .hd { font-size:0.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+.finds { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:14px; margin:14px 0 4px; }
+.finds .card { padding:15px 17px; }
+.finds h3 { margin:0 0 6px; font-size:0.96rem; }
+.finds p { margin:0; font-size:0.89rem; color:var(--muted); line-height:1.5; }
+.finds b { color:var(--text); font-weight:600; }
+
+.dl-top { background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+          padding: 18px 20px 16px; margin: 6px 0 4px; box-shadow: var(--shadow); }
+.dl-top .dl-lead { margin: 0 0 12px; font-size: 0.95rem; color: var(--text); max-width: 76ch; }
+.dl-top .dl-lead a { white-space: nowrap; }
+.dl-top .ctas { margin: 0; }
+.dl-top .note { max-width: 76ch; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Company Research Agent</b></span></nav>
+
+  <header class="cs-head">
+    <p class="eyebrow"><span class="badge data-app">Research method</span><span>Sep 2026</span></p>
+    <h1>A due-diligence method that refuses to anchor</h1>
+    <p class="lede">Research on a private company usually fails the same way: someone finds a plausible number early, it becomes the anchor, and everything after is arranged to support it. I designed a method to interrupt that at every step and packaged it as a Claude Code workflow: give it a company name and it produces a three-part dossier and a financial model from public filings and patents, with the bear case written before the verdict.</p>
+    <div class="chips"><span>Due diligence</span><span>SEC filings</span><span>Patents</span><span>Word + Excel output</span><span>Built with Claude Code</span></div>
+  </header>
+
+  <section id="downloads" class="dl-top">
+    <p class="dl-lead">Run end to end on a real company &mdash; <b>Cosmic Buildings</b>, a California startup picked to fit a brief and nothing else. Everything below came from public records in a single day. <a href="#example">How it got there &darr;</a></p>
+    <div class="ctas">
+      <a class="btn" href="example/onepager.pdf">The one-pager &mdash; PDF, opens in the browser</a>
+      <a class="btn ghost" href="example/workup.docx" download>The workup &mdash; Word, 19 pages</a>
+      <a class="btn ghost" href="example/assumptions.xlsx" download>The registry &mdash; Excel, 53 rows + findings register</a>
+      <a class="btn ghost" href="example/model.xlsx" download>The model &mdash; Excel, 23 drivers, returns waterfall</a>
+    </div>
+    <p class="note" style="margin-top:12px">Start with the one-pager &mdash; which document you get is decided by how long you have, not by how much work went in. Independent research from public records; I have no relationship with this company and nobody paid for it. Not investment advice.</p>
+  </section>
+
+  <section class="facts">
+    <div class="fact"><span class="n">3</span><span class="l">parts to every dossier — Screen, Dossier, Opinion — with a wall between the facts and the view</span></div>
+    <div class="fact"><span class="n">4</span><span class="l">confidence tiers on every number: observed, inferred, analog, guess</span></div>
+    <div class="fact"><span class="n">2</span><span class="l">public sources the scripts pull from: SEC EDGAR filings and the patent record</span></div>
+    <div class="fact"><span class="n">3</span><span class="l">full workups run on real companies &mdash; one of them published below, in full</span></div>
+  </section>
+
+  <section class="prose">
+    <h2>What it does</h2>
+    <p>Say &ldquo;work up this company&rdquo; and the workflow asks one round of questions — who they are and which decision the research feeds — then gathers evidence in parallel: the regulatory trail in SEC filings, the patent portfolio, the people, commercial signals and market context. Before a word of prose is written, every material number goes into a registry with its source and a confidence tier. The dossier follows a fixed template so companies stay comparable. The strongest case for failure is written next, and only then the opinion. If asked, the same registry becomes a working Excel model with bear, base and bull cases and a ranking of which assumption matters most.</p>
+    <div class="parts">
+      <div class="card"><h3>Screen</h3><p>One page, readable in ninety seconds: what the company is, what is known, what is not.</p></div>
+      <div class="card"><h3>Dossier</h3><p>The facts, in a fixed order, each claim tagged with where it came from. No judgment above the line.</p></div>
+      <div class="card wall"><h3>Opinion</h3><p>Behind a page break: the call, the two or three things it rests on, and what would change it.</p></div>
+    </div>
+  </section>
+
+  <section class="prose">
+    <h2>The rules</h2>
+    <ol class="rules">
+      <li><b>Numbers before prose.</b> A number either has a row in the registry — value, source, confidence — or it does not go in. Guesses are allowed and labelled; relabelling a guess to look rigorous is the one move that destroys the document.</li>
+      <li><b>Every claim carries its source.</b> A company&rsquo;s statement about its own market is evidence that the statement was made, not that it is true; it is recorded, checked independently, and the result noted.</li>
+      <li><b>The bear case comes first.</b> Assume it is three years later and the company has failed; explain why, in the strongest version, and where that was visible today. Only then write the opinion, with the specific facts that would flip it.</li>
+      <li><b>Grade who stands behind every number.</b> Separately from how a number was derived, it carries an independence grade: the company said it, a second source that isn&rsquo;t independent of the company agrees, or a source with no stake in the answer would have said so if it were false. The rule that makes it worth doing is that no conclusion may rest on the company&rsquo;s own account alone &mdash; and a third party validating data the company supplied does not count as independent.</li>
+      <li><b>Every problem gets a disposition.</b> Findings go in a register with a severity and an owner, and a column for what actually happens as a result &mdash; a diligence request, a condition, a walk-away trigger, or an explicit decision to live with it. A finding that never reaches a document binding somebody has changed nothing.</li>
+      <li><b>Unknown stays unknown.</b> Not &ldquo;approximately&rdquo;, and never a range invented to look thorough. Sometimes absence is the finding.</li>
+    </ol>
+  </section>
+
+
+  <section id="example">
+    <h2>The method on a real company</h2>
+    <p class="caption" style="max-width:74ch;margin:0 0 6px">To show the method rather than describe it, I pointed it at a company picked to fit a brief and nothing else: a California startup, Series&nbsp;A or earlier, building something physical rather than another AI product. It landed on <b>Cosmic Buildings</b> &mdash; a Los Angeles firm that parks a trailer of robot arms on your lot and frames the house there, selling into the Palisades fire rebuild. I had never heard of it. Everything below came from public records in a single day, and all three documents are here to download.</p>
+
+    <div class="facts">
+      <div class="fact"><span class="n">2</span><span class="l">homes it has actually finished, twenty months into the rebuild it was built for</span></div>
+      <div class="fact"><span class="n">0</span><span class="l">contractor licences on the state register, against a published claim of holding one</span></div>
+      <div class="fact"><span class="n">86</span><span class="l">homes a year it needs to break even &mdash; against 17 in the base case, and its own public goal of 100</span></div>
+      <div class="fact"><span class="n">53</span><span class="l">numbers checked and tagged, drawn from 32 sources, in a single day</span></div>
+    </div>
+
+    <h3>The one-page verdict</h3>
+    <div class="card screen-card">
+      <p class="call"><b>Call:</b> Worth a first meeting. Not an investment on this evidence.</p>
+      <h4>What it rests on</h4>
+      <ol>
+        <li>The mechanism genuinely avoids the two costs that killed Katerra, Veev and Mighty Buildings &mdash; keeping a factory full, and trucking houses down a road. That is a real insight, not marketing.</li>
+        <li>Twenty months after the fires that created its market, the record shows two finished backyard units and no finished house. In fairness that is partly the market: every builder in Los Angeles combined has rebuilt about 1.5% of what burned. But a competitor holds a certificate of occupancy on a factory-built rebuild, and this company does not.</li>
+        <li>The prize is bounded. Framing is about a sixth of what a house costs to build, so even taking the claim of 80% off framing at face value, that is roughly 13% off the house &mdash; against a headline claim of 30%. And at these margins a home contributes about $39,000 against roughly $3.4M of overhead, putting break-even near 86 homes a year against 17 in the base case.</li>
+      </ol>
+      <h4>What would change my mind</h4>
+      <ul>
+        <li>One finished, occupied house, with its build time and final cost against the contract.</li>
+        <li>A contractor licence number that resolves on the state register.</li>
+        <li>Evidence of money raised since the $1.5M of March 2024.</li>
+      </ul>
+    </div>
+
+    <h3>Every number, tagged before any of it was written up</h3>
+    <p class="caption" style="max-width:74ch;margin:0 0 12px">This is the part that does the work. No number reaches the write-up without a row saying where it came from and how much weight it will take &mdash; <span class="tier observed">observed</span> in a primary document, <span class="tier inferred">inferred</span> with the reasoning shown, <span class="tier analog">analog</span> from a named comparable, or a plain <span class="tier guess">guess</span>. Guesses are allowed. Guesses dressed up as something firmer are the one thing that ruins the document. A second column grades independence &mdash; <b>C</b> the company is the source, <b>R</b> corroborated by something not independent of it, <b>V</b> a source with no stake that would have said so if the claim were false. Nine of the fifty-three rows:</p>
+    <div class="tablewrap">
+      <table class="data">
+        <thead><tr><th>Number</th><th>What it is</th><th>Where it came from</th><th>Derivation</th><th>Independence</th></tr></thead>
+        <tbody>
+          <tr><td class="num">$279,000</td><td>List price of the 380 sq ft studio</td><td>The company&rsquo;s own price list</td><td><span class="tier observed">observed</span></td><td><span class="tier guess">C</span></td></tr>
+          <tr><td class="num">$734 / sq ft</td><td>What that price works out to per foot</td><td>Arithmetic on the row above</td><td><span class="tier inferred">inferred</span></td><td><span class="tier guess">C</span></td></tr>
+          <tr><td class="num">~$284 / sq ft</td><td>What an ADU actually costs in LA County</td><td>Berkeley owner survey, escalated for construction inflation</td><td><span class="tier inferred">inferred</span></td><td><span class="tier observed">V</span></td></tr>
+          <tr><td class="num">2</td><td>Homes the company has demonstrably finished</td><td>A reporter who visited the site with her own camera</td><td><span class="tier observed">observed</span></td><td><span class="tier observed">V</span></td></tr>
+          <tr><td class="num">26 &rarr; 12 &rarr; 20&ndash;25 &rarr; ~40</td><td>The pipeline, as the company restated it four times</td><td>Company statements, May 2025 to February 2026</td><td><span class="tier guess">guess</span></td><td><span class="tier guess">C</span></td></tr>
+          <tr><td class="num">none found</td><td>California contractor licence, against a published claim of holding one</td><td>The state licence register</td><td><span class="tier observed">observed</span></td><td><span class="tier observed">V</span></td></tr>
+          <tr><td class="num">12</td><td>&ldquo;Commissioned&rdquo; units, in a counter hidden in the page source</td><td>The site&rsquo;s own markup &mdash; not visible to a visitor</td><td><span class="tier inferred">inferred</span></td><td><span class="tier guess">C</span></td></tr>
+          <tr><td class="num">100</td><td>Homes a year per microfactory</td><td>The company, repeated by the press</td><td><span class="tier guess">guess</span></td><td><span class="tier guess">C</span></td></tr>
+          <tr><td class="num">&euro;11M</td><td>Raised, according to the lead investor&rsquo;s website</td><td>Conflicts with $1.5M everywhere else</td><td><span class="tier guess">guess</span></td><td><span class="tier analog">R</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Which number to attack first</h3>
+    <p class="caption" style="max-width:74ch;margin:0 0 14px">The model runs the pipeline explicitly, splits revenue into the two products &mdash; backyard units sell at a contract value, custom rebuilds at a rate per square foot &mdash; and builds the cost base from headcount by geography, because two thirds of this team sits in Belgrade and that is what makes the burn survivable. Then it ranks all 23 drivers by how much each moves the answer, here cash five years out. A guess at the top of this list is the next phone call. A guess at the bottom can stay a guess forever.</p>
+    <div class="card">
+      <div class="tablewrap">
+      <div class="tornado">
+        <div class="hd">Assumption</div><div class="hd">Trust</div><div class="hd">Effect on five-year cash</div><div class="hd amt">Swing</div>
+      <div class="lbl">US field staff needed per home</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:100.0%"></i></div><div class="amt">$8.1M</div>
+      <div class="lbl">Gross margin on custom homes</div><div><span class="tier analog">analog</span></div><div class="bar"><i class="" style="width:98.0%"></i></div><div class="amt">$7.9M</div>
+      <div class="lbl">Cash at the start of 2026</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:92.8%"></i></div><div class="amt">$7.5M</div>
+      <div class="lbl">Growth in design-stage clients</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:58.9%"></i></div><div class="amt">$4.8M</div>
+      <div class="lbl">US core team size</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:55.9%"></i></div><div class="amt">$4.5M</div>
+      <div class="lbl">Microfactories added a year</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:55.7%"></i></div><div class="amt">$4.5M</div>
+      <div class="lbl">Belgrade design staff per client</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:50.6%"></i></div><div class="amt">$4.1M</div>
+      <div class="lbl">Design-stage clients today</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:46.9%"></i></div><div class="amt">$3.8M</div>
+      <div class="lbl">ADU share of deliveries</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:39.8%"></i></div><div class="amt">$3.2M</div>
+      <div class="lbl">Loaded cost per US employee</div><div><span class="tier analog">analog</span></div><div class="bar"><i class="" style="width:39.2%"></i></div><div class="amt">$3.2M</div>
+      <div class="lbl">Loaded cost per Belgrade employee</div><div><span class="tier analog">analog</span></div><div class="bar"><i class="" style="width:33.2%"></i></div><div class="amt">$2.7M</div>
+      <div class="lbl">Non-payroll overhead</div><div><span class="tier analog">analog</span></div><div class="bar"><i class="" style="width:33.1%"></i></div><div class="amt">$2.7M</div>
+      <div class="lbl">Average custom home size</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:31.0%"></i></div><div class="amt">$2.5M</div>
+      <div class="lbl">Working capital days</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:27.7%"></i></div><div class="amt">$2.2M</div>
+      <div class="lbl">Gross margin on ADUs</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:25.5%"></i></div><div class="amt">$2.1M</div>
+      <div class="lbl">Cost of one microfactory</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:24.7%"></i></div><div class="amt">$2.0M</div>
+      <div class="lbl">Custom revenue per sq ft</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:14.9%"></i></div><div class="amt">$1.2M</div>
+      <div class="lbl">Annual change in pricing</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:13.7%"></i></div><div class="amt">$1.1M</div>
+      <div class="lbl">Belgrade core team size</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:13.6%"></i></div><div class="amt">$1.1M</div>
+      <div class="lbl">Average ADU contract value</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:4.6%"></i></div><div class="amt">$0.4M</div>
+      <div class="lbl">Homes completed in 2026</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="" style="width:4.4%"></i></div><div class="amt">$0.4M</div>
+      <div class="lbl">Design clients who sign</div><div><span class="tier inferred">inferred</span></div><div class="bar"><i class="" style="width:2.1%"></i></div><div class="amt">$0.2M</div>
+      <div class="lbl">Homes framed per microfactory a year</div><div><span class="tier guess">guess</span></div><div class="bar"><i class="zero" style="width:0.8%"></i></div><div class="amt">$0</div>
+      </div>
+      </div>
+    </div>
+    <p class="caption" style="max-width:74ch;margin:12px 0 0"><b>Growth is not the answer, which was a surprise.</b> &ldquo;Design clients who sign&rdquo; is the number you would instinctively chase, and it ranks second from bottom. That is not a modelling quirk &mdash; it is the finding. At these margins each delivered home contributes about $39,000 against roughly $3.4M of fixed overhead, so break-even sits near 86 homes a year against 17 in the base case. Selling more of something delivered at a loss does not fix it.</p>
+    <p class="caption" style="max-width:74ch;margin:12px 0 0"><b>Read the bottom row.</b> &ldquo;A hundred homes a year per microfactory&rdquo; is the number in the press release, the trade coverage and the architecture magazines. In the model it changes the answer by nothing at all, because the robot&rsquo;s capacity never binds &mdash; the company cannot sell houses fast enough to keep one of them busy. Adding microfactories makes the cash position <i>worse</i>. The impressive number and the important number are not the same number, and only building the thing shows you which is which.</p>
+
+    <h3>What grading the evidence exposed</h3>
+    <p class="caption" style="max-width:74ch;margin:0 0 12px">Splitting <i>how a number was derived</i> from <i>who stands behind it</i> changes what the document can claim. On this company, <b>18 of the 53 numbers are the company&rsquo;s own account</b> &mdash; the whole price list, every pipeline figure, the capacity and savings claims. So the headline result, break-even near 86 homes a year, is a conditional statement about the company&rsquo;s own numbers rather than an independent measurement, and the workup now says so in that sentence. What is independently verified is the other half: the absent licence, the permit record, the two completions, the market data. The negative case rests on verified evidence; the quantified case rests on the company&rsquo;s.</p>
+
+    <h3>What the entry price would have to be</h3>
+    <p class="caption" style="max-width:74ch;margin:0 0 12px">No round terms are public, so the model prices a hypothetical entry rather than reporting one &mdash; a $2M cheque at a $20M pre-money, diluting through two more rounds.</p>
+    <div class="tablewrap">
+      <table class="data">
+        <tbody>
+          <tr><td>Ownership at entry, then at exit after dilution</td><td class="num">9.1% &rarr; 5.5%</td></tr>
+          <tr><td>Base-case revenue in 2030, at an assumed builder&rsquo;s multiple of 1.2x</td><td class="num">$17.8M</td></tr>
+          <tr><td>What the stake is worth at exit</td><td class="num">$986,000</td></tr>
+          <tr><td>What the $2M cheque returns &mdash; and only because the liquidation preference pays it back</td><td class="num">1.0x</td></tr>
+          <tr><td>Exit multiple required for a 3x return</td><td class="num">7.3x revenue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="max-width:74ch;margin:12px 0 0">The equity is worth less than half the money going in; the preference is the only thing that pays. Getting to 3x needs either a software multiple on a construction business, or roughly six times the base-case revenue. Set against four companies in this category whose assets sold for a fraction of what they raised, neither is comfortable to underwrite.</p>
+
+    <h3>Four things the checks turned up</h3>
+    <div class="finds">
+      <div class="card"><h3>A number that was not on the page</h3><p>A counter reading <b>12 units commissioned</b> sat in the site&rsquo;s source code. Opening the page in a browser, it measures zero pixels tall &mdash; left in the markup, invisible to visitors. It nearly became evidence of an order book. It is a leftover.</p></div>
+      <div class="card"><h3>A licence that is not on the register</h3><p>The company states it is a licensed general contractor in California. The state register lists <b>no licence under its name</b>, none under its founder&rsquo;s, and no pending application. It may sit under another entity &mdash; so the workup records this as <i>not found</i>, which is a different claim from <i>not there</i>.</p></div>
+      <div class="card"><h3>A price rise wearing a flat price</h3><p>The three headline prices have not moved since 2024. The floor areas behind them have: <b>395&rarr;380, 595&rarr;570, 750&rarr;720 sq ft</b>. Same price, less house, which is a price increase per square foot presented as steady pricing.</p></div>
+      <div class="card"><h3>A first attempt nobody wrote down</h3><p>The founder ran this before. <b>Formdwell</b>, 2017, backed by Autodesk and Village Global, pitched a &ldquo;mobile construction factory&rdquo; &mdash; the same sentence. Its site is still up as a stub. No sale, no closure notice, no recorded ending. Bios list prior companies; outcomes are the part they leave out.</p></div>
+    </div>
+
+    <p class="caption" style="max-width:74ch;margin:22px 0 0">The four documents behind all of this are at the top of the page.</p>
+  </section>
+
+  <section class="prose">
+    <h2>What it shows</h2>
+    <ul>
+      <li>Turning judgment about how analysis goes wrong into a repeatable process rather than a set of good intentions.</li>
+      <li>Skepticism built into the deliverable: provenance on every number, the case against before the case for, and confidence that tracks the evidence rather than conviction.</li>
+      <li>Packaging expertise as an AI workflow that another person, or a future version of me, can run the same way every time.</li>
+    </ul>
+    <p class="note">It works from public records only, so a private company&rsquo;s footprint is often thin and a real workup contains honest guesses and unknowns; that is the point. The repository and the two earlier workups stay private &mdash; the one below is published in full so the method can be judged on its output rather than on its description.</p>
+  </section>
+
+  <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
+</div>
+</body></html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FitLog — Ben Meyer</title>
+<meta name="description" content="FitLog is an iPhone strength-training app Ben Meyer designed around an AI coach that plans the week with you, tested on his own training. Built with Claude Code.">
+<link rel="stylesheet" href="../../assets/case-study.css">
+<style>
+/* page-specific rules only */
+.app-id { display: flex; align-items: center; gap: 14px; margin: 0 0 10px; }
+.app-id img { width: 48px; height: 48px; flex: none; border-radius: 11px; border: 1px solid var(--border); }
+.app-id h1 { margin: 0; }
+.prose ul.tight li { margin-bottom: 8px; }
+.prose ul.tight li b { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>FitLog</b></span></nav>
+
+  <header class="cs-head">
+    <p class="eyebrow"><span class="badge ios">iOS app</span><span>Aug &ndash; Sep 2026</span></p>
+    <div class="app-id">
+      <img src="icon.png" alt="FitLog app icon" width="48" height="48">
+      <h1>FitLog &mdash; a strength-training app with a coach that plans the week with you</h1>
+    </div>
+    <p class="lede">An iPhone app I designed for my own training and use every week. A coach works out your weekly program in conversation, prescribes each session from your own history, and writes a debrief when you finish. Everything stays on the phone: no account, no server. Shown here as a case study; the app runs on an iPhone, not in a browser.</p>
+    <div class="chips"><span>Product design</span><span>Strength training</span><span>iOS</span><span>SwiftUI</span><span>Built with Claude Code</span></div>
+  </header>
+
+  <section class="facts">
+    <div class="fact"><span class="n">5</span><span class="l">tabs: Coach, Workout, History, Exercises, Progress</span></div>
+    <div class="fact"><span class="n">96</span><span class="l">automated coaching scenarios that pin down how the coach must behave</span></div>
+    <div class="fact"><span class="n">17</span><span class="l">muscles in the model behind every exercise, from a 2026 research review</span></div>
+    <div class="fact"><span class="n">154</span><span class="l">commits in one month, built and tested against my own training log</span></div>
+  </section>
+
+  <section class="prose">
+    <h2>The idea</h2>
+    <p>Training apps either log what you did or hand out generic plans. I wanted a coach that reasons from my own history and the equipment in front of me, follows progression rules I actually trust, and never quietly changes my data. The week is a fixed rotation of named days; the coach helps you build it in conversation, and every suggestion it makes is checked by the app against your equipment and your rules before it counts.</p>
+  </section>
+
+  <section class="prose">
+    <h2>What it does</h2>
+    <ul class="tight">
+      <li><b>Plans the week with you.</b> The first program comes straight from your log; you edit it by hand or talk it through with the coach, who shows the whole week as a card until you accept it.</li>
+      <li><b>Prescribes each session.</b> Say how long you have and how you feel; the app assigns each lift its sets, reps and weight. A rough day drops sets, never weight, so a lighter bar can never silently block the next earned jump.</li>
+      <li><b>Logs and progresses.</b> Rest timer, supersets, timed holds, personal records caught mid-set. Weight goes up by a percentage earned at the top of the rep range on two sessions running, and the card tells you where you stand.</li>
+      <li><b>Looks back.</b> A calendar coloured by day type, a written debrief after each session, and a report card of which lifts moved up.</li>
+    </ul>
+  </section>
+
+  <section class="shots phones">
+    <figure><img src="screenshots/coach.png" alt="FitLog Coach tab: session cards for Push 1 and Pull 1, each listing six lifts with a Start button" loading="lazy"><figcaption>Coach &mdash; the week as cards; the chat button opens the program conversation.</figcaption></figure>
+    <figure><img src="screenshots/workout.png" alt="FitLog Workout tab: Start Workout, a summary of the last session, and a Coach debrief paragraph" loading="lazy"><figcaption>Workout &mdash; Start, the last session, and the coach&rsquo;s debrief.</figcaption></figure>
+    <figure><img src="screenshots/history.png" alt="FitLog History tab: a month calendar with days colour-coded as Push, Pull, Legs or Other" loading="lazy"><figcaption>History &mdash; a calendar coloured by day type.</figcaption></figure>
+    <figure><img src="screenshots/exercises.png" alt="FitLog Exercises tab: search, muscle-group filter chips, and a Recent list of lifts" loading="lazy"><figcaption>Exercises &mdash; search, filters, and last-done and best lines.</figcaption></figure>
+    <figure><img src="screenshots/progress.png" alt="FitLog Progress tab: 11 of 16 tracked lifts moved up, with estimated one-rep-max changes and a report card" loading="lazy"><figcaption>Progress &mdash; the verdict and the report card.</figcaption></figure>
+  </section>
+
+  <section class="prose">
+    <h2>What it shows</h2>
+    <ul class="tight">
+      <li>Product judgment grounded in real use: rules written from experience and revised from evidence, including the willingness to cut a feature that was not earning its place.</li>
+      <li>Domain research turned into design: a muscle model from the literature rather than convention.</li>
+      <li>Putting an AI where it helps and fencing it where it does not: the coach suggests, the app enforces, and everything works without a key.</li>
+      <li>Running a month-long build with a coding agent through specs, a verified queue and automated scenarios.</li>
+    </ul>
+    <p class="note">A personal app, not on the App Store; it runs on my iPhone through a developer install.</p>
+  </section>
+
+  <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
+</div>
+</body></html>

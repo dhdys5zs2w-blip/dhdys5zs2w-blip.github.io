@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ben Meyer — Projects</title>
+<meta name="description" content="Apps and dashboards designed and built by Ben Meyer using AI.">
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: #e4e4e0;
+    --accent: #2563eb;
+    --chip-bg: #eef1f4;
+    --badge-web-bg: #e0ebff;    --badge-web-fg: #1d4ed8;
+    --badge-dash-bg: #dcf3e6;   --badge-dash-fg: #157347;
+    --badge-ios-bg: #ece4fb;    --badge-ios-fg: #6d28d9;
+    --badge-data-bg: #fdeacf;   --badge-data-fg: #a55a09;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.05);
+    --shadow-hover: 0 2px 6px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131315;
+      --surface: #1c1c1f;
+      --text: #ececec;
+      --muted: #9a9aa2;
+      --border: #2a2a2e;
+      --accent: #7aa2ff;
+      --chip-bg: #26262b;
+      --badge-web-bg: #1e2a4a;  --badge-web-fg: #9db9ff;
+      --badge-dash-bg: #16301f; --badge-dash-fg: #6fd39a;
+      --badge-ios-bg: #2a2140;  --badge-ios-fg: #c0a5ff;
+      --badge-data-bg: #3a2a14; --badge-data-fg: #f0b269;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+      --shadow-hover: 0 4px 16px rgba(0,0,0,.5);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 72px 0 40px; }
+  h1 { font-size: 2.1rem; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .tagline { color: var(--muted); font-size: 1.08rem; margin: 0 0 18px; }
+  .intro { color: var(--text); font-size: 1rem; max-width: 62ch; margin: 0 0 18px; }
+  .process { margin: 40px 0 8px; }
+  .process p { color: var(--text); font-size: 1rem; max-width: 62ch; margin: 0 0 14px; line-height: 1.65; }
+  .process p:last-child { margin-bottom: 0; }
+  .contact { display: flex; gap: 18px; flex-wrap: wrap; font-size: .95rem; }
+  .contact a { color: var(--accent); text-decoration: none; }
+  .contact a:hover { text-decoration: underline; }
+  .section-head { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 20px; }
+  .section-head h2 { font-size: 1.15rem; margin: 0; }
+  .count { color: var(--muted); font-size: .9rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 22px;
+    padding-bottom: 72px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .thumb {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #3b5bdb 0%, #6d28d9 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.92);
+    font-size: 2rem; font-weight: 600; letter-spacing: -0.02em;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card-body { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .meta-row { display: flex; align-items: center; gap: 8px; }
+  .badge {
+    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
+    padding: 3px 9px; border-radius: 999px;
+  }
+  .badge.web  { background: var(--badge-web-bg);  color: var(--badge-web-fg); }
+  .badge.dashboard { background: var(--badge-dash-bg); color: var(--badge-dash-fg); }
+  .badge.ios  { background: var(--badge-ios-bg);  color: var(--badge-ios-fg); }
+  .badge.data-app { background: var(--badge-data-bg); color: var(--badge-data-fg); }
+  .date { color: var(--muted); font-size: .8rem; }
+  .card h3 { margin: 0; font-size: 1.12rem; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--muted); font-size: .93rem; flex: 1; }
+  .tech { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tech span {
+    background: var(--chip-bg); color: var(--muted);
+    font-size: .75rem; padding: 3px 9px; border-radius: 6px;
+  }
+  .open { color: var(--accent); font-size: .9rem; font-weight: 500; }
+  .card.featured { grid-column: 1 / -1; flex-direction: row; }
+  .card.featured .thumb { flex: 0 0 56%; aspect-ratio: auto; min-height: 320px; }
+  .card.featured .card-body { padding: 26px 28px 22px; }
+  .card.featured h3 { font-size: 1.5rem; }
+  .card.featured p { font-size: 1rem; }
+  .featured-tag { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
+  @media (max-width: 760px) {
+    .card.featured { flex-direction: column; }
+    .card.featured .thumb { flex: none; aspect-ratio: 16 / 9; min-height: 0; }
+  }
+  .empty {
+    border: 1px dashed var(--border); border-radius: 14px;
+    padding: 56px 24px; text-align: center; color: var(--muted);
+    grid-column: 1 / -1;
+  }
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1 id="site-name"></h1>
+      <p class="tagline" id="site-tagline"></p>
+      <p class="intro" id="site-intro" hidden></p>
+      <nav class="contact" id="site-contact"></nav>
+    </header>
+    <div class="section-head">
+      <h2>Projects</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <main class="grid" id="grid"></main>
+    <section class="process" id="process" hidden>
+      <div class="section-head"><h2 id="process-heading"></h2></div>
+      <div id="process-body"></div>
+    </section>
+    <footer id="footer"></footer>
+  </div>
+<script>
+/*DATA_START*/
+const DATA = {
+  "site": {
+    "name": "Ben Meyer",
+    "tagline": "Research and software projects, designed and directed by me and built with Claude Code",
+    "email": "benmeyer753@gmail.com",
+    "github": "https://github.com/enjaminbay",
+    "linkedin": "https://www.linkedin.com/in/bencmeyer3/",
+    "intro": "Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed Claude Code through the build; every page says what the thing does and the thinking behind it.",
+    "process": {
+      "heading": "How I work",
+      "paragraphs": [
+        "Every project here started as a question I actually wanted answered: whether battery storage pencils out for Tucson\u2019s grid, whether the physics behind avalanches says anything useful about a stock, whether I could get a training plan that would hold me to it. I do the research first, and I write the rules down before there is any code to bend them.",
+        "The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only 50 of the roughly 100 live days it needs \u2014 a number that isn\u2019t earned yet shouldn\u2019t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn\u2019t a result.",
+        "Then I use the thing I built and let that change it. FitLog first planned every training day from scratch; a fixed weekly program turned out to serve me better, so I had the daily planner cut rather than kept.",
+        "Claude Code wrote most of the code on this site \u2014 I\u2019d rather say that plainly than let it be inferred. What\u2019s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn\u2019t say what I wanted. The direction and the judgment are mine; most of the typing isn\u2019t."
+      ]
+    }
+  },
+  "projects": [
+    {
+      "slug": "equity-research",
+      "title": "Quant Equity Research Platform",
+      "type": "data-app",
+      "featured": true,
+      "description": "A research platform built to test whether a stock's technical state predicts its return tomorrow, with rules fixed before each experiment and a live daily record as the only evidence. This is its research browser, exported live, plus a SQL console in your browser.",
+      "tech": [
+        "Quant research",
+        "DuckDB",
+        "Python",
+        "Live demo"
+      ],
+      "date": "2026-09",
+      "pattern": "precomputed",
+      "thumb": "projects/equity-research/thumb.png",
+      "link": "projects/equity-research/",
+      "cta": "Open the research browser \u2192"
+    },
+    {
+      "slug": "fitlog",
+      "title": "FitLog",
+      "type": "ios",
+      "description": "An iPhone strength-training app I designed around a coach that plans the week with you, with rules I wrote and tested on my own training. The coach suggests; the app enforces.",
+      "tech": [
+        "Product design",
+        "iOS",
+        "SwiftUI",
+        "AI coach"
+      ],
+      "date": "2026-09",
+      "pattern": "case-study",
+      "thumb": "projects/fitlog/thumb.png"
+    },
+    {
+      "slug": "personal-dashboard",
+      "title": "Personal Dashboard",
+      "type": "ios",
+      "description": "A private morning-glance app I specified in full before any code: a Mac gathers the day, the phone adds sleep and calendar, and nothing leaves my network.",
+      "tech": [
+        "Specification",
+        "Privacy by design",
+        "iOS",
+        "Python service"
+      ],
+      "date": "2026-09",
+      "pattern": "case-study",
+      "thumb": "projects/personal-dashboard/thumb.png"
+    },
+    {
+      "slug": "tucson-grid-battery-model",
+      "title": "Tucson Grid & Battery Model",
+      "type": "data-app",
+      "description": "My study of what battery storage does to Tucson's grid peak, from a year of public hourly demand data. Explore the year and size a battery yourself.",
+      "tech": [
+        "Energy research",
+        "EIA-930",
+        "Scenario analysis",
+        "Interactive model"
+      ],
+      "date": "2026-09",
+      "pattern": "self-contained",
+      "thumb": "projects/tucson-grid-battery-model/thumb.png",
+      "cta": "Open the explorer \u2192"
+    },
+    {
+      "slug": "company-research-agent",
+      "title": "Company Research Agent",
+      "type": "data-app",
+      "description": "A due-diligence method I designed to stop research from anchoring on early numbers, packaged as a repeatable AI workflow. Run end to end on a real California startup, with the dossier, the evidence registry and the model published in full.",
+      "tech": [
+        "Due diligence",
+        "SEC EDGAR",
+        "Patents",
+        "Claude Code skill"
+      ],
+      "date": "2026-09",
+      "pattern": "case-study",
+      "thumb": "projects/company-research-agent/thumb.png",
+      "cta": "Read the worked example \u2192"
+    },
+    {
+      "slug": "soc-analysis",
+      "title": "SOC Volatility Dashboard",
+      "type": "dashboard",
+      "description": "My research into whether the physics of avalanches describes intraday volatility, built into a dashboard that scores stocks on it and tests the signals. The page runs the model and carries a real scoring run, with the validation results as they came out.",
+      "tech": [
+        "Research",
+        "Python",
+        "Streamlit",
+        "Options backtest"
+      ],
+      "date": "2025-12",
+      "pattern": "case-study",
+      "thumb": "projects/soc-analysis/thumb.png",
+      "cta": "View the study and live model \u2192"
+    }
+  ]
+};
+/*DATA_END*/
+
+const TYPE_LABEL = { web: "Web app", dashboard: "Dashboard", ios: "iOS app", "data-app": "Data app" };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
+function fmtDate(d) {
+  if (!d) return "";
+  const [y, m] = d.split("-");
+  const names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return m ? names[parseInt(m,10)-1] + " " + y : y;
+}
+
+function initials(title) {
+  return title.split(/\s+/).slice(0,2).map(w => w[0] || "").join("").toUpperCase();
+}
+
+function render() {
+  const site = DATA.site || {};
+  document.getElementById("site-name").textContent = site.name || "";
+  document.getElementById("site-tagline").textContent = site.tagline || "";
+  const intro = document.getElementById("site-intro");
+  intro.textContent = site.intro || "";
+  intro.hidden = !site.intro;
+  document.title = (site.name ? site.name + " — " : "") + "Projects";
+
+  const links = [];
+  if (site.email)    links.push('<a href="mailto:' + esc(site.email) + '">Email</a>');
+  if (site.github)   links.push('<a href="' + esc(site.github) + '" target="_blank" rel="noopener">GitHub</a>');
+  if (site.linkedin) links.push('<a href="' + esc(site.linkedin) + '" target="_blank" rel="noopener">LinkedIn</a>');
+  document.getElementById("site-contact").innerHTML = links.join("");
+
+  const projects = DATA.projects || [];
+  document.getElementById("count").textContent = projects.length ? projects.length : "";
+
+  const grid = document.getElementById("grid");
+  if (!projects.length) {
+    grid.innerHTML = '<div class="empty">Projects coming soon.</div>';
+  } else {
+    grid.innerHTML = projects.map(p => {
+      const link = p.link || ("projects/" + p.slug + "/");
+      const thumb = p.thumb
+        ? '<div class="thumb"><img src="' + esc(p.thumb) + '" alt="' + esc(p.title) + ' preview" loading="lazy"></div>'
+        : '<div class="thumb">' + esc(initials(p.title)) + '</div>';
+      const badgeType = TYPE_LABEL[p.type] ? p.type : "web";
+      const cta = p.cta || (p.pattern === "case-study" || p.type === "ios"
+        ? "View case study →" : "Open live app →");
+      return '<a class="card' + (p.featured ? ' featured' : '') + '" href="' + esc(link) + '">'
+        + thumb
+        + '<div class="card-body">'
+        + '<div class="meta-row"><span class="badge ' + badgeType + '">' + TYPE_LABEL[badgeType] + '</span>'
+        + '<span class="date">' + esc(fmtDate(p.date)) + '</span>'
+        + (p.featured ? '<span class="featured-tag">Featured</span>' : '') + '</div>'
+        + '<h3>' + esc(p.title) + '</h3>'
+        + '<p>' + esc(p.description) + '</p>'
+        + (p.tech && p.tech.length ? '<div class="tech">' + p.tech.map(t => "<span>" + esc(t) + "</span>").join("") + '</div>' : "")
+        + '<span class="open">' + cta + '</span>'
+        + '</div></a>';
+    }).join("");
+  }
+  const proc = site.process || {};
+  const paras = proc.paragraphs || [];
+  if (paras.length) {
+    document.getElementById("process-heading").textContent = proc.heading || "How I work";
+    document.getElementById("process-body").innerHTML =
+      paras.map(t => "<p>" + esc(t) + "</p>").join("");
+    document.getElementById("process").hidden = false;
+  }
+
+  document.getElementById("footer").textContent =
+    "© " + new Date().getFullYear() + " " + (site.name || "") + " · Built with Claude";
+}
+render();
+</script>
+</body>
+</html>

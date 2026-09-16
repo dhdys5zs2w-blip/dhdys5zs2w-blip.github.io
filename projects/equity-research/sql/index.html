@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qe — SQL console</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css">
+<link rel="stylesheet" href="../static/demo.css">
+</head>
+<body>
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
+  <nav aria-label="Pages">
+    <a href="../index.html">Overview</a>
+    <a href="../screener/">Screener</a>
+    <a href="../model/">Model</a>
+    <a href="../research/">Research</a>
+    <a href="../health/">Health</a>
+    <a href="../sql/" class="active">SQL</a>
+    <a href="../about/">About</a>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header>
+<div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span id="banner-text">A static snapshot of a personal quant research platform. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<main>
+  <header class="page-intro">
+    <div class="intro-text">
+      <p class="eyebrow">Console &middot; <span class="mono">DuckDB-WASM</span></p>
+      <h1>SQL console</h1>
+      <p class="lede">Query a slice of the research database directly in your browser. The same DuckDB
+      engine the platform runs on, compiled to WebAssembly, loads the tables on the right from Parquet
+      files and executes whatever you type. Nothing leaves your machine and nothing here writes.</p>
+    </div>
+    <div class="intro-aside">
+      <dl class="facts boxed" id="sql-facts">
+        <div><dt>Tables</dt><dd class="mono" id="f-tables">&mdash;</dd></div>
+        <div><dt>Rows</dt><dd class="mono" id="f-rows">&mdash;</dd></div>
+        <div><dt>Parquet</dt><dd class="mono" id="f-bytes">&mdash;</dd></div>
+        <div><dt>Engine</dt><dd class="mono" id="f-engine">loading&hellip;</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="sql-layout">
+    <div>
+      <textarea class="sql-editor" id="sql" spellcheck="false" aria-label="SQL query">-- The model's ten favourite names on the latest scored day
+SELECT s.symbol, s.rank, round(s.score, 4) AS score, m.name
+FROM daily_signals s
+JOIN symbols m USING (symbol)
+WHERE s.score_date = (SELECT max(score_date) FROM daily_signals)
+ORDER BY s.rank
+LIMIT 10</textarea>
+      <div class="sql-toolbar">
+        <button class="btn" id="run" type="button" disabled>Run &nbsp;<span class="mono" style="font-weight:400;opacity:.8">&#8984;/Ctrl+Enter</span></button>
+        <button class="btn ghost" id="clear" type="button">Clear</button>
+        <span class="status" id="status">Loading table list&hellip;</span>
+      </div>
+      <div class="sql-progress" id="progress" hidden><div></div></div>
+      <div class="sql-result" id="result"><div class="empty">Results appear here. Up to 1,000 rows are shown; add your own <span class="mono">LIMIT</span> for fewer.</div></div>
+      <details class="explain" style="margin-top: 1rem">
+        <summary>How to read this</summary>
+        <p>These are slices of the platform's DuckDB file, exported as Parquet by the same script that
+        built this demo: the full <span class="mono">predictions</span>, <span class="mono">live_book</span>,
+        <span class="mono">daily_signals</span>, <span class="mono">backtest_daily</span>, research ledger and
+        registry tables, and date-bounded cuts of the big ones (prices from 2024, all 25 indicators for the
+        last 63 sessions, monthly universe snapshots since 2005). Row counts and the exact bounds are in
+        the table list.</p>
+        <p>Two rules from the platform carry over. A prediction row whose <span class="mono">scored_at</span>
+        date is later than its <span class="mono">score_date</span> was scored after the outcome existed and
+        is not out-of-sample evidence, whatever its <span class="mono">source</span> stamp says. And every
+        statistic in <span class="mono">research_results</span> carries its standard error and n; read those
+        before the means.</p>
+        <p>The engine runs in a Web Worker; the runtime (about 8&nbsp;MB) comes from the jsDelivr CDN on
+        first use and is cached by the browser. If it cannot load, the rest of the demo still works.</p>
+      </details>
+    </div>
+    <aside class="sql-side">
+      <h3>Try one</h3>
+      <div class="examples" id="examples"></div>
+      <h3>Tables</h3>
+      <div id="schema"><p class="muted" style="font-size:.82rem">loading&hellip;</p></div>
+    </aside>
+  </div>
+</main>
+<footer><span>Snapshot of the qe research browser. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../";</script>
+<script src="../static/demo-shim.js"></script>
+<script src="../static/app.js"></script>
+<script type="module">
+const DUCKDB_ESM = "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.32.0/+esm";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmtInt = (n) => Number(n).toLocaleString("en-US");
+const fmtMB = (b) => (b / 1e6).toFixed(1) + " MB";
+
+const EXAMPLES = [
+  ["Model's favourites today", `-- The model's ten favourite names on the latest scored day
+SELECT s.symbol, s.rank, round(s.score, 4) AS score, m.name
+FROM daily_signals s
+JOIN symbols m USING (symbol)
+WHERE s.score_date = (SELECT max(score_date) FROM daily_signals)
+ORDER BY s.rank
+LIMIT 10`],
+  ["Does rank predict return?", `-- Mean realized next-day sector-excess return by model-rank decile
+-- (decile 10 = the model's favourites). Read the SE column before the means.
+WITH scored AS (
+  SELECT ntile(10) OVER (PARTITION BY s.score_date ORDER BY s.rank DESC) AS decile,
+         t.fwd_ret_sector_excess * 1e4 AS y_bps
+  FROM daily_signals s
+  JOIN targets t ON t.symbol = s.symbol AND t.date = s.score_date AND t.horizon = 1
+  WHERE s.rank IS NOT NULL AND t.fwd_ret_sector_excess IS NOT NULL
+)
+SELECT decile, count(*) AS n_obs,
+       round(avg(y_bps), 2) AS mean_bps,
+       round(stddev(y_bps) / sqrt(count(*)), 2) AS naive_se_bps
+FROM scored GROUP BY decile ORDER BY decile`],
+  ["The live record, day by day", `-- One row per scored day: the book's realized excess and whether the day
+-- was scored before its outcome existed (the only kind that is evidence)
+SELECT score_date,
+       count(*) AS names,
+       round(avg(realized_excess_ret) * 1e4, 1) AS book_excess_bps,
+       source,
+       max(scored_at)::DATE > score_date AS scored_in_arrears
+FROM predictions
+GROUP BY score_date, source
+ORDER BY score_date DESC`],
+  ["Survivorship: members later delisted", `-- How many names ever in the universe were later delisted?
+-- (a universe without them would flatter every backtest)
+SELECT count(DISTINCT m.symbol) AS members_ever,
+       count(DISTINCT m.symbol) FILTER (WHERE s.delist_date IS NOT NULL) AS later_delisted,
+       round(100.0 * count(DISTINCT m.symbol) FILTER (WHERE s.delist_date IS NOT NULL)
+             / count(DISTINCT m.symbol), 1) AS pct
+FROM universe_membership m
+JOIN symbols s USING (symbol)`],
+  ["Universe turnover by year", `-- Distinct members per year in the monthly snapshots
+SELECT year(date) AS yr, count(DISTINCT symbol) AS distinct_members,
+       count(DISTINCT date) AS snapshots
+FROM universe_membership
+GROUP BY yr ORDER BY yr`],
+  ["Backtest by volatility regime", `-- The registered backtest's implementable leg, split by the pre-named
+-- volatility state of the market (SPY's trailing 21-day vol in terciles)
+SELECT vol, count(*) AS days,
+       round(avg(implementable_bps), 2) AS mean_bps,
+       round(stddev(implementable_bps) / sqrt(count(*)), 2) AS naive_se_bps
+FROM backtest_daily
+WHERE implementable_bps IS NOT NULL
+GROUP BY vol ORDER BY vol`],
+  ["Best and worst year-to-date", `-- Adjusted-close returns over the last 252 sessions in the price slice
+WITH cal AS (SELECT date FROM prices_daily WHERE symbol = 'SPY' ORDER BY date DESC LIMIT 253),
+     w AS (SELECT min(date) AS d0, max(date) AS d1 FROM cal),
+     p AS (SELECT symbol,
+                  first(adj_close ORDER BY date) AS a0,
+                  last(adj_close ORDER BY date) AS a1
+           FROM prices_daily, w WHERE date BETWEEN w.d0 AND w.d1 GROUP BY symbol)
+SELECT symbol, round(a1 / a0 - 1, 3) AS ret_1y
+FROM p WHERE a0 > 0
+ORDER BY ret_1y DESC
+LIMIT 15`],
+  ["Highest implied volatility now", `-- ATM 30-day implied vol from the newest weekly option-chain snapshot
+SELECT symbol, date, round(atm_iv30, 3) AS iv30, round(skew25, 3) AS skew25, n_contracts
+FROM options_daily
+WHERE date = (SELECT max(date) FROM options_daily)
+ORDER BY iv30 DESC
+LIMIT 15`],
+  ["Registered verdicts", `-- Every verdict a pre-registered research block wrote, with its statistic
+SELECT block, statistic, label, round(value, 4) AS value, round(se, 4) AS se, n,
+       json_extract_string(meta_json, '$.verdict') AS verdict
+FROM research_results
+WHERE json_extract_string(meta_json, '$.verdict') IS NOT NULL
+ORDER BY block, statistic`],
+  ["Oversold by RSI, latest session", `-- Members with the lowest 14-day RSI on the newest indicator date
+SELECT i.symbol, i.date, round(i.value, 1) AS rsi_14, s.name
+FROM indicator_values i JOIN symbols s USING (symbol)
+WHERE i.indicator_id = 'rsi_v1'
+  AND i.date = (SELECT max(date) FROM indicator_values WHERE indicator_id = 'rsi_v1')
+ORDER BY i.value
+LIMIT 15`],
+];
+
+let conn = null;
+let tablesMeta = null;
+
+function status(text, err) {
+  const el = $("status");
+  el.textContent = text;
+  el.classList.toggle("err", !!err);
+}
+
+function renderSchema(meta) {
+  $("f-tables").textContent = meta.tables.length;
+  $("f-rows").textContent = fmtInt(meta.tables.reduce((a, t) => a + t.rows, 0));
+  $("f-bytes").textContent = fmtMB(meta.tables.reduce((a, t) => a + t.bytes, 0));
+  $("schema").innerHTML = meta.tables.map((t) =>
+    '<details><summary>' + esc(t.name) + '<span class="n">' + fmtInt(t.rows) + ' rows</span></summary>' +
+    '<p>' + esc(t.note) + '</p><ul>' +
+    t.columns.map((c) => '<li>' + esc(c.name) + ' <span class="muted">' + esc(c.type.toLowerCase()) + '</span></li>').join("") +
+    '</ul></details>').join("");
+}
+
+function renderExamples() {
+  $("examples").innerHTML = EXAMPLES.map((e, i) => '<button type="button" data-i="' + i + '">' + esc(e[0]) + '</button>').join("");
+  $("examples").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button");
+    if (!b) return;
+    $("sql").value = EXAMPLES[parseInt(b.dataset.i, 10)][1];
+    if (conn) run();
+  });
+}
+
+function fmtCell(v) {
+  if (v == null) return ['<span class="muted">null</span>', false];
+  if (typeof v === "bigint") return [fmtInt(v), true];
+  if (typeof v === "number") {
+    if (Number.isInteger(v)) return [fmtInt(v), true];
+    const a = Math.abs(v);
+    const s = a >= 1000 ? v.toLocaleString("en-US", { maximumFractionDigits: 2 })
+            : a >= 1 ? String(parseFloat(v.toFixed(4))) : String(parseFloat(v.toPrecision(4)));
+    return [s, true];
+  }
+  if (typeof v === "boolean") return [String(v), false];
+  if (v instanceof Date) return [v.toISOString().slice(0, 10), false];
+  if (typeof v === "object") { try { return [esc(JSON.stringify(v, (k, x) => typeof x === "bigint" ? Number(x) : x)), false]; } catch (e) { return [esc(String(v)), false]; } }
+  return [esc(String(v)), false];
+}
+
+function renderResult(table, ms) {
+  const fields = table.schema.fields.map((f) => f.name);
+  const rows = [];
+  for (const r of table) rows.push(fields.map((f) => r[f]));
+  const truncated = rows.length > 1000;
+  const shown = truncated ? rows.slice(0, 1000) : rows;
+  if (!shown.length) {
+    $("result").innerHTML = '<div class="empty">No rows.</div>';
+  } else {
+    $("result").innerHTML = '<table><thead><tr>' + fields.map((f) => '<th>' + esc(f) + '</th>').join("") +
+      '</tr></thead><tbody>' + shown.map((r) => '<tr>' + r.map((v) => {
+        const [html, num] = fmtCell(v);
+        return '<td' + (num ? ' class="num"' : '') + '>' + html + '</td>';
+      }).join("") + '</tr>').join("") + '</tbody></table>';
+  }
+  status((truncated ? "first 1,000 rows" : fmtInt(shown.length) + (shown.length === 1 ? " row" : " rows")) +
+         " · " + fields.length + " columns · " + ms.toFixed(0) + " ms");
+}
+
+async function run() {
+  if (!conn) return;
+  let sql = $("sql").value.trim().replace(/;\s*$/, "");
+  if (!sql) return;
+  $("run").disabled = true;
+  status("running…");
+  const t0 = performance.now();
+  try {
+    let result;
+    let cols = null;
+    try {
+      const d = await conn.query("DESCRIBE SELECT * FROM (" + sql + ") AS __q");
+      cols = [];
+      for (const r of d) cols.push({ name: r.column_name, type: String(r.column_type) });
+    } catch (e) { cols = null; }
+    if (cols && cols.length) {
+      // dates, timestamps and nested types travel as text so every browser renders them the same;
+      // decimals and 128-bit integers as doubles so they sort and align as numbers
+      const sel = cols.map((c) => {
+        const q = '"' + c.name.replace(/"/g, '""') + '"';
+        if (/DATE|TIME|INTERVAL|BLOB|STRUCT|LIST|MAP|UUID|JSON|\[\]/i.test(c.type)) return "CAST(" + q + " AS VARCHAR) AS " + q;
+        if (/DECIMAL|HUGEINT|UBIGINT/i.test(c.type)) return "CAST(" + q + " AS DOUBLE) AS " + q;
+        return q;
+      }).join(", ");
+      result = await conn.query("SELECT " + sel + " FROM (" + sql + ") AS __q LIMIT 1001");
+    } else {
+      result = await conn.query(sql);
+    }
+    renderResult(result, performance.now() - t0);
+  } catch (e) {
+    $("result").innerHTML = '<div class="empty">' + esc(e.message || String(e)) + '</div>';
+    status("error", true);
+  }
+  $("run").disabled = false;
+}
+
+async function boot() {
+  try {
+    tablesMeta = await (await fetch("../data/parquet/tables.json")).json();
+  } catch (e) {
+    status("The table list could not be loaded.", true);
+    return;
+  }
+  renderSchema(tablesMeta);
+  renderExamples();
+  status("Loading the DuckDB-WASM runtime from jsDelivr (about 8 MB, cached after the first visit)…");
+  $("f-engine").textContent = "DuckDB-WASM 1.32";
+  let duckdb;
+  try {
+    duckdb = await import(DUCKDB_ESM);
+  } catch (e) {
+    $("f-engine").textContent = "not loaded";
+    status("The DuckDB-WASM runtime could not be fetched from jsDelivr (offline, or blocked by a network policy). Everything else in this demo works without it.", true);
+    return;
+  }
+  try {
+    const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
+    const workerUrl = URL.createObjectURL(new Blob(['importScripts("' + bundle.mainWorker + '");'], { type: "text/javascript" }));
+    const worker = new Worker(workerUrl);
+    const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    URL.revokeObjectURL(workerUrl);
+
+    const total = tablesMeta.tables.reduce((a, t) => a + t.bytes, 0);
+    let loaded = 0;
+    $("progress").hidden = false;
+    status("Loading tables (" + fmtMB(total) + ")…");
+    for (const t of tablesMeta.tables) {
+      const res = await fetch("../data/parquet/" + t.name + ".parquet");
+      if (!res.ok) throw new Error("could not fetch " + t.name + ".parquet");
+      await db.registerFileBuffer(t.name + ".parquet", new Uint8Array(await res.arrayBuffer()));
+      loaded += t.bytes;
+      $("progress").firstElementChild.style.width = (100 * loaded / total).toFixed(0) + "%";
+    }
+    conn = await db.connect();
+    for (const t of tablesMeta.tables) {
+      await conn.query('CREATE VIEW "' + t.name + '" AS SELECT * FROM read_parquet(\'' + t.name + ".parquet')");
+    }
+    $("progress").hidden = true;
+    const v = await conn.query("SELECT version() AS v");
+    let ver = "";
+    for (const r of v) ver = String(r.v);
+    $("f-engine").textContent = "DuckDB " + ver.replace(/^v/, "") + " · wasm";
+    $("run").disabled = false;
+    status("ready — " + tablesMeta.tables.length + " tables loaded");
+    run();
+  } catch (e) {
+    $("progress").hidden = true;
+    $("f-engine").textContent = "failed";
+    status("The engine failed to start: " + (e.message || e), true);
+  }
+}
+
+$("run").addEventListener("click", run);
+$("clear").addEventListener("click", () => { $("sql").value = ""; $("sql").focus(); });
+$("sql").addEventListener("keydown", (ev) => {
+  if ((ev.metaKey || ev.ctrlKey) && ev.key === "Enter") { ev.preventDefault(); run(); }
+});
+fetch("../data/manifest.json").then((r) => r.json()).then((m) => {
+  $("banner-text").textContent = "A static snapshot of a personal quant research platform — " + m.members +
+    " current members of a " + m.universe + " universe, daily history since " + m.demo_start.slice(0, 4) +
+    ", exported " + m.exported_at.slice(0, 10) + " from the live " + m.db_size_gb.toFixed(1) +
+    " GB DuckDB. Every chart and table is the real tool's own output.";
+}).catch(() => {});
+boot();
+</script>
+</body>
+</html>

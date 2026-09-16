@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAR — qe</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
+   ?theme=light|dark previews one theme without remembering it. */
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css"><link rel="stylesheet" href="../static/demo.css">
+</head>
+<body>
+
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
+  <nav aria-label="Pages">
+    <a href="../index.html" class="">Overview</a>
+    <a href="../screener/" class="">Screener</a>
+    <a href="../model/" class="">Model</a>
+    <a href="../research/" class="">Research</a>
+    <a href="../health/" class="">Health</a><a href="../sql/">SQL</a><a href="../about/">About</a>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-16 from the live 18.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<main>
+
+
+<div id="symbol-page" data-symbol="MAR">
+
+<header class="symbol-head">
+  <div>
+    <p class="eyebrow">Symbol &middot; <span class="mono">NASDAQ</span></p>
+    <h1><span class="mono">MAR</span><span class="subname">Marriott International Inc - Class A</span></h1>
+    <p class="meta-line">
+      <span class="mono">NASDAQ</span>
+      &middot; Stock
+      
+        &middot; Consumer Cyclical / Lodging
+        <small>(<abbr class="caveat-inline" title="Sector labels are current-only: historical rows carry today's label.">current label</abbr>)</small>
+      
+      &middot; IPO 1993-10-13
+    </p>
+  </div>
+  <div class="badges">
+    
+      <span class="badge badge-live">active</span>
+    
+    
+      <span class="badge badge-info" title="In the current membership snapshot of the universe the model scores">liquid500 member</span>
+    
+    
+  </div>
+</header>
+
+<div id="stats-strip" class="stats-strip"><span class="loading">loading</span></div>
+
+<nav class="tabs" role="tablist" aria-label="Symbol sections">
+  <button class="tab active" role="tab" data-tab="history">History</button>
+  <button class="tab" role="tab" data-tab="patterns">Patterns</button>
+  <button class="tab" role="tab" data-tab="indicators">Indicators</button>
+  <button class="tab" role="tab" data-tab="options">Options</button>
+  <button class="tab" role="tab" data-tab="model">Model</button>
+</nav>
+
+<section class="tabpane active" id="tab-history" role="tabpanel">
+  <div class="tab-intro">
+    <p>Adjusted close with the 200-day average by default; switch the raw close, candles,
+    dividends or the 50-day average on from the legend. Pins mark splits. Drag to zoom.</p>
+  </div>
+  <div class="chart-tools">
+    <span class="rangebtns">
+      <button data-range="63">3M</button><button data-range="252">1Y</button>
+      <button data-range="1260">5Y</button><button data-range="all" class="on">Max</button>
+    </span>
+    <button id="log-toggle">log scale</button>
+  </div>
+  <div id="chart-price" class="chart tall"></div>
+  <p class="note">Candles are raw as-traded prices (split cliffs are real);
+the default line is the locally computed adjusted close, cross-checked against
+the vendor at 0.5% tolerance.</p>
+</section>
+
+<section class="tabpane" id="tab-patterns" role="tabpanel">
+  <div class="tab-intro">
+    <p>Descriptive statistics over the full stored history: how the stock <em>has</em> behaved,
+    not how it will. Every bucket mean carries its SE and n.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Monthly returns</h3>
+      <p class="panel-sub">Compounded daily returns within each calendar month.</p>
+      <div id="chart-monthly" class="chart"></div>
+    </div>
+    <div class="panel">
+      <h3>Drawdowns</h3>
+      <p class="panel-sub">Distance from the running peak, and the five deepest episodes.</p>
+      <div id="chart-drawdown" class="chart"></div>
+      <table class="data" id="dd-table">
+        <thead><tr><th>Peak</th><th>Trough</th><th class="num">Depth</th><th>Recovered</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h3>Mean daily return by month <small>&plusmn;1 SE</small></h3>
+      <div id="chart-season-month" class="chart short"></div>
+    </div>
+    <div class="panel">
+      <h3>Mean daily return by weekday <small>&plusmn;1 SE</small></h3>
+      <div id="chart-season-weekday" class="chart short"></div>
+    </div>
+    <div class="panel">
+      <h3>Rolling volatility <small>63-day, annualized</small></h3>
+      <div id="chart-vol" class="chart short"></div>
+    </div>
+    <div class="panel">
+      <h3>Rolling beta to SPY <small>stored beta_spy_v1, 60-day</small></h3>
+      <div id="chart-beta" class="chart short"></div>
+    </div>
+    <div class="panel">
+      <h3>Daily return distribution</h3>
+      <div id="chart-hist" class="chart short"></div>
+      <p class="chart-caption mono" id="hist-stats"></p>
+    </div>
+    <div class="panel">
+      <h3>Relative strength vs SPY <small>rebased at the first common date</small></h3>
+      <div id="chart-rel" class="chart short"></div>
+    </div>
+  </div>
+  <details class="explain">
+    <summary>How these are computed</summary>
+    <p class="caveat">Descriptive, not predictive. SE is s/&radic;n and assumes
+independent days; buckets mix regimes across the whole sample. The n is shown
+so you can judge how little a bucket mean can carry.</p>
+    <ul>
+      <li><strong>Monthly returns</strong> compound the daily adjusted-close returns inside each calendar month; a partial month is shown with its day count rather than hidden.</li>
+      <li><strong>Drawdowns</strong> are the adjusted close against its running maximum; an episode still under water is marked ongoing.</li>
+      <li><strong>Rolling volatility</strong> is the 63-day standard deviation of daily returns, annualized by &radic;252.</li>
+      <li><strong>Rolling beta</strong> is the stored 60-day <span class="mono">beta_spy_v1</span> indicator, which exists only while the symbol is in a scored universe &mdash; line breaks are membership gaps.</li>
+      <li><strong>The distribution</strong> shows every daily return with a normal curve of the same mean and standard deviation overlaid; skew and excess kurtosis are reported beside it. Fewer than 60 returns is not drawn.</li>
+      <li><strong>Relative strength</strong> is the cumulative ratio of the stock to SPY, rebased to 1 at the first date both have a price &mdash; the base date is arbitrary.</li>
+    </ul>
+  </details>
+</section>
+
+<section class="tabpane" id="tab-indicators" role="tabpanel">
+  <div class="tab-intro">
+    <p>The stored indicator values the model reads for this symbol. They are computed only while
+    the symbol is in a scored universe, so a sparse series is expected, not broken.</p>
+  </div>
+  <div class="chart-tools">
+    <label for="indicator-select" class="muted small">indicator</label>
+    <select id="indicator-select"><option>loading&hellip;</option></select>
+    <span class="muted small" id="indicator-coverage"></span>
+  </div>
+  <div id="chart-indicator" class="chart"></div>
+  <p class="note">Indicator values are computed only while the symbol is in a
+scored universe &mdash; line breaks are membership gaps, not missing data.</p>
+</section>
+
+<section class="tabpane" id="tab-options" role="tabpanel">
+  <div class="tab-intro">
+    <p>Weekly snapshots of the listed option chain, reduced to three numbers: implied volatility,
+    the call&minus;put spread and the 25-delta skew. Descriptive; candidate features under a
+    registered test that has not run yet.</p>
+  </div>
+  <div id="options-summary" class="stats-strip"><span class="loading">loading</span></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Implied vs realized volatility</h3>
+      <p class="panel-sub">30-day at-the-money implied vol (weekly) against the trailing 20-day realized vol (daily), both annualized. The gap is the variance premium being paid.</p>
+      <div id="chart-iv" class="chart"></div>
+    </div>
+    <div class="panel">
+      <h3>Call&minus;put spread and 25-delta skew</h3>
+      <p class="panel-sub">Implied-vol points at 30 days: call minus put at the money, and out-of-the-money put minus call.</p>
+      <div id="chart-skew" class="chart"></div>
+    </div>
+  </div>
+  <p class="note" id="options-note"></p>
+  <details class="explain">
+    <summary>How to read this</summary>
+    <p>One chain per week, the last session of the week, reduced to three
+    numbers. <strong>ATM implied vol</strong> is the market's price of the
+    next 30 days of variance for this name; drawn against the trailing 20-day
+    realized vol, the gap is the variance premium being paid. The
+    <strong>call&minus;put spread</strong> at the money and the <strong>25-delta
+    skew</strong> (out-of-the-money put vol minus call vol) are the two
+    cross-sectional signals the literature reports, under a registered test
+    here that has not run yet. Weekly sampling means a line break is a skipped
+    week or a name without listed options, not missing data.</p>
+  </details>
+</section>
+
+<section class="tabpane" id="tab-model" role="tabpanel">
+  <div class="tab-intro">
+    <p>Where the frozen model has ranked this stock on each scored day, and what happened next.
+    One stock's record is anecdote &mdash; the aggregate rank profile on the
+    <a href="../model/#s-rank">model page</a> is the real test.</p>
+  </div>
+  <div id="model-tab-body"><span class="loading">loading</span></div>
+</section>
+
+</div>
+
+</main>
+<footer><span>Snapshot of the qe research browser exported 2026-09-16. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script src="../static/symbol.js"></script>
+</body>
+</html>

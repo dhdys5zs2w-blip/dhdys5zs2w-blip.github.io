@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qe — about this project</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css">
+<link rel="stylesheet" href="../static/demo.css">
+</head>
+<body>
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
+  <nav aria-label="Pages">
+    <a href="../index.html">Overview</a>
+    <a href="../screener/">Screener</a>
+    <a href="../model/">Model</a>
+    <a href="../research/">Research</a>
+    <a href="../health/">Health</a>
+    <a href="../sql/">SQL</a>
+    <a href="../about/" class="active">About</a>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header>
+<div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span id="banner-text">A static snapshot of a personal quant research platform. Every chart and table is the real tool's own output.</span><a href="../sql/">Open the SQL console &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<main class="about">
+  <header class="page-intro">
+    <div class="intro-text">
+      <p class="eyebrow">About this project &middot; <span class="mono">qe</span></p>
+      <h1>A research question, tested with real discipline</h1>
+      <p class="lede">Does a stock&rsquo;s recent technical state tell you anything about its return tomorrow? Most searches for an answer find noise and call it signal. I built qe, with Claude Code writing the code, to ask the question in a way that could not fool me: a universe that cannot flatter itself, rules fixed before each experiment runs, checks designed to catch the machinery inventing results, and a live daily record that is the only evidence that counts. This site is a copy of the platform&rsquo;s own research browser, exported from the live database.</p>
+    </div>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>The question</h2>
+      <p class="panel-sub">Plainly, and with what would make the answer wrong.</p></div></div>
+    <p>Take the 500 most-traded US stocks each month, going back to 2005, and compute a set of ordinary technical indicators from price and volume alone &mdash; no fundamentals, no news. Ask whether any combination of those states predicts a stock&rsquo;s return the next day relative to its peers. The trap is that with thousands of possible patterns and twenty years of data, something will always look predictive by chance; the value of the answer depends entirely on how hard the process tries to disprove it.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>How the research was run</h2>
+      <p class="panel-sub">The rules I set, and what each one prevents.</p></div></div>
+    <ul>
+      <li><strong>Rules before results.</strong> Every experiment is written up with its decision rule, and the write-up is recorded, before it runs. When a sweep later showed that a 40% threshold beat the 30% I had committed to, I kept the 30%: changing the rule after seeing the answer is exactly the mistake the process exists to prevent.</li>
+      <li><strong>A test of the machinery itself.</strong> Before any result was trusted, the whole pipeline was run on scrambled data that contains no signal at all. It should have found nothing. The first time, it found two thousand &ldquo;significant&rdquo; patterns &mdash; a flaw in how returns were measured &mdash; and that check is the single most valuable thing the project did.</li>
+      <li><strong>A universe that cannot flatter itself.</strong> The 500-stock universe is rebuilt month by month as it stood at the time, including the 528 companies that later delisted. Leaving them out would quietly improve every historical number.</li>
+      <li><strong>One frozen model, and a live record.</strong> The model was fitted once, through 2015, and never refit. Since July 2026 it has scored the market every evening and its picks are recorded before the next day&rsquo;s prices exist. Only those days are evidence; the record needs roughly a year of them before it says anything, and the site says so on every page.</li>
+      <li><strong>Report the honest number.</strong> Every figure on these pages carries its standard error, and the summary is written to make a reader appropriately skeptical rather than impressed.</li>
+    </ul>
+    <p>The process caught its own mistakes along the way &mdash; the scrambled-data flaw above, a random seed that silently changed between runs, transaction costs counted twice, a filter that kept patterns which had stopped working a decade earlier &mdash; each found by a check built to find it, and each recorded in the project&rsquo;s findings log rather than quietly fixed.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>What it found</h2>
+      <p class="panel-sub">The project&rsquo;s own summary of its result, quoted rather than improved.</p></div></div>
+    <p class="caveat"><strong>A modest cross-sectional effect</strong> &mdash; roughly 3.6 basis points per day of stock-selection alpha, t &asymp; 2.1 &mdash; found through a long and heavily documented search, surviving a permutation null, four independent training cutoffs, the 2008 crisis, and factor attribution. It is not a large effect, its error bars are wide, several of the checks that support it were themselves corrected mid-project, and the live record needs about a year before it says anything.</p>
+    <p id="record-text">In plain terms: the model appears to order stocks slightly better than chance, the effect is earned overnight rather than during the trading day, and it is small enough that one properly measured cost or one more risk factor could absorb it. At export the live record held <span class="mono" data-m="live_days">50</span> days stamped live, of which <span class="mono" data-m="advance_days">20</span> were scored before the outcome existed; the rest were recovered after an outage and restamped by my decision, which the findings log records. The SQL console&rsquo;s <em>live record, day by day</em> query separates the two.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>The platform in numbers</h2>
+      <p class="panel-sub">Counts from the live database at export time; the demo ships a slice of it.</p></div></div>
+    <div class="tiles wide">
+      <div class="tile boxed"><span class="t-label">Market data</span><span class="t-value" data-m="db_gb">18.3 GB</span><span class="t-sub">one database file, refreshed every evening</span></div>
+      <div class="tile boxed"><span class="t-label">Daily prices</span><span class="t-value" data-m="prices">31.3M</span><span class="t-sub" data-m="prices_span">rows, 1999 &rarr; 2026, 14,368 symbols</span></div>
+      <div class="tile boxed"><span class="t-label">Indicator readings</span><span class="t-value" data-m="indicators">67.8M</span><span class="t-sub">25 indicators computed from price and volume</span></div>
+      <div class="tile boxed"><span class="t-label">Universe members</span><span class="t-value" data-m="members_ever">1,879</span><span class="t-sub" data-m="delisted">of which 528 later delisted &mdash; kept, not dropped</span></div>
+      <div class="tile boxed"><span class="t-label">Experiments registered</span><span class="t-value">16</span><span class="t-sub">pre-registration documents, each fixing its rules before running</span></div>
+      <div class="tile boxed"><span class="t-label">Automated checks</span><span class="t-value">280</span><span class="t-sub">tests, including the no-lookahead and frozen-model guards</span></div>
+      <div class="tile boxed"><span class="t-label">Build</span><span class="t-value">104</span><span class="t-sub">commits, July to September 2026, with Claude Code</span></div>
+      <div class="tile boxed"><span class="t-label">Documentation</span><span class="t-value">6,521</span><span class="t-sub">lines: the plan, the findings log with its corrections, the registrations</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><h2>What is in this demo</h2>
+      <p class="panel-sub">Exported, not rewritten.</p></div></div>
+    <div class="two-col">
+      <div>
+        <p>Every page here is the platform&rsquo;s own research browser, crawled from the live system so the charts and tables are its real output: the overview, a screener over the current 500-stock universe, ten years of history and patterns for each of 539 symbols, the model&rsquo;s paper record and the tests on it, the research ledger of registered experiments, and a data-health page. The <a href="../sql/">SQL console</a> runs a real database engine in your browser over slices of the same tables, so you can ask your own questions.</p>
+      </div>
+      <div>
+        <p>Not here: the data pipeline and the nightly job, history before 2016 on the symbol pages, most of the 25 indicators, and every symbol outside the current universe. Nothing on this site writes anything, and the live platform runs only on a single Mac.</p>
+        <p class="note">Numbers on this page are read from the export manifest, so they match the snapshot you are looking at.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><span>Snapshot of the qe research browser. The real app is a read-only service on a single Mac; it never writes, and neither does this copy. <a href="../sql/">SQL console</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../";</script>
+<script src="../static/demo-shim.js"></script>
+<script src="../static/app.js"></script>
+<script>
+(function () {
+  const compact = (n) => {
+    if (n == null) return "—";
+    const a = Math.abs(n);
+    if (a >= 1e6) return (n / 1e6).toFixed(1) + "M";
+    if (a >= 1e3) return (n / 1e3).toFixed(1) + "k";
+    return String(n);
+  };
+  const set = (key, text) => document.querySelectorAll('[data-m="' + key + '"]').forEach((el) => { el.textContent = text; });
+  fetch("../data/manifest.json").then((r) => r.json()).then((m) => {
+    const f = m.full_db || {};
+    set("db_gb", m.db_size_gb.toFixed(1) + " GB");
+    set("prices", compact(f.prices_daily));
+    set("prices_span", "rows, " + (f.prices_first || "").slice(0, 4) + " → " + (f.prices_last || "").slice(0, 4) + ", " + Number(f.prices_symbols || 0).toLocaleString() + " symbols");
+    set("indicators", compact(f.indicator_values));
+    set("members_ever", Number(f.members_ever || 0).toLocaleString());
+    set("delisted", "of which " + Number(f.members_delisted || 0).toLocaleString() + " later delisted — kept, not dropped");
+    set("live_days", String(m.record.live_days));
+    set("advance_days", String(m.record.committed_in_advance_days));
+    document.getElementById("banner-text").textContent = "A static snapshot of a personal quant research platform — " +
+      m.members + " current members of a " + m.universe + " universe, daily history since " + m.demo_start.slice(0, 4) +
+      ", exported " + m.exported_at.slice(0, 10) + " from the live " + m.db_size_gb.toFixed(1) +
+      " GB DuckDB. Every chart and table is the real tool's own output.";
+  }).catch(() => {});
+})();
+</script>
+</body>
+</html>

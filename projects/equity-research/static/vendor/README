@@ -1,0 +1,3 @@
+Apache ECharts 5.5.1 (echarts.min.js), Apache-2.0.
+Fetched once from https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js
+Vendored so the app works offline; no CDN at runtime.
