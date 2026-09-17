@@ -51,21 +51,6 @@
       "thumb": "projects/fitlog/thumb.png"
     },
     {
-      "slug": "personal-dashboard",
-      "title": "Personal Dashboard",
-      "type": "ios",
-      "description": "A private morning-glance app I specified in full before any code: a Mac gathers the day, the phone adds sleep and calendar, and nothing leaves my network.",
-      "tech": [
-        "Specification",
-        "Privacy by design",
-        "iOS",
-        "Python service"
-      ],
-      "date": "2026-09",
-      "pattern": "case-study",
-      "thumb": "projects/personal-dashboard/thumb.png"
-    },
-    {
       "slug": "tucson-grid-battery-model",
       "title": "Tucson Grid & Battery Model",
       "type": "data-app",

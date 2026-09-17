@@ -43,7 +43,6 @@ THUMBS: dict[str, dict] = {
                      "crop": (0, 1110), "crop_w": 1400, "wait": 8000},
     "fitlog": {"phones": ["projects/fitlog/screenshots/coach.png", "projects/fitlog/screenshots/workout.png",
                           "projects/fitlog/screenshots/progress.png"]},
-    "personal-dashboard": {"phones": ["projects/personal-dashboard/screenshots/today.png"]},
 }
 
 
