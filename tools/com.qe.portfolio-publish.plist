@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Nightly publisher for the equity-research demo: re-exports the qe research
+  browser from the platform database and pushes the refreshed site.
+
+  Runs at 23:15, after the 22:30 com.qe.daily run. The script it calls waits
+  for com.qe.daily to go idle before it opens the database, and does nothing
+  at all on a night with no new trading day.
+
+  Install (or re-install after editing this file):
+
+      cd ~/dev/Portfolio\ Website
+      cp tools/com.qe.portfolio-publish.plist ~/Library/LaunchAgents/
+      launchctl bootout   "gui/$UID/com.qe.portfolio-publish" 2>/dev/null
+      launchctl bootstrap "gui/$UID" ~/Library/LaunchAgents/com.qe.portfolio-publish.plist
+
+  Run it now:     launchctl kickstart -k "gui/$UID/com.qe.portfolio-publish"
+  Turn it off:    launchctl bootout "gui/$UID/com.qe.portfolio-publish"
+  Log:            ~/Library/Logs/qe-portfolio-publish.log
+
+  Paths are written as $HOME (expanded by `zsh -lc`) rather than /Users/...,
+  so nothing in this public repo records the local account name.
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.qe.portfolio-publish</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/zsh</string>
+		<string>-lc</string>
+		<string>exec "$HOME/dev/Portfolio Website/tools/publish_nightly.sh"</string>
+	</array>
+
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>23</integer>
+		<key>Minute</key>
+		<integer>15</integer>
+	</dict>
+
+	<!-- The script logs to ~/Library/Logs/qe-portfolio-publish.log itself.
+	     These two only catch a failure to start the script at all. -->
+	<key>StandardOutPath</key>
+	<string>/tmp/qe-portfolio-publish.boot.err</string>
+	<key>StandardErrorPath</key>
+	<string>/tmp/qe-portfolio-publish.boot.err</string>
+
+	<key>RunAtLoad</key>
+	<false/>
+	<key>ProcessType</key>
+	<string>Background</string>
+</dict>
+</plist>
