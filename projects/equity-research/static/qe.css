@@ -323,6 +323,14 @@ table.compare td.num .n { display: block; color: var(--muted); font-size: 0.74re
 .badge-warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
 .badge-info { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
 .badge-ok { background: var(--live-soft); border-color: transparent; color: var(--live); }
+/* "this panel moved" and the changelog's three kinds. Deliberately built from
+ * the accent and warn tokens only: live/backfill/backtest are evidence states
+ * and a change is not one, so no reserved hue is borrowed here and no CVD
+ * re-validation is owed. Both themes inherit, since both redefine the tokens. */
+.badge-changed { background: var(--accent-soft); border-color: transparent; color: var(--accent); letter-spacing: 0.04em; }
+.badge-kind-strategy { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.badge-kind-reporting { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
+.badge-kind-systems { background: var(--panel-2); border-color: var(--line); color: var(--ink-2); }
 .caveat {
   border-left: 3px solid var(--warn-line); background: var(--warn-bg); color: var(--warn-ink);
   padding: 0.5rem 0.8rem; font-size: 0.84rem; border-radius: 0 var(--radius) var(--radius) 0;
@@ -501,6 +509,22 @@ dl.guide dd { margin: 0; color: var(--ink-2); }
 .rangebtns button:last-child, .seg button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
 .inline-form label { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.85rem; }
 .chart-caption { color: var(--muted); font-size: 0.8rem; margin: 0.3rem 0 0; }
+
+/* ---- the changelog and the commands it points at --------------------------- */
+/* One row per change: date, kind, sentence. The kind badge sits in its own
+ * column so the eye can filter to "strategy" without reading the prose. */
+ul.changelog { list-style: none; margin: 0.4rem 0 0.2rem; padding: 0; display: grid; gap: 0.1rem; }
+ul.changelog li { display: grid; grid-template-columns: 6.5rem 6.5rem 1fr; gap: 0.2rem 0.9rem;
+  align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid var(--line-2); }
+ul.changelog li:last-child { border-bottom: 0; }
+ul.changelog .ch-date { color: var(--muted); font-size: 0.8rem; }
+ul.changelog .ch-text { color: var(--ink-2); font-size: 0.9rem; line-height: 1.5; max-width: 82ch; }
+ul.changelog .ch-text strong { color: var(--ink); }
+@media (max-width: 720px) { ul.changelog li { grid-template-columns: 1fr; } }
+/* a command the reader is meant to run, not a value: wraps, never truncates */
+.cmd { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 0.45rem 0.65rem; font-size: 0.8rem; overflow-wrap: anywhere; margin: 0.5rem 0; }
+.alert .cmd { display: inline-block; margin: 0.4rem 0 0; }
 .loading { color: var(--muted); font-size: 0.88rem; }
 .loading::before { content: ""; display: inline-block; width: 0.7em; height: 0.7em; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin-right: 0.45em; vertical-align: -0.05em; animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

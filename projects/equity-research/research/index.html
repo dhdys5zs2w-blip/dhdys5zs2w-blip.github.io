@@ -33,14 +33,14 @@ try {
     </div>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-18 from the live 19.8 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <main>
-<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-closed">Closed directions</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
 
 <header class="page-intro">
   <div class="intro-text">
-    <p class="eyebrow">Forking-paths ledger &middot; 14 registrations &middot; 4 blocks with results</p>
+    <p class="eyebrow">Forking-paths ledger &middot; 18 registrations &middot; 9 blocks with results</p>
     <h1>Research ledger</h1>
     <p class="lede">Every block was registered &mdash; hypothesis, statistic and decision rule
     fixed in a committed document &mdash; before it ran. What was committed to comes first; what
@@ -107,6 +107,56 @@ try {
       <td class="num mono">3</td>
     </tr>
     
+    <tr>
+      <td class="mono strong"><a href="#block-R1">R1</a></td>
+      <td>What are the factor alphas when the market regressor is aligned to the same window as the return it explains (FINDINGS C8)?
+        <span class="sub mono">docs/pre-registered-R.md</span></td>
+      <td><span class="muted">no verdict field</span></td>
+      <td class="mono small nowrap">2026-09-19 14:21<span class="sub">commit 9f9b60fc</span></td>
+      <td class="mono small nowrap">2026-09-19 14:23<span class="sub">run d86ac3cf</span></td>
+      <td class="num mono">60</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-R2">R2</a></td>
+      <td>Does the book&#39;s overnight alpha survive a third night?
+        <span class="sub mono">docs/pre-registered-R.md</span></td>
+      <td><span class="verdict pos" title="night3_over_overnight_next / all">all: PERSISTS</span> <span class="verdict pos" title="verdict / night3">night3: PERSISTS</span> </td>
+      <td class="mono small nowrap">2026-09-19 14:21<span class="sub">commit 9f9b60fc</span></td>
+      <td class="mono small nowrap">2026-09-19 14:23<span class="sub">run d86ac3cf</span></td>
+      <td class="num mono">14</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-R3">R3</a></td>
+      <td>Does the ranking order names inside its own top — the prerequisite for holding fewer of them?
+        <span class="sub mono">docs/pre-registered-R.md</span></td>
+      <td><span class="verdict neg" title="verdict / within_top_ic">within_top_ic: GATE CLOSED</span> <span class="verdict neg" title="within_top_ic / all">all: GATE CLOSED</span> </td>
+      <td class="mono small nowrap">2026-09-19 14:21<span class="sub">commit 9f9b60fc</span></td>
+      <td class="mono small nowrap">2026-09-19 14:23<span class="sub">run d86ac3cf</span></td>
+      <td class="num mono">18</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-R4">R4</a></td>
+      <td>Does the calm-market result survive a null that preserves how persistent a regime label is?
+        <span class="sub mono">docs/pre-registered-R.md</span></td>
+      <td><span class="verdict neg" title="verdict / gate_family">NOT ESTABLISHED</span> </td>
+      <td class="mono small nowrap">2026-09-19 14:21<span class="sub">commit 9f9b60fc</span></td>
+      <td class="mono small nowrap">2026-09-19 14:23<span class="sub">run d86ac3cf</span></td>
+      <td class="num mono">26</td>
+    </tr>
+    
+    <tr>
+      <td class="mono strong"><a href="#block-R5">R5</a></td>
+      <td>Does refitting the model on recent data, weighted toward it, beat the frozen one on identical dates?
+        <span class="sub mono">docs/pre-registered-R5.md</span></td>
+      <td><span class="verdict " title="delta_bps / W">W: INDISTINGUISHABLE</span> <span class="verdict " title="delta_ic / W">W: INDISTINGUISHABLE</span> <span class="verdict " title="verdict / all">all: INDISTINGUISHABLE</span> </td>
+      <td class="mono small nowrap">2026-09-19 14:45<span class="sub">commit 9f9b60fc</span></td>
+      <td class="mono small nowrap">2026-09-19 15:42<span class="sub">run ef069dbb</span></td>
+      <td class="num mono">32</td>
+    </tr>
+    
     </tbody>
   </table>
   </div>
@@ -115,11 +165,54 @@ model scored on dates it never traded, after the fact. A description of the
 holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 </section>
 
+<section class="panel" id="s-closed">
+  <header class="panel-head">
+    <div>
+      <h2>Closed directions (synthesis 2026-09-19)</h2>
+      <p class="panel-sub">Lines of work this project has stopped, each with what closed it. Kept
+      so a later reader &mdash; or a later agent &mdash; does not spend a week re-opening one, and
+      so that reopening any of them is a deliberate act with a reason.</p>
+    </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
+      <span class="muted">docs/research-synthesis-2026-09-19.md</span></div>
+  </header>
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Line</th><th>Closed by</th><th>In one line</th></tr></thead>
+    <tbody>
+    
+    <tr><td>a finer use of the ranking — weights, concentration, tranches</td><td class="mono small">R3 GATE CLOSED, AG-011 (dead), AG-012, R2&#39;s own economics</td><td>the profile is flat below decile 1; the buffer already halves turnover; tranches turn over less and earn less</td></tr>
+    
+    <tr><td>adapting the model to recent data</td><td class="mono small">R5 INDISTINGUISHABLE</td><td>recency weighting took a third of the IC away at t −1.6</td></tr>
+    
+    <tr><td>residualised inputs, as written</td><td class="mono small">AG-014</td><td>the form subtracts the market twice; its sector half is rs_sector_v1, already in the model</td></tr>
+    
+    <tr><td>regime gates and sizing on dispersion or volatility</td><td class="mono small">R4 NOT ESTABLISHED, AG-007, AG-016</td><td>restatements of C16, unstable, absent since 2023; the overlay is mostly free leverage</td></tr>
+    
+    <tr><td>overnight persistence as an add-on</td><td class="mono small">AG-019</td><td>real on the universe, 2020-onward, adds nothing inside the decile, harvestable only below cost</td></tr>
+    
+    <tr><td>the illiquid half; the overnight leg alone</td><td class="mono small">AG-017 (dead), AG-013</td><td>a cost identity; an overnight-only book breaks even below its cost</td></tr>
+    
+    <tr><td>the model against single characteristics, by superiority on these days</td><td class="mono small">AG-020 (dead)</td><td>the design&#39;s power was under a tenth; no member of that family may run again without its minimum detectable difference computed first</td></tr>
+    
+    <tr><td>the bottom decile, a short book, more regime cuts on the same days</td><td class="mono small">BLOCKED.md</td><td>settled before today and again in every stream</td></tr>
+    
+    </tbody>
+  </table>
+  </div>
+  <p class="caveat">Read the second column carefully: an <span class="mono">R</span> verdict came
+  from a registered block, an <span class="mono">AG-0nn</span> from an agent of the research
+  fleet. <strong>An agent verdict is not a record finding</strong> &mdash; it is an argument
+  recorded in <span class="mono">research/agent-ledger/</span> with its own data and its own
+  reasoning, and none of it is live evidence. Nothing here is evidence either way; it is a list of
+  questions that stopped being worth asking.</p>
+</section>
+
 <section class="panel" id="s-registrations">
   <header class="panel-head">
     <div>
       <h2>Pre-registrations</h2>
-      <p class="panel-sub">14 blocks, oldest first: the document, the items
+      <p class="panel-sub">18 blocks, oldest first: the document, the items
       committed to, and the commit that fixed them before anything ran.</p>
     </div>
   </header>
@@ -238,6 +331,38 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
       <td><ol class="compact small"><li>P3 implementable open-to-open verdict (IMPLEMENTABLE / PARTIAL / NOT IMPLEMENTABLE)</li></ol></td>
       <td class="small">Phase P3: one-day-lagged execution at the open, correction of P1&#39;s interpretation</td>
       <td class="mono small">f66894fda4</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-19 14:21</td>
+      <td class="mono small">docs/pre-registered-R.md</td>
+      <td><ol class="compact small"><li>R1</li><li>R2</li><li>R3</li><li>R4</li></ol></td>
+      <td class="small">pre-registered block: 4 items</td>
+      <td class="mono small">9f9b60fc70</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-19 14:45</td>
+      <td class="mono small">docs/pre-registered-R5.md</td>
+      <td><ol class="compact small"><li>R5</li></ol></td>
+      <td class="small">pre-registered block: 1 items</td>
+      <td class="mono small">9f9b60fc70</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-20 15:26</td>
+      <td class="mono small">docs/pre-registered-R0.md</td>
+      <td><ol class="compact small"><li>R0</li></ol></td>
+      <td class="small">R0: vendor-open fidelity and fill slippage, rule fixed before the first fill</td>
+      <td class="mono small">8db71cf945</td>
+    </tr>
+    
+    <tr>
+      <td class="mono small nowrap">2026-09-20 15:38</td>
+      <td class="mono small">docs/pre-registered-S.md</td>
+      <td><ol class="compact small"><li>S1</li></ol></td>
+      <td class="small">S1: the shadow lane&#39;s promotion process, fixed before the shadow model exists</td>
+      <td class="mono small">28311355bb</td>
     </tr>
     
     </tbody>
@@ -795,10 +920,1940 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
   
 </section>
 
+
+<section class="panel" id="block-R1">
+  <header class="panel-head">
+    <div>
+      <h2>Block R1</h2>
+      <p class="panel-sub">What are the factor alphas when the market regressor is aligned to the same window as the return it explains (FINDINGS C8)?</p>
+    </div>
+    <div class="panel-tags">
+      
+      <span class="muted">60 statistics &middot; run <span class="mono">d86ac3cf</span> &middot; 2026-09-19 14:23</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="baseline_max_abs_dev_bps">baseline max abs dev bps</td>
+      <td class="mono small">old_spec_vs_recorded</td>
+      <td class="mono num" data-v="1.4553965341631163">1.455</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">worst_spec=J1_spread</span> <span class="muted">n_recorded=2,653.000</span> <span class="muted">tolerance_bps=0.050</span> <span class="muted">reproduces=0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:LMH_vol</td>
+      <td class="mono num" data-v="0.08508589834962066">0.085</td>
+      <td class="mono num" data-v="0.030818275082572517">0.031</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=2.761</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:MKT</td>
+      <td class="mono num" data-v="0.14790127962713798">0.148</td>
+      <td class="mono num" data-v="0.03599759048678468">0.036</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=4.109</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:MOM</td>
+      <td class="mono num" data-v="0.27216727127069223">0.272</td>
+      <td class="mono num" data-v="0.06893134717272545">0.069</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=3.948</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:SIZE</td>
+      <td class="mono num" data-v="-0.03067982497018499">-0.031</td>
+      <td class="mono num" data-v="0.06655378408427384">0.067</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=-0.461</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:TREND</td>
+      <td class="mono num" data-v="-0.5559171326513437">-0.556</td>
+      <td class="mono num" data-v="0.07181230159629118">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=-7.741</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:aligned:alpha</td>
+      <td class="mono num" data-v="3.9248298268222346">3.925</td>
+      <td class="mono num" data-v="2.116356507033315">2.116</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=1.855</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:LMH_vol</td>
+      <td class="mono num" data-v="0.04876498796075696">0.049</td>
+      <td class="mono num" data-v="0.028793486255582285">0.029</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=1.694</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:MKT</td>
+      <td class="mono num" data-v="-0.036761185915352136">-0.037</td>
+      <td class="mono num" data-v="0.03312027362767926">0.033</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=-1.110</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:MOM</td>
+      <td class="mono num" data-v="0.2835103623888176">0.284</td>
+      <td class="mono num" data-v="0.06946417260079897">0.069</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=4.081</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:SIZE</td>
+      <td class="mono num" data-v="-0.04331708694240721">-0.043</td>
+      <td class="mono num" data-v="0.06740485292289473">0.067</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=-0.643</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:TREND</td>
+      <td class="mono num" data-v="-0.5775318594157055">-0.578</td>
+      <td class="mono num" data-v="0.07229685079797508">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=-7.988</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">J1_spread:old:alpha</td>
+      <td class="mono num" data-v="4.866096534163116">4.866</td>
+      <td class="mono num" data-v="2.0806182624343443">2.081</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=J1_spread</span> <span class="muted">t=2.339</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_long_raw:aligned:MKT</td>
+      <td class="mono num" data-v="1.4650560893935836">1.465</td>
+      <td class="mono num" data-v="0.038011799484072205">0.038</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.629</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_long_raw</span> <span class="muted">t=38.542</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_long_raw:aligned:alpha</td>
+      <td class="mono num" data-v="0.6449838773519261">0.645</td>
+      <td class="mono num" data-v="2.2129854541992318">2.213</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.629</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_long_raw</span> <span class="muted">t=0.291</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_long_raw:old:MKT</td>
+      <td class="mono num" data-v="-0.1653188909062902">-0.165</td>
+      <td class="mono num" data-v="0.08985954076829465">0.090</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.008</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_long_raw</span> <span class="muted">t=-1.840</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_long_raw:old:alpha</td>
+      <td class="mono num" data-v="10.774265943944393">10.774</td>
+      <td class="mono num" data-v="3.9406687315507085">3.941</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.008</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_long_raw</span> <span class="muted">t=2.734</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_selection:aligned:MKT</td>
+      <td class="mono num" data-v="0.3424911392337288">0.342</td>
+      <td class="mono num" data-v="0.024780182767690298">0.025</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.157</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_selection</span> <span class="muted">t=13.821</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_selection:aligned:alpha</td>
+      <td class="mono num" data-v="1.6847623836904215">1.685</td>
+      <td class="mono num" data-v="1.557460447111461">1.557</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.157</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_selection</span> <span class="muted">t=1.082</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_selection:old:MKT</td>
+      <td class="mono num" data-v="-0.03395806917422686">-0.034</td>
+      <td class="mono num" data-v="0.029477558957886757">0.029</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.002</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_selection</span> <span class="muted">t=-1.152</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_selection:old:alpha</td>
+      <td class="mono num" data-v="4.023825386239138">4.024</td>
+      <td class="mono num" data-v="1.751570217825075">1.752</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.002</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_selection</span> <span class="muted">t=2.297</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_universe:aligned:MKT</td>
+      <td class="mono num" data-v="1.0677774867441434">1.068</td>
+      <td class="mono num" data-v="0.012525477610326432">0.013</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.903</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_universe</span> <span class="muted">t=85.248</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_universe:aligned:alpha</td>
+      <td class="mono num" data-v="-0.8227162479127123">-0.823</td>
+      <td class="mono num" data-v="0.7524029938126142">0.752</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.903</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K1_universe</span> <span class="muted">t=-1.093</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_universe:old:MKT</td>
+      <td class="mono num" data-v="-0.12728984441133456">-0.127</td>
+      <td class="mono num" data-v="0.06614216227588925">0.066</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.013</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_universe</span> <span class="muted">t=-1.924</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K1_universe:old:alpha</td>
+      <td class="mono num" data-v="6.6017163139525685">6.602</td>
+      <td class="mono num" data-v="2.4644864205713413">2.464</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.013</span> <span class="muted">alignment=old</span> <span class="muted">spec=K1_universe</span> <span class="muted">t=2.679</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:LMH_vol</td>
+      <td class="mono num" data-v="0.08508589834962066">0.085</td>
+      <td class="mono num" data-v="0.030818275082572517">0.031</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=2.761</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:MKT</td>
+      <td class="mono num" data-v="0.14790127962713798">0.148</td>
+      <td class="mono num" data-v="0.03599759048678468">0.036</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=4.109</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:MOM</td>
+      <td class="mono num" data-v="0.27216727127069223">0.272</td>
+      <td class="mono num" data-v="0.06893134717272545">0.069</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=3.948</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:SIZE</td>
+      <td class="mono num" data-v="-0.03067982497018499">-0.031</td>
+      <td class="mono num" data-v="0.06655378408427384">0.067</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=-0.461</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:TREND</td>
+      <td class="mono num" data-v="-0.5559171326513437">-0.556</td>
+      <td class="mono num" data-v="0.07181230159629118">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=-7.741</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:aligned:alpha</td>
+      <td class="mono num" data-v="3.9248298268222346">3.925</td>
+      <td class="mono num" data-v="2.116356507033315">2.116</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.285</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=1.855</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:LMH_vol</td>
+      <td class="mono num" data-v="0.04876498796075696">0.049</td>
+      <td class="mono num" data-v="0.028793486255582285">0.029</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=1.694</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:MKT</td>
+      <td class="mono num" data-v="-0.036761185915352136">-0.037</td>
+      <td class="mono num" data-v="0.03312027362767926">0.033</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=-1.110</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:MOM</td>
+      <td class="mono num" data-v="0.2835103623888176">0.284</td>
+      <td class="mono num" data-v="0.06946417260079897">0.069</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=4.081</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:SIZE</td>
+      <td class="mono num" data-v="-0.04331708694240721">-0.043</td>
+      <td class="mono num" data-v="0.06740485292289473">0.067</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=-0.643</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:TREND</td>
+      <td class="mono num" data-v="-0.5775318594157055">-0.578</td>
+      <td class="mono num" data-v="0.07229685079797508">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=-7.988</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_novalue:old:alpha</td>
+      <td class="mono num" data-v="4.866096534163116">4.866</td>
+      <td class="mono num" data-v="2.0806182624343443">2.081</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.273</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_novalue</span> <span class="muted">t=2.339</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:LMH_vol</td>
+      <td class="mono num" data-v="0.07857569204380664">0.079</td>
+      <td class="mono num" data-v="0.030562219727232096">0.031</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=2.571</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:MKT</td>
+      <td class="mono num" data-v="0.14726445300308">0.147</td>
+      <td class="mono num" data-v="0.0363696107414602">0.036</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=4.049</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:MOM</td>
+      <td class="mono num" data-v="0.21222737220761495">0.212</td>
+      <td class="mono num" data-v="0.07025459208757369">0.070</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=3.021</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:SIZE</td>
+      <td class="mono num" data-v="0.015672048442761904">0.016</td>
+      <td class="mono num" data-v="0.07190490644494282">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=0.218</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:TREND</td>
+      <td class="mono num" data-v="-0.5497188190246417">-0.550</td>
+      <td class="mono num" data-v="0.07206080334983106">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=-7.629</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:VALUE</td>
+      <td class="mono num" data-v="-0.12670906872252485">-0.127</td>
+      <td class="mono num" data-v="0.04685601781267596">0.047</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=-2.704</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:aligned:alpha</td>
+      <td class="mono num" data-v="4.1813637403061765">4.181</td>
+      <td class="mono num" data-v="2.092380552920768">2.092</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.291</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=K2_value</span> <span class="muted">t=1.998</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:LMH_vol</td>
+      <td class="mono num" data-v="0.04241511087010574">0.042</td>
+      <td class="mono num" data-v="0.028534605114166646">0.029</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=1.486</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:MKT</td>
+      <td class="mono num" data-v="-0.030763684528531562">-0.031</td>
+      <td class="mono num" data-v="0.03315227887727982">0.033</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=-0.928</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:MOM</td>
+      <td class="mono num" data-v="0.22462663694279492">0.225</td>
+      <td class="mono num" data-v="0.07195942436477235">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=3.122</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:SIZE</td>
+      <td class="mono num" data-v="0.002273332112135845">0.002</td>
+      <td class="mono num" data-v="0.0723116771368801">0.072</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=0.031</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:TREND</td>
+      <td class="mono num" data-v="-0.5716273650301192">-0.572</td>
+      <td class="mono num" data-v="0.07281862201637615">0.073</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=-7.850</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:VALUE</td>
+      <td class="mono num" data-v="-0.1250698150398386">-0.125</td>
+      <td class="mono num" data-v="0.04720577458672168">0.047</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=-2.649</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">K2_value:old:alpha</td>
+      <td class="mono num" data-v="5.077331168805081">5.077</td>
+      <td class="mono num" data-v="2.060201685574764">2.060</td>
+      <td class="mono num" data-v="2692">2692</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.280</span> <span class="muted">alignment=old</span> <span class="muted">spec=K2_value</span> <span class="muted">t=2.464</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">book_raw_open_to_open:aligned:SPY_o2o</td>
+      <td class="mono num" data-v="1.5852505708839644">1.585</td>
+      <td class="mono num" data-v="0.04175716712503848">0.042</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.637</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=book_raw_open_to_open</span> <span class="muted">dates=P3</span> <span class="muted">t=37.964</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="hac5_coefficient">hac5 coefficient</td>
+      <td class="mono small">book_raw_open_to_open:aligned:alpha</td>
+      <td class="mono num" data-v="1.4238546448209517">1.424</td>
+      <td class="mono num" data-v="2.266320422220395">2.266</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">r_squared=0.637</span> <span class="muted">alignment=aligned</span> <span class="muted">spec=book_raw_open_to_open</span> <span class="muted">dates=P3</span> <span class="muted">t=0.628</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">j1_raw_spread_bps</td>
+      <td class="mono num" data-v="5.631768737933625">5.632</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k1_long_raw_bps</td>
+      <td class="mono num" data-v="9.755588277373239">9.756</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k1_long_vs_universe_bps</td>
+      <td class="mono num" data-v="3.814579325622437">3.815</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k1_spy_bps</td>
+      <td class="mono num" data-v="6.161895116684389">6.162</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k1_spy_fwd_bps</td>
+      <td class="mono num" data-v="6.218604506665937">6.219</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k1_universe_ew_bps</td>
+      <td class="mono num" data-v="5.8173696432708475">5.817</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="input_bps">input bps</td>
+      <td class="mono small">k2_raw_spread_bps</td>
+      <td class="mono num" data-v="5.631768737933625">5.632</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="0">0</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-R.md</span>
+    at commit <span class="mono">9f9b60fc</span>, 2026-09-19 14:21.</p>
+  
+</section>
+
+
+<section class="panel" id="block-R2">
+  <header class="panel-head">
+    <div>
+      <h2>Block R2</h2>
+      <p class="panel-sub">Does the book&#39;s overnight alpha survive a third night?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">all: PERSISTS</span><span class="verdict pos">night3: PERSISTS</span>
+      <span class="muted">14 statistics &middot; run <span class="mono">d86ac3cf</span> &middot; 2026-09-19 14:23</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="breakeven_bps">breakeven bps</td>
+      <td class="mono small">daily_book</td>
+      <td class="mono num" data-v="24.053604077351512">24.054</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="breakeven_bps">breakeven bps</td>
+      <td class="mono small">tranche2</td>
+      <td class="mono num" data-v="21.288234906689173">21.288</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="compounding_identity_max_abs_dev">compounding identity max abs dev</td>
+      <td class="mono small">intraday2*night3 == oo23</td>
+      <td class="mono num" data-v="4.440892098500626e-16">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1345101">1345101</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">hold2</td>
+      <td class="mono num" data-v="6.901663846571267">6.902</td>
+      <td class="mono num" data-v="3.3395338065859446">3.340</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">marks=(&#39;open&#39;, 1)-&gt;(&#39;open&#39;, 3)</span> <span class="muted">decision_bearing=0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">implementable</td>
+      <td class="mono num" data-v="4.857483750801078">4.857</td>
+      <td class="mono num" data-v="1.8323729659941075">1.832</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">intraday2</td>
+      <td class="mono num" data-v="-1.1569415191106627">-1.157</td>
+      <td class="mono num" data-v="1.3817498580676923">1.382</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">marks=(&#39;open&#39;, 2)-&gt;(&#39;close&#39;, 2)</span> <span class="muted">decision_bearing=0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">night3</td>
+      <td class="mono num" data-v="3.39773121978503">3.398</td>
+      <td class="mono num" data-v="0.9360609894156492">0.936</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">marks=(&#39;close&#39;, 2)-&gt;(&#39;open&#39;, 3)</span> <span class="muted">decision_bearing=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="long_book_bps">long book bps</td>
+      <td class="mono small">overnight_next</td>
+      <td class="mono num" data-v="4.263296736496884">4.263</td>
+      <td class="mono num" data-v="0.9857667268674977">0.986</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">marks=(&#39;close&#39;, 1)-&gt;(&#39;open&#39;, 2)</span> <span class="muted">decision_bearing=0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="night3_over_overnight_next">night3 over overnight next</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="0.7969727255196686">0.797</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        <span class="verdict pos">PERSISTS</span>
+        <span class="muted">ci_excludes_zero=1.000</span> <span class="muted">floor=0.500</span> <span class="muted">permutation_p=0.005</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_pct95_bps">null pct95 bps</td>
+      <td class="mono small">night3</td>
+      <td class="mono num" data-v="0.5889040569672348">0.589</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        
+        <span class="muted">null_mean=-0.014</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="replaced_fraction">replaced fraction</td>
+      <td class="mono small">daily</td>
+      <td class="mono num" data-v="0.2019441134551145">0.202</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">convention=C3 per-leg, charged once</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="replaced_fraction">replaced fraction</td>
+      <td class="mono small">lag2</td>
+      <td class="mono num" data-v="0.32420084975681246">0.324</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2683">2683</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="tranche2_nav_turnover">tranche2 nav turnover</td>
+      <td class="mono small">per_day</td>
+      <td class="mono num" data-v="0.16210042487840623">0.162</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2683">2683</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">tickets_per_day=29.216</span> <span class="muted">daily_book_tickets_per_day=18.199</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="verdict">verdict</td>
+      <td class="mono small">night3</td>
+      <td class="mono num" data-v="0.004975124378109453">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        <span class="verdict pos">PERSISTS</span>
+        <span class="muted">p_definition=(1 + #{null &gt;= observed}) / (draws + 1), one-sided upper over 200 within-date permutation draws; floor 1/201</span> <span class="muted">bh_q=0.015</span> <span class="muted">bh_reject=1.000</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-R.md</span>
+    at commit <span class="mono">9f9b60fc</span>, 2026-09-19 14:21.</p>
+  
+</section>
+
+
+<section class="panel" id="block-R3">
+  <header class="panel-head">
+    <div>
+      <h2>Block R3</h2>
+      <p class="panel-sub">Does the ranking order names inside its own top — the prerequisite for holding fewer of them?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict neg">within_top_ic: GATE CLOSED</span><span class="verdict neg">all: GATE CLOSED</span>
+      <span class="muted">18 statistics &middot; run <span class="mono">d86ac3cf</span> &middot; 2026-09-19 14:23</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:1</td>
+      <td class="mono num" data-v="5.4287730041306075">5.429</td>
+      <td class="mono num" data-v="1.9002089754432712">1.900</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:10</td>
+      <td class="mono num" data-v="-1.421723862587254">-1.422</td>
+      <td class="mono num" data-v="1.891427266147146">1.891</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:2</td>
+      <td class="mono num" data-v="1.2225222389986705">1.223</td>
+      <td class="mono num" data-v="0.7958169365325277">0.796</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:3</td>
+      <td class="mono num" data-v="-0.05013158510569998">-0.050</td>
+      <td class="mono num" data-v="0.688465016412636">0.688</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:4</td>
+      <td class="mono num" data-v="-0.4245136291186544">-0.425</td>
+      <td class="mono num" data-v="0.6076236690885457">0.608</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:5</td>
+      <td class="mono num" data-v="-0.508431005835916">-0.508</td>
+      <td class="mono num" data-v="0.6403951134809704">0.640</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:6</td>
+      <td class="mono num" data-v="0.24997004722048505">0.250</td>
+      <td class="mono num" data-v="0.6631795915715483">0.663</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:7</td>
+      <td class="mono num" data-v="-1.6183766752493858">-1.618</td>
+      <td class="mono num" data-v="0.6844219871576398">0.684</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:8</td>
+      <td class="mono num" data-v="-0.7751643804995705">-0.775</td>
+      <td class="mono num" data-v="0.6621148340224536">0.662</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="decile_profile_bps">decile profile bps</td>
+      <td class="mono small">decile:9</td>
+      <td class="mono num" data-v="-0.9432153658876298">-0.943</td>
+      <td class="mono num" data-v="0.7528801351697455">0.753</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_pct95_ic">null pct95 ic</td>
+      <td class="mono small">within_top</td>
+      <td class="mono num" data-v="0.003369155531039227">0.003</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="200">200</td>
+      <td class="small">
+        
+        <span class="muted">null_mean=-0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="top_decile_subbucket_bps">top decile subbucket bps</td>
+      <td class="mono small">bucket:1</td>
+      <td class="mono num" data-v="10.31339302655833">10.313</td>
+      <td class="mono num" data-v="4.367453358249671">4.367</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">n_buckets=5.000</span> <span class="muted">granularity_not_registered=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="top_decile_subbucket_bps">top decile subbucket bps</td>
+      <td class="mono small">bucket:2</td>
+      <td class="mono num" data-v="3.067051414714479">3.067</td>
+      <td class="mono num" data-v="2.981448836065845">2.981</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">n_buckets=5.000</span> <span class="muted">granularity_not_registered=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="top_decile_subbucket_bps">top decile subbucket bps</td>
+      <td class="mono small">bucket:3</td>
+      <td class="mono num" data-v="4.844186639065975">4.844</td>
+      <td class="mono num" data-v="2.2362783591568594">2.236</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">n_buckets=5.000</span> <span class="muted">granularity_not_registered=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="top_decile_subbucket_bps">top decile subbucket bps</td>
+      <td class="mono small">bucket:4</td>
+      <td class="mono num" data-v="5.913021672680638">5.913</td>
+      <td class="mono num" data-v="2.010518092651979">2.011</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">n_buckets=5.000</span> <span class="muted">granularity_not_registered=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="top_decile_subbucket_bps">top decile subbucket bps</td>
+      <td class="mono small">bucket:5</td>
+      <td class="mono num" data-v="2.8222838402461923">2.822</td>
+      <td class="mono num" data-v="1.580493713937012">1.580</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">n_buckets=5.000</span> <span class="muted">granularity_not_registered=1.000</span> <span class="muted">trials=15.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="verdict">verdict</td>
+      <td class="mono small">within_top_ic</td>
+      <td class="mono num" data-v="0.9651741293532339">0.965</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        <span class="verdict neg">GATE CLOSED</span>
+        <span class="muted">p_definition=(1 + #{null &gt;= observed}) / (draws + 1), one-sided upper over 200 within-date permutation draws; floor 1/201</span> <span class="muted">bh_q=0.965</span> <span class="muted">bh_reject=0.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="within_top_ic">within top ic</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="-0.004050327299802852">-0.004</td>
+      <td class="mono num" data-v="0.0035806905530765716">0.004</td>
+      <td class="mono num" data-v="2685">2685</td>
+      <td class="small">
+        <span class="verdict neg">GATE CLOSED</span>
+        <span class="muted">top_fraction=0.200</span> <span class="muted">permutation_p=0.965</span> <span class="muted">lower_95=-0.011</span> <span class="muted">dates_dropped=0.000</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-R.md</span>
+    at commit <span class="mono">9f9b60fc</span>, 2026-09-19 14:21.</p>
+  
+</section>
+
+
+<section class="panel" id="block-R4">
+  <header class="panel-head">
+    <div>
+      <h2>Block R4</h2>
+      <p class="panel-sub">Does the calm-market result survive a null that preserves how persistent a regime label is?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict neg">NOT ESTABLISHED</span>
+      <span class="muted">26 statistics &middot; run <span class="mono">d86ac3cf</span> &middot; 2026-09-19 14:23</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="family_max_z">family max z</td>
+      <td class="mono small">credited</td>
+      <td class="mono num" data-v="2.0302300997916305">2.030</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        <span class="muted">p=0.228</span> <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="family_max_z">family max z</td>
+      <td class="mono small">implementable</td>
+      <td class="mono num" data-v="2.059104085299157">2.059</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        <span class="muted">p=0.217</span> <span class="muted">gate=vol=mid+high</span> <span class="muted">rotations=2,683.000</span> <span class="muted">null_pct95=2.649</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=high</td>
+      <td class="mono num" data-v="6.094137661146189">6.094</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1614">1614</td>
+      <td class="small">
+        
+        <span class="muted">z=1.691</span> <span class="muted">episodes=42.000</span> <span class="muted">switches=187.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=low</td>
+      <td class="mono num" data-v="-5.44537761362658">-5.445</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="437">437</td>
+      <td class="small">
+        
+        <span class="muted">z=-1.252</span> <span class="muted">episodes=34.000</span> <span class="muted">switches=120.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=low+high</td>
+      <td class="mono num" data-v="3.9879018746293236">3.988</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2051">2051</td>
+      <td class="small">
+        
+        <span class="muted">z=0.912</span> <span class="muted">episodes=52.000</span> <span class="muted">switches=297.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=low+mid</td>
+      <td class="mono num" data-v="-6.094137661146192">-6.094</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1070">1070</td>
+      <td class="small">
+        
+        <span class="muted">z=-1.691</span> <span class="muted">episodes=47.000</span> <span class="muted">switches=187.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=mid</td>
+      <td class="mono num" data-v="-3.98790187462932">-3.988</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="633">633</td>
+      <td class="small">
+        
+        <span class="muted">z=-0.912</span> <span class="muted">episodes=74.000</span> <span class="muted">switches=297.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">dispersion=mid+high</td>
+      <td class="mono num" data-v="5.445377613626558">5.445</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2247">2247</td>
+      <td class="small">
+        
+        <span class="muted">z=1.252</span> <span class="muted">episodes=29.000</span> <span class="muted">switches=120.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">trend=above</td>
+      <td class="mono num" data-v="-4.87166404690689">-4.872</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2235">2235</td>
+      <td class="small">
+        
+        <span class="muted">z=-1.169</span> <span class="muted">episodes=14.000</span> <span class="muted">switches=53.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">trend=below</td>
+      <td class="mono num" data-v="4.871664046906887">4.872</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="449">449</td>
+      <td class="small">
+        
+        <span class="muted">z=1.169</span> <span class="muted">episodes=13.000</span> <span class="muted">switches=53.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=high</td>
+      <td class="mono num" data-v="3.7883183002733385">3.788</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="733">733</td>
+      <td class="small">
+        
+        <span class="muted">z=1.108</span> <span class="muted">episodes=20.000</span> <span class="muted">switches=55.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=low</td>
+      <td class="mono num" data-v="-6.184115107389511">-6.184</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1062">1062</td>
+      <td class="small">
+        
+        <span class="muted">z=-2.059</span> <span class="muted">episodes=31.000</span> <span class="muted">switches=85.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=low+high</td>
+      <td class="mono num" data-v="-3.2805314450122363">-3.281</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1795">1795</td>
+      <td class="small">
+        
+        <span class="muted">z=-0.930</span> <span class="muted">episodes=46.000</span> <span class="muted">switches=140.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=low+mid</td>
+      <td class="mono num" data-v="-3.788318300273347">-3.788</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1951">1951</td>
+      <td class="small">
+        
+        <span class="muted">z=-1.108</span> <span class="muted">episodes=21.000</span> <span class="muted">switches=55.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=mid</td>
+      <td class="mono num" data-v="3.280531445012243">3.281</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="889">889</td>
+      <td class="small">
+        
+        <span class="muted">z=0.930</span> <span class="muted">episodes=52.000</span> <span class="muted">switches=140.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="gate_difference_bps">gate difference bps</td>
+      <td class="mono small">vol=mid+high</td>
+      <td class="mono num" data-v="6.184115107389513">6.184</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1622">1622</td>
+      <td class="small">
+        
+        <span class="muted">z=2.059</span> <span class="muted">episodes=32.000</span> <span class="muted">switches=85.000</span> <span class="muted">series=implementable</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="ic_by_gate">ic by gate</td>
+      <td class="mono small">vol=mid+high</td>
+      <td class="mono num" data-v="0.003706034857198656">0.004</td>
+      <td class="mono num" data-v="0.0021087359090757305">0.002</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        
+        <span class="muted">ic_all=0.007</span> <span class="muted">ic_excluded=0.003</span> <span class="muted">conjunct_met=0.000</span> <span class="muted">ic_definition=full cross-section average-rank Spearman(frozen score, implementable excess), per date (R3&#39;s)</span> <span class="muted">threshold_ignores_gate_selection=1.000</span> <span class="muted">se_construction=paired block bootstrap of x*(off/p_off) - x with p_off held at its observed value</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">dispersion:high</td>
+      <td class="mono num" data-v="0.9653784999455824">0.965</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1614">1614</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=7.362</span> <span class="muted">sd_bps=121.058</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">dispersion:low</td>
+      <td class="mono num" data-v="0.13830578589148826">0.138</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="437">437</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=0.374</span> <span class="muted">sd_bps=42.886</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">dispersion:mid</td>
+      <td class="mono num" data-v="0.4718498666700521">0.472</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="633">633</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=1.885</span> <span class="muted">sd_bps=63.419</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">trend:above</td>
+      <td class="mono num" data-v="0.8193854023575039">0.819</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2235">2235</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=4.117</span> <span class="muted">sd_bps=79.770</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">trend:below</td>
+      <td class="mono num" data-v="0.8447966025551578">0.845</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="449">449</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=8.989</span> <span class="muted">sd_bps=168.914</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">vol:high</td>
+      <td class="mono num" data-v="0.8682741594939857">0.868</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="733">733</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=7.686</span> <span class="muted">sd_bps=140.525</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">vol:low</td>
+      <td class="mono num" data-v="0.33568739815547366">0.336</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1062">1062</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=1.195</span> <span class="muted">sd_bps=56.522</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="state_ir_annualised">state ir annualised</td>
+      <td class="mono small">vol:mid</td>
+      <td class="mono num" data-v="1.1152185473492455">1.115</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="889">889</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">mean_bps=7.126</span> <span class="muted">sd_bps=101.440</span> <span class="muted">untestable_under_rotation=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="verdict">verdict</td>
+      <td class="mono small">gate_family</td>
+      <td class="mono num" data-v="0.21684053651266766">0.217</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2684">2684</td>
+      <td class="small">
+        <span class="verdict neg">NOT ESTABLISHED</span>
+        <span class="muted">p_definition=(1 + #{Z*_k &gt;= Z*_0}) / T over the exhaustive circular shift; floor 1/T</span> <span class="muted">bh_q=0.325</span> <span class="muted">bh_reject=0.000</span> <span class="muted">ic_conjunct=0.000</span> <span class="muted">gate=vol=mid+high</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-R.md</span>
+    at commit <span class="mono">9f9b60fc</span>, 2026-09-19 14:21.</p>
+  
+</section>
+
+
+<section class="panel" id="block-R5">
+  <header class="panel-head">
+    <div>
+      <h2>Block R5</h2>
+      <p class="panel-sub">Does refitting the model on recent data, weighted toward it, beat the frozen one on identical dates?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">W: INDISTINGUISHABLE</span><span class="verdict ">W: INDISTINGUISHABLE</span><span class="verdict ">all: INDISTINGUISHABLE</span>
+      <span class="muted">32 statistics &middot; run <span class="mono">ef069dbb</span> &middot; 2026-09-19 15:42</span>
+    </div>
+  </header>
+  <div class="tablewrap">
+  <table class="data sortable">
+    <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+    <tbody>
+    
+    <tr>
+      <td class="small" title="delta_bps">delta bps</td>
+      <td class="mono small">U</td>
+      <td class="mono num" data-v="-1.396102052526169">-1.396</td>
+      <td class="mono num" data-v="1.1944685475172436">1.194</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_bps">delta bps</td>
+      <td class="mono small">W</td>
+      <td class="mono num" data-v="-0.9613931085413536">-0.961</td>
+      <td class="mono num" data-v="1.5594162279987063">1.559</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        <span class="verdict ">INDISTINGUISHABLE</span>
+        <span class="muted">null_pct95_abs=0.946</span> <span class="muted">frozen_bps=4.411</span> <span class="muted">leg=implementable open t+1 -&gt; open t+2</span> <span class="muted">decision_bearing=1.000</span> <span class="muted">null_cleared=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic">delta ic</td>
+      <td class="mono small">U</td>
+      <td class="mono num" data-v="-0.0006641567889293758">-0.001</td>
+      <td class="mono num" data-v="0.0013672072593754227">0.001</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic">delta ic</td>
+      <td class="mono small">W</td>
+      <td class="mono num" data-v="-0.003476096581569438">-0.003</td>
+      <td class="mono num" data-v="0.0021248816135126625">0.002</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        <span class="verdict ">INDISTINGUISHABLE</span>
+        <span class="muted">null_pct95_abs=0.002</span> <span class="muted">floor=0.002</span> <span class="muted">frozen_ic=0.010</span> <span class="muted">decision_bearing=1.000</span> <span class="muted">null_cleared=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2016</td>
+      <td class="mono num" data-v="0.0040375933588446475">0.004</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2017</td>
+      <td class="mono num" data-v="0.00039253518007157073">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2018</td>
+      <td class="mono num" data-v="-0.0017119270476906735">-0.002</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2019</td>
+      <td class="mono num" data-v="0.0002019793649488584">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2020</td>
+      <td class="mono num" data-v="0.0007915774396160876">0.001</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="253">253</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2021</td>
+      <td class="mono num" data-v="-0.018756634191180434">-0.019</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2022</td>
+      <td class="mono num" data-v="-0.003034770432896142">-0.003</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2023</td>
+      <td class="mono num" data-v="0.0004829785156299253">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="250">250</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2024</td>
+      <td class="mono num" data-v="0.008572706699998392">0.009</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">U:2025</td>
+      <td class="mono num" data-v="0.00480875355067619">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="140">140</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2016</td>
+      <td class="mono num" data-v="0.0009215514961814815">0.001</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2017</td>
+      <td class="mono num" data-v="0.0045424491457570415">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2018</td>
+      <td class="mono num" data-v="0.0014087082630387705">0.001</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2019</td>
+      <td class="mono num" data-v="-0.0035878322545372402">-0.004</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2020</td>
+      <td class="mono num" data-v="-0.0007817470834121944">-0.001</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="253">253</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2021</td>
+      <td class="mono num" data-v="-0.0307932802534822">-0.031</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2022</td>
+      <td class="mono num" data-v="-0.006540906250792032">-0.007</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="251">251</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2023</td>
+      <td class="mono num" data-v="-0.008343793203755424">-0.008</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="250">250</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2024</td>
+      <td class="mono num" data-v="0.004868641815234925">0.005</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="252">252</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="delta_ic_by_year">delta ic by year</td>
+      <td class="mono small">W:2025</td>
+      <td class="mono num" data-v="0.00914380519881594">0.009</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="140">140</td>
+      <td class="small">
+        
+        <span class="muted">reported_only=1.000</span> <span class="muted">trials=10.000</span> <span class="muted">note=per-fold breakdown; a later block citing it counts these as trials</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="frozen_bps">frozen bps</td>
+      <td class="mono small">comparator</td>
+      <td class="mono num" data-v="4.410937877510875">4.411</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        
+        <span class="muted">run=b9ca7ceb-3a78-4ff9-9fc7-b9a50636ca74</span> <span class="muted">leg=implementable open t+1 -&gt; open t+2</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="frozen_ic">frozen ic</td>
+      <td class="mono small">comparator</td>
+      <td class="mono num" data-v="0.01020339430877544">0.010</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        
+        <span class="muted">run=b9ca7ceb-3a78-4ff9-9fc7-b9a50636ca74</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_mean_delta_ic">null mean delta ic</td>
+      <td class="mono small">W</td>
+      <td class="mono num" data-v="0.00021809942552798917">0.000</td>
+      <td class="mono num" data-v="0.0002620783317840479">0.000</td>
+      <td class="mono num" data-v="20">20</td>
+      <td class="small">
+        
+        <span class="muted">cleared=1.000</span> <span class="muted">rule=mean within 2 SE of zero</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_pct95_abs_delta_bps">null pct95 abs delta bps</td>
+      <td class="mono small">W</td>
+      <td class="mono num" data-v="0.9458633580129592">0.946</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="20">20</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="null_pct95_abs_delta_ic">null pct95 abs delta ic</td>
+      <td class="mono small">W</td>
+      <td class="mono num" data-v="0.002318430559424056">0.002</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="20">20</td>
+      <td class="small">
+        
+        
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="reproduction_max_rel_dev">reproduction max rel dev</td>
+      <td class="mono small">arm_u_2015_vs_pickle</td>
+      <td class="mono num" data-v="42815.51516677438">42,815.515</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="103827">103827</td>
+      <td class="small">
+        
+        <span class="muted">gate=reported</span> <span class="muted">max_abs=0.020</span> <span class="muted">rank_corr=0.947</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="reproduction_max_rel_dev">reproduction max rel dev</td>
+      <td class="mono small">frozen_pickle_vs_backtest_scores</td>
+      <td class="mono num" data-v="0.0">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="1093176">1093176</td>
+      <td class="small">
+        
+        <span class="muted">gate=hard</span> <span class="muted">rtol=0.000</span> <span class="muted">passed=1.000</span> 
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="small" title="verdict">verdict</td>
+      <td class="mono small">all</td>
+      <td class="mono num" data-v="0.0">0.000</td>
+      <td class="mono num" data-v="">—</td>
+      <td class="mono num" data-v="2404">2404</td>
+      <td class="small">
+        <span class="verdict ">INDISTINGUISHABLE</span>
+        <span class="muted">null_cleared=1.000</span> <span class="muted">excluded_from=2025-07-28</span> <span class="muted">excluded_to=2026-08-19</span> 
+      </td>
+    </tr>
+    
+    </tbody>
+  </table>
+  </div>
+  
+  <p class="panel-foot">Decision rule fixed in <span class="mono">docs/pre-registered-R5.md</span>
+    at commit <span class="mono">9f9b60fc</span>, 2026-09-19 14:45.</p>
+  
+</section>
+
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-18. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-22. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
 <script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 

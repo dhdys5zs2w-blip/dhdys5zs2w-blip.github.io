@@ -14,6 +14,26 @@
   const money = (v) => (v == null ? "—" : "$" + qe.fmtNum(v, 0));
   const vcls = (v) => (/^(ATTAINABLE|IMPLEMENTABLE|PASS|REGIME-DEPENDENT|OK)$/i.test(v) ? "pos"
                        : /^(NOT ATTAINABLE|NOT IMPLEMENTABLE|FAIL)/i.test(v) ? "neg" : "");
+  /* Every leg-based number is recomputed from prices_daily on request, so it
+   * moves when a bar is restated overnight. Say which prices produced it. */
+  const asOf = (d) => (d == null ? "" :
+    "Computed from prices as of " + qe.esc(d) +
+    "; derived rows restate nightly by up to 6 bps on single days.");
+  /* An undefined SE is not a zero one: below the block length the bootstrap
+   * has nothing to resample and the honest answer is that we cannot say. */
+  const UNDEFINED_SE = "undefined below 6 days";
+  const se = (v) => (v == null ? UNDEFINED_SE : bps(v));
+
+  /* Two returns, never one: the days committed before their outcome existed are
+   * evidence, and the live stamp is not the same set — 30 days scored in
+   * arrears were restamped on 2026-09-12 (C20). Each number carries the count
+   * it was taken over, so neither can be read as the other. */
+  const committedSub = (s) =>
+    "over " + s.n_committed_days + " days committed before the outcome existed — " +
+    "the only figure that is evidence";
+  const stampedSub = (s) =>
+    "over " + s.n_live_days + " stamped-live days, including " +
+    (s.n_live_days - s.n_committed_days) + " restamped in arrears (C20) — not evidence";
 
   /* fill one of the server-rendered overview tiles */
   function setTile(id, valueHtml, sub, cls) {
@@ -39,10 +59,13 @@
               { sub: "from $100,000 · " + s.n_days_with_pnl + " days with P&amp;L" }) +
       qe.tile("Total net return", qe.fmtPct(s.total_net_return),
               { cls: qe.signCls(s.total_net_return), sub: "live and backfilled days together" }) +
-      qe.tile("Net return, live days only", qe.fmtPct(s.live_only_net_return),
-              { cls: qe.signCls(s.live_only_net_return), sub: s.n_live_days + " live days — the only evidence" }) +
+      qe.tile("Net return, committed days only", qe.fmtPct(s.net_return_committed),
+              { cls: qe.signCls(s.net_return_committed), sub: committedSub(s) }) +
+      qe.tile("Net return, stamped-live days", qe.fmtPct(s.live_only_net_return),
+              { cls: qe.signCls(s.live_only_net_return), sub: stampedSub(s) }) +
       qe.tile("Days recorded",
-              s.n_live_days + ' <span class="badge badge-live">live</span> &nbsp;' +
+              s.n_live_days + ' <span class="badge badge-live">live</span> <span class="se">(' +
+              s.n_committed_days + ' committed in advance)</span> &nbsp;' +
               s.n_backfill_days + ' <span class="badge badge-backfill">backfill</span>',
               { sub: "through " + qe.esc(p.as_of) }) +
       qe.tile("Mean net per day", s.mean_net_return == null ? "—" : bps(s.mean_net_return * 1e4, 1),
@@ -54,9 +77,8 @@
       qe.tile("Positions", String(s.positions_held), { sub: "held at the latest book" });
     setTile("ov-value", money(s.closing_value),
             "total net " + qe.fmtPct(s.total_net_return) + " over " + s.n_days + " recorded days");
-    setTile("ov-live-net", qe.fmtPct(s.live_only_net_return),
-            s.n_live_days + " live days — the only figure that is evidence",
-            qe.signCls(s.live_only_net_return));
+    setTile("ov-live-net", qe.fmtPct(s.net_return_committed), committedSub(s),
+            qe.signCls(s.net_return_committed));
 
     /* equity curve: one x axis, live and backfill as separate series so the
      * eye cannot read backfill as evidence */
@@ -184,12 +206,12 @@
   /* Phase P: the P1/P3 timing comparison and the P2 regime map. Backtest
    * series are drawn in the backtest colour and labelled as such; only the
    * live column is evidence. */
-  function fillCell(key, mean, se, n) {
+  function fillCell(key, mean, se, n, seUnknown) {
     const td = document.querySelector('#timing-table td[data-k="' + key + '"]');
     if (!td) return;
     if (mean == null) { td.innerHTML = '<span class="muted">—</span>'; return; }
-    td.innerHTML = '<span class="v">' + bps(mean) + '</span><span class="se">± ' +
-      (se == null ? "?" : se.toFixed(2)) + "</span>" +
+    td.innerHTML = '<span class="v">' + bps(mean) + '</span><span class="se">' +
+      (se != null ? "± " + se.toFixed(2) : (seUnknown || "± ?")) + "</span>" +
       (n != null ? '<span class="n">' + n + " days</span>" : "");
   }
 
@@ -198,6 +220,7 @@
     const verdicts = document.getElementById("timing-verdicts");
     const note = document.getElementById("execution-note");
     note.textContent = rep.notes.execution;
+    document.getElementById("execution-asof").textContent = asOf(rep.prices_as_of);
     if (!rep.available) {
       verdicts.innerHTML = '<span class="muted">no registered backtest series for this model yet ' +
         "(scripts/p1_attainable_regimes.py, then p1_persist_daily.py)</span>";
@@ -205,12 +228,24 @@
     }
     const b = rep.backtest, v3 = rep.registered_p3 || {};
     fillCell("implementable", b.implementable_bps, b.implementable_se_bps, b.n_days_implementable);
-    const l = rep.live;
+    /* the cell is the committed-in-advance series; the stamped-live one goes in
+     * the note under the table, labelled as including the C20 restamps */
+    const l = rep.live_committed;
     if (l && l.n_days_implementable) {
-      fillCell("implementable-live", l.implementable_bps, l.implementable_se_bps, l.n_days_implementable);
+      fillCell("implementable-live", l.implementable_bps, l.implementable_se_bps,
+               l.n_days_implementable, "SE " + UNDEFINED_SE);
     } else {
       const td = document.querySelector('#timing-table td[data-k="implementable-live"]');
-      if (td) td.innerHTML = '<span class="muted small">no live days with a realized open-to-open return yet</span>';
+      if (td) td.innerHTML = '<span class="muted small">no day committed in advance carries a realized open-to-open return yet</span>';
+    }
+    const sl = rep.live;
+    const stamped = document.getElementById("execution-stamped");
+    if (stamped) {
+      stamped.textContent = sl && sl.n_days_implementable
+        ? bps(sl.implementable_bps) + " ± " +
+          (sl.implementable_se_bps == null ? UNDEFINED_SE : sl.implementable_se_bps.toFixed(2)) +
+          " over " + sl.n_days_implementable + " days"
+        : "— (no live-stamped day carries the leg yet)";
     }
     const vb = (label, verdict, detail) =>
       '<span><span class="muted">' + label + '</span><span class="verdict ' + vcls(verdict) + '">' +
@@ -220,7 +255,8 @@
     if (!html) html = '<span class="muted">no registered verdict recorded yet</span>';
     const ln = l ? l.n_days_implementable : 0;
     html += '<span class="muted small">' + b.n_days_implementable + " holdout days" +
-      (ln ? " · " + ln + " live days" + (ln < 100 ? " — not enough to mean anything yet" : "") : "") +
+      (ln ? " · " + ln + " days committed in advance" +
+            (ln < 100 ? " — not enough to mean anything yet" : "") : "") +
       "</span>";
     verdicts.innerHTML = html;
     qe.chart("chart-execution").setOption({
@@ -235,6 +271,56 @@
           showSymbol: false, itemStyle: { color: C.accent }, lineStyle: { width: 2, color: C.accent } },
       ],
     });
+  }
+
+  /* The paper companion: the paired series when one is fixed, the four
+   * candidates and what each could ever settle when none is. The power line
+   * and the MDE show in both states — they are the reason to expect little
+   * from this panel, and hiding them until a companion exists would make the
+   * fixed state read as more informative than it is. */
+  function powerLine(rows) {
+    if (!rows || !rows.length) return "No power figures for this characteristic.";
+    const span = (x) => (x.days == null ? "—"
+      : x.days.toLocaleString() + " days (" + qe.fmtNum(x.years, 0) + " y)");
+    const one = (p) =>
+      qe.esc(p.characteristic) + ": " + span(p.whole_book) +
+      " for a difference the size of the model's whole gross, " + span(p.observed) +
+      " for the " + bps(p.observed_diff_bps, 2) + "/day AG-020 measured";
+    return "Days to t = 2, at AG-020's own dispersion — " + rows.map(one).join("; ") + ".";
+  }
+
+  async function loadCompanion() {
+    const rep = await qe.fetch("/api/model/" + MODEL + "/companion");
+    const summary = document.getElementById("companion-summary");
+    if (!summary) return;
+    document.getElementById("companion-asof").textContent = asOf(rep.prices_as_of);
+    document.getElementById("companion-power").textContent = powerLine(rep.power);
+    if (!rep.fixed) {
+      summary.innerHTML = rep.candidates.map((c) =>
+        qe.tile(c.characteristic, qe.esc(c.direction),
+                { sub: "turnover " + qe.fmtNum(
+                    (rep.power.find((p) => p.characteristic === c.characteristic) || {}).turnover_pct, 2) +
+                  "%/day on AG-020's panel" })).join("");
+      return;
+    }
+    const p = rep.paired, t = rep.turnover;
+    const be = (x) => (x.breakeven_bps == null ? "—" : bps(x.breakeven_bps, 1));
+    const turn = (x) => (x.replaced == null ? "—" : qe.fmtPct(x.replaced) + " /day");
+    summary.innerHTML =
+      qe.tile("Days scored", String(rep.days.live + rep.days.backfill),
+              { sub: rep.days.live + ' <span class="badge badge-live">live</span> &nbsp;' +
+                     rep.days.backfill + ' <span class="badge badge-backfill">backfill</span>' }) +
+      qe.tile("Committed in advance", String(rep.days.committed),
+              { sub: rep.days.restamped + " live-stamped days were scored in arrears" }) +
+      qe.tile("Paired days", String(p.n_days),
+              { sub: "dates both books committed before the outcome existed" }) +
+      qe.tile("Model − companion", bps(p.diff_bps),
+              { cls: qe.signCls(p.diff_bps),
+                sub: "SE " + se(p.diff_se_bps) + " · MDE " + se(p.mde_bps) }) +
+      qe.tile("Model turnover", turn(t.model),
+              { sub: "breakeven " + be(t.model) + " round-trip (R2's convention), gross of an unmeasured cost" }) +
+      qe.tile("Companion turnover", turn(t.companion),
+              { sub: "breakeven " + be(t.companion) + " round-trip (R2's convention), gross of an unmeasured cost" });
   }
 
   async function loadRegimes() {
@@ -309,5 +395,6 @@
   loadDeciles("live").catch((e) => console.error(e));
   loadRankProfile().catch((e) => console.error(e));
   loadExecution().catch((e) => console.error(e));
+  loadCompanion().catch((e) => console.error(e));
   loadRegimes().catch((e) => console.error(e));
 })();

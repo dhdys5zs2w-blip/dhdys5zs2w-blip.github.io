@@ -33,7 +33,7 @@ try {
     </div>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-18 from the live 19.8 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <main>
 
@@ -53,36 +53,46 @@ try {
 <section class="panel">
   <header class="panel-head">
     <div><h2>Status</h2><p class="panel-sub">The facts that say whether last night's run did its job.</p></div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
   </header>
   <div class="tiles wide">
     <div class="tile">
       <span class="t-label">Database file</span>
-      <span class="t-value">19.8 GB</span>
-      <span class="t-sub mono">qe.duckdb &middot; modified 2026-09-18 22:34</span>
+      <span class="t-value">22.1 GB</span>
+      <span class="t-sub mono">qe.duckdb &middot; modified 2026-09-21 22:38</span>
     </div>
     
     <div class="tile">
       <span class="t-label">Prices as of</span>
-      <span class="t-value">2026-09-18</span>
-      <span class="t-sub">last fetch 2026-09-18</span>
+      <span class="t-value">2026-09-21</span>
+      <span class="t-sub">last fetch 2026-09-21</span>
     </div>
     <div class="tile">
       <span class="t-label">Latest scored day</span>
-      <span class="t-value">2026-09-18</span>
+      <span class="t-value">2026-09-21</span>
       <span class="t-sub"><span class="badge badge-live">live</span>
         &middot; 48 predictions</span>
     </div>
     <div class="tile">
       <span class="t-label">Live record</span>
-      <span class="t-value">53<span class="se">live days</span></span>
-      <span class="t-sub">1 backfilled &mdash; not evidence</span>
+      <span class="t-value">24<span class="se">committed in advance</span></span>
+      <span class="t-sub">54 carry the live stamp (30 scored in arrears
+        and restamped live on 2026-09-12, FINDINGS C20) &middot; 0 backfilled &mdash;
+        not evidence</span>
     </div>
     <div class="tile">
       <span class="t-label">Fetches, trailing 7 days</span>
-      <span class="t-value">26,996</span>
-      <span class="t-sub">86.3% ok</span>
+      <span class="t-value">32,052</span>
+      <span class="t-sub">85.3% ok</span>
     </div>
     
+    <div class="tile" id="s-fills">
+      <span class="t-label">Execution fills logged</span>
+      <span class="t-value">none logged</span>
+      <span class="t-sub">no fills in
+        <span class="mono">logs/fills.csv</span>; fidelity and slippage are read once at &ge; 60 fill-days, so
+        every cost figure on this site is still an assumption</span>
+    </div>
   </div>
 </section>
 
@@ -91,12 +101,12 @@ try {
   <section class="card">
     <h2>Freshness</h2>
     <table class="kv">
-      <tr><td>Prices</td><td class="mono">2026-09-18</td></tr>
-      <tr><td>Indicators</td><td class="mono">2026-09-18</td></tr>
-      <tr><td>Targets</td><td class="mono">2026-09-17</td></tr>
-      <tr><td>Signals</td><td class="mono">2026-09-18</td></tr>
-      <tr><td>Predictions</td><td class="mono">2026-09-18</td></tr>
-      <tr><td>Last fetch</td><td class="mono">2026-09-18</td></tr>
+      <tr><td>Prices</td><td class="mono">2026-09-21</td></tr>
+      <tr><td>Indicators</td><td class="mono">2026-09-21</td></tr>
+      <tr><td>Targets</td><td class="mono">2026-09-18</td></tr>
+      <tr><td>Signals</td><td class="mono">2026-09-21</td></tr>
+      <tr><td>Predictions</td><td class="mono">2026-09-21</td></tr>
+      <tr><td>Last fetch</td><td class="mono">2026-09-21</td></tr>
     </table>
     <p class="note">Anchored on prices; indicators and targets legitimately lag (targets by the
     horizon, since a target needs the next bar).</p>
@@ -110,7 +120,7 @@ try {
       
       <tr>
         <td class="mono">liquid500</td>
-        <td class="mono nowrap">2026-09-18</td>
+        <td class="mono nowrap">2026-09-21</td>
         <td class="mono num">1,879</td>
         <td></td>
       </tr>
@@ -135,16 +145,19 @@ try {
       <thead><tr><th>Outcome</th><th class="num">Count</th><th class="num">Share</th></tr></thead>
       <tbody>
       
-      <tr><td class="mono">ok</td><td class="mono num">23,285</td>
-          <td class="mono num muted">86.3%</td></tr>
+      <tr><td class="mono">ok</td><td class="mono num">27,342</td>
+          <td class="mono num muted">85.3%</td></tr>
       
-      <tr><td class="mono">adjustment_suspect</td><td class="mono num">3,539</td>
-          <td class="mono num muted">13.1%</td></tr>
+      <tr><td class="mono">adjustment_suspect</td><td class="mono num">3,948</td>
+          <td class="mono num muted">12.3%</td></tr>
       
-      <tr><td class="mono">not_served</td><td class="mono num">142</td>
-          <td class="mono num muted">0.5%</td></tr>
+      <tr><td class="mono">empty</td><td class="mono num">550</td>
+          <td class="mono num muted">1.7%</td></tr>
       
-      <tr><td class="mono">network_error</td><td class="mono num">30</td>
+      <tr><td class="mono">not_served</td><td class="mono num">192</td>
+          <td class="mono num muted">0.6%</td></tr>
+      
+      <tr><td class="mono">network_error</td><td class="mono num">20</td>
           <td class="mono num muted">0.1%</td></tr>
       
       </tbody>
@@ -153,8 +166,15 @@ try {
     rather than a hope. Options-chain fetches share this log with prices.</p>
   </section>
 
-  <section class="card">
-    <h2>Option chains <small>Phase Q weekly backfill</small></h2>
+  <section class="card" id="s-options">
+    <h2>Option chains <small>Phase Q weekly backfill</small> <span class="badge badge-changed">changed 2026-09-20</span></h2>
+    
+    <p class="alert"><strong>The options backfill has not advanced since
+      2026-09-11 10:35</strong> &mdash; 11 days.
+      Q3 waits on &ge; 95% of scheduled member-weeks and cannot run until then;
+      only the owner can restart it, and it must not run inside the evening windows:<br>
+      <span class="cmd mono">PYTHONPATH=src nohup .venv/bin/qe ingest options --since 2016-01-04 --until 2026-09-04 --workers 10 &gt;&gt; logs/options-ingest.log 2&gt;&amp;1 &amp;</span></p>
+    
     <div class="tile">
       <span class="t-label">Member-weeks summarised</span>
       <span class="t-value">156,826<span class="se">of 278,566 scheduled</span></span>
@@ -178,6 +198,54 @@ try {
     <table class="data">
       <thead><tr><th>Started</th><th>Stage</th><th>Status</th><th>Finished</th><th>Commit</th></tr></thead>
       <tbody>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-20 15:38</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-20 15:38</td>
+        <td class="mono">28311355</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-20 15:26</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-20 15:26</td>
+        <td class="mono">8db71cf9</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-19 15:42</td>
+        <td class="mono">research</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-09-19 15:42</td>
+        <td class="mono">37bac3a9</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-19 14:45</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-19 14:45</td>
+        <td class="mono">9f9b60fc</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-19 14:23</td>
+        <td class="mono">research</td>
+        <td><span class="badge badge-ok">done</span></td>
+        <td class="mono nowrap">2026-09-19 14:23</td>
+        <td class="mono">9f9b60fc</td>
+      </tr>
+      
+      <tr>
+        <td class="mono nowrap">2026-09-19 14:21</td>
+        <td class="mono">prereg</td>
+        <td><span class="badge badge-ok">registered</span></td>
+        <td class="mono nowrap">2026-09-19 14:21</td>
+        <td class="mono">9f9b60fc</td>
+      </tr>
       
       <tr>
         <td class="mono nowrap">2026-09-10 09:23</td>
@@ -291,54 +359,6 @@ try {
         <td class="mono">3040f627</td>
       </tr>
       
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:53</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:54</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:51</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:52</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:51</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:51</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:49</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:50</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:48</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:49</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
-      <tr>
-        <td class="mono nowrap">2026-08-11 12:47</td>
-        <td class="mono">fit</td>
-        <td><span class="badge badge-ok">done</span></td>
-        <td class="mono nowrap">2026-08-11 12:47</td>
-        <td class="mono">3040f627</td>
-      </tr>
-      
       </tbody>
     </table>
     </div>
@@ -347,7 +367,7 @@ try {
 
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-18. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-22. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
 <script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 

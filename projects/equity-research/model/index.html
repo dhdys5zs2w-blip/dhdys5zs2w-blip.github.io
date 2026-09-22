@@ -33,10 +33,10 @@ try {
     </div>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-18 from the live 19.8 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <main>
-<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-overview">At a glance</a><a href="#s-paper">Paper record</a><a href="#s-rank">Rank test</a><a href="#s-timing">Timing</a><a href="#s-regimes">Regimes</a><a href="#s-book">The book</a></nav>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-overview">At a glance</a><a href="#s-shadow">Shadow lane</a><a href="#s-paper">Paper record</a><a href="#s-rank">Rank test</a><a href="#s-timing">Timing</a><a href="#s-companion">Companion book</a><a href="#s-regimes">Regimes</a><a href="#s-book">The book</a></nav>
 
 
 
@@ -44,12 +44,13 @@ try {
 
 <header class="page-intro">
   <div class="intro-text">
+    
     <p class="eyebrow">Frozen model &middot; <span class="mono">09d8c916</span>
       &middot; gbm &middot; h=1 &middot; long only</p>
     <h1>Model dashboard</h1>
     <p class="lede">The frozen model, its paper record, and the registered tests of what that
-    record means. Live days are the only evidence on this page; everything else is a
-    description.</p>
+    record means. Days committed in advance are the only evidence on this page; everything else
+    is a description.</p>
   </div>
   <div class="intro-aside">
     <dl class="facts boxed">
@@ -57,7 +58,7 @@ try {
       <div><dt>Trained through</dt><dd class="mono">2015-12-31 <span class="muted">&middot; never refit</span></dd></div>
       <div><dt>Exit buffer</dt><dd class="mono">30%</dd></div>
       
-      <div><dt>Latest book</dt><dd><span class="mono">2026-09-18</span> &middot; 48 names
+      <div><dt>Latest book</dt><dd><span class="mono">2026-09-21</span> &middot; 48 names
         <span class="badge badge-live">live</span></dd></div>
       
     </dl>
@@ -72,22 +73,27 @@ try {
       <p class="panel-sub">What the record holds so far and what the registered blocks concluded.
       Each section below carries its own detail.</p>
     </div>
-    
-    <div class="panel-tags"><span class="muted">latest scored day</span>
-      <span class="mono">2026-09-18</span>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
+      <span class="muted">latest scored day</span>
+      <span class="mono">2026-09-21</span>
       <span class="badge badge-live">live</span></div>
-    
   </header>
   <div class="split">
     <div>
       <div class="tiles wide">
         <div class="tile big">
+          <span class="t-label">Committed in advance</span>
+          <span class="t-value">24<span class="se">of ~100 needed</span></span>
+          <div class="meter" role="progressbar" aria-label="Days committed in advance toward the ~100 needed"
+               aria-valuenow="24" aria-valuemin="0" aria-valuemax="100">
+            <span style="width: 24.0%"></span></div>
+          <span class="t-sub">76 more before the record carries information</span>
+        </div>
+        <div class="tile">
           <span class="t-label">Live days</span>
-          <span class="t-value">53<span class="se">of ~100 needed</span></span>
-          <div class="meter" role="progressbar" aria-label="Live days toward the ~100 needed"
-               aria-valuenow="53" aria-valuemin="0" aria-valuemax="100">
-            <span style="width: 53.0%"></span></div>
-          <span class="t-sub">47 more before the record carries information</span>
+          <span class="t-value muted">54</span>
+          <span class="t-sub">carry the live stamp; 30 of them were scored in arrears and
+            restamped live on 2026-09-12 (FINDINGS C20)</span>
         </div>
         <div class="tile">
           <span class="t-label">Backfilled days</span>
@@ -100,9 +106,9 @@ try {
           <span class="t-sub">notional $100k at the first recorded day</span>
         </div>
         <div class="tile" id="ov-live-net">
-          <span class="t-label">Net return, live days only</span>
+          <span class="t-label">Net return, committed days only</span>
           <span class="t-value">&mdash;</span>
-          <span class="t-sub">the only figure that is evidence</span>
+          <span class="t-sub">over the days committed before the outcome existed &mdash; the only figure that is evidence</span>
         </div>
       </div>
       
@@ -121,13 +127,28 @@ try {
         <dt>Q0 · option-chain coverage</dt>
         <dd><span class="verdict pos" title="atm_iv_usable / served">PASS</span></dd>
         
+        <dt>R2</dt>
+        <dd><span class="verdict pos" title="night3_over_overnight_next / all">all: PERSISTS</span><span class="verdict pos" title="verdict / night3">night3: PERSISTS</span></dd>
+        
+        <dt>R3</dt>
+        <dd><span class="verdict neg" title="verdict / within_top_ic">within_top_ic: GATE CLOSED</span><span class="verdict neg" title="within_top_ic / all">all: GATE CLOSED</span></dd>
+        
+        <dt>R4</dt>
+        <dd><span class="verdict neg" title="verdict / gate_family">NOT ESTABLISHED</span></dd>
+        
+        <dt>R5</dt>
+        <dd><span class="verdict " title="delta_bps / W">W: INDISTINGUISHABLE</span><span class="verdict " title="delta_ic / W">W: INDISTINGUISHABLE</span><span class="verdict " title="verdict / all">all: INDISTINGUISHABLE</span></dd>
+        
       </dl>
       
     </div>
     <div>
       <div class="evidence-key">
   <div><span class="badge badge-live">live</span><span><strong>Live</strong> &mdash; scored the evening
-    before the outcome existed. The only rows that count as evidence.</span></div>
+    before the outcome existed. The stamp alone is not evidence:
+    only days committed before the outcome existed count, and 30 live-stamped days were
+    scored in arrears and restamped on 2026-09-12
+    (<span class="mono">docs/FINDINGS.md</span> C20).</span></div>
   <div><span class="badge badge-backfill">backfill</span><span><strong>Backfill</strong> &mdash; scored in
     arrears after an outage. Real accounting over a real book, but the position was never committed
     to in advance: a plumbing check, <strong>not evidence</strong>.</span></div>
@@ -138,6 +159,53 @@ try {
     </div>
   </div>
 </section>
+
+
+<section class="panel" id="s-shadow">
+  <header class="panel-head">
+    <div>
+      
+      <h2>Shadows of this model</h2>
+      <p class="panel-sub">Registered against this model and scored beside it every night under
+      <span class="mono">docs/pre-registered-S.md</span>, in their own runs and their own rows. Nothing here
+      trades: this model's book, its workbook and its record are untouched by anything a shadow does.</p>
+      
+    </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
+  </header>
+  
+  <div class="tablewrap">
+  <table class="data">
+    <thead><tr><th>Model</th><th>Trained through</th><th>Registered</th><th>Note</th></tr></thead>
+    <tbody>
+      
+      <tr><td class="mono"><a href="../model/">3c4dc501</a></td>
+        <td class="mono">2025-06-26</td>
+        <td class="mono small nowrap">2026-09-20 17:11</td>
+        <td class="small">Shadow S1 (docs/pre-registered-S.md): the production recipe and 09d8c916-37bb-4807-a2b6-266c46d0950d&#39;s 19 stored features, fit to the implementable open(t+1) -&gt; open(t+2) sector-excess through 2025-06-26, the last two sessions purged. Scored beside the production model, never active; promotion only by that document&#39;s calendar and never by profit and loss.</td></tr>
+      
+    </tbody>
+  </table>
+  </div>
+  
+  <details class="explain">
+    <summary>How to read this</summary>
+    <p>A shadow is a second frozen model on the same universe, scored every night in its own run, into its own
+    workbook and its own rows. It trades nothing. It exists so that a candidate the backtest already chose
+    accrues a forward record before anything switches to it &mdash; the live year is there to stop a materially
+    worse model and to prove the lane runs, not to prove a better one.</p>
+    <p>Promotion is by process, never by profit and loss. The first evaluation is taken when the two models have
+    250 days both committed in advance, and every 125 paired days after it. It promotes only if the shadow's
+    live ranking of the implementable return is below the production model's by no more than 0.002 in rank
+    correlation, if the two models' scores correlate at least 0.30 at that first evaluation and at least
+    three-quarters of the first evaluation's own value at every later one &mdash; a drift check, not a second
+    level check &mdash; and if the lane has no coverage holes of its own. Each
+    book's own return is reported at those evaluations and decides nothing.</p>
+    <p class="note">Decision rule fixed in <span class="mono">docs/pre-registered-S.md</span>, before the first
+    shadow night. <a href="../research/#s-registrations">the registrations &rarr;</a></p>
+  </details>
+</section>
+
 
 <section class="panel" id="s-paper">
   <header class="panel-head">
@@ -154,13 +222,17 @@ try {
   <div id="chart-equity" class="chart tall"></div>
   <p class="caveat">Backfilled days were scored in arrears &mdash; the position was
 never committed to in advance. They are a plumbing check, <strong>not
-evidence</strong>. Judge the model on the live count only.</p>
+evidence</strong>. Neither is every live-stamped day: 30 days scored in arrears
+were restamped live on 2026-09-12 (<span class="mono">docs/FINDINGS.md</span>
+C20). Judge the model on the <strong>committed-in-advance count</strong>, which
+is the smaller one.</p>
   <details class="explain">
     <summary>How to read this</summary>
     <p>The dashed amber stretch was reconstructed in arrears after the scheduler failure and
     after a week without network &mdash; real accounting over a real book, but the positions
-    were never committed to in advance, so it demonstrates plumbing, not foresight. Only the
-    solid green stretch is live evidence. Turnover is charged at 3 bps round-trip; the newest
+    were never committed to in advance, so it demonstrates plumbing, not foresight. The solid
+    green stretch carries the live stamp, and only the days inside it that were committed
+    before the outcome existed are evidence. Turnover is charged at 3 bps round-trip; the newest
     day is unmarked until its forward return is realized, so the account is valued at the last
     marked day.</p>
   </details>
@@ -211,7 +283,7 @@ evidence</strong>. Judge the model on the live count only.</p>
       record's own close-to-close entry is booked at the 16:00 close of a day whose signal is
       only committed at 18:30, so it is not reported here.</p>
     </div>
-    <div class="panel-tags"><span class="badge badge-backtest">backtest</span><span class="badge badge-live">live</span>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span><span class="badge badge-backtest">backtest</span><span class="badge badge-live">live</span>
       <span class="muted">Phase P3, registered</span></div>
   </header>
   <div class="verdict-row" id="timing-verdicts"><span class="loading">loading</span></div>
@@ -219,15 +291,23 @@ evidence</strong>. Judge the model on the live count only.</p>
   <table class="compare" id="timing-table">
     <thead><tr><th>Leg</th>
       <th class="num">Holdout 2016&ndash;2026 <span class="badge badge-backtest">backtest</span></th>
-      <th class="num">Live days <span class="badge badge-live">live</span></th></tr></thead>
+      <th class="num">Committed in advance <span class="badge badge-live">live</span></th></tr></thead>
     <tbody>
       <tr><td class="label">Implementable<span class="sub">next open to the open after &mdash; an execution one day behind the signal, holding through the following night</span></td>
           <td class="num" data-k="implementable">&mdash;</td><td class="num" data-k="implementable-live">&mdash;</td></tr>
     </tbody>
   </table>
   </div>
+  <p class="note">The live column counts only days committed before the outcome existed. Over
+  every day carrying the live stamp the same leg reads
+  <span id="execution-stamped" class="mono">&mdash;</span> &mdash; that series includes the 30
+  days scored in arrears and restamped live on 2026-09-12
+  (<span class="mono">docs/FINDINGS.md</span> C20), so it is
+  <strong>not out-of-sample evidence</strong> and is shown only so the two counts can be
+  compared.</p>
   <p class="chart-caption">Mean sector-excess return per day, centered across each day's
   cross-section, with block-bootstrap SE and the number of days. Cumulative line below.</p>
+  <p class="chart-caption" id="execution-asof"></p>
   <div id="chart-execution" class="chart"></div>
   <p class="note" id="execution-note"></p>
   <details class="explain">
@@ -247,11 +327,75 @@ evidence</strong>. Judge the model on the live count only.</p>
     result. Both remain in <span class="mono">backtest_daily</span> and in the
     Phase P registration &mdash; the audit trail keeps what was measured even
     when the browser stops publishing it.</p>
+    <p class="caveat">What the +4.93 is made of. <strong>The tilt:</strong> roughly half of it is
+    the return to the book&rsquo;s beta tilt &mdash; slope +0.42 on the forward market, 52% of the
+    mean on this decade, residual +2.36 at t&nbsp;1.45 (AG-018, an agent-fleet finding, not a
+    registered block); it is never restated beta-adjusted, here or anywhere else on this site.
+    <strong>The timing:</strong> 87% of the implementable return sits in the close-to-open leg on
+    2016&ndash;2021; since 2022 the two legs split evenly and neither is distinguishable from zero
+    (AG-013). <strong>The ranking:</strong> decile 1 earns +5.43, decile 2 +1.22, deciles
+    3&ndash;10 sit at zero, and inside decile 1 the five sub-buckets are not ordered (R3,
+    registered).</p>
     <p class="caveat">The live column is the only part that is evidence, and
-    only once there are enough live days for it to mean anything.</p>
+    only once there are enough days committed in advance for it to mean anything.</p>
     <p class="caveat"><span class="badge badge-backtest">backtest</span> The frozen
 model scored on dates it never traded, after the fact. A description of the
 holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
+  </details>
+</section>
+
+<section class="panel" id="s-companion">
+  <header class="panel-head">
+    <div>
+      <h2>The paper companion</h2>
+      <p class="panel-sub">One single-characteristic decile, scored beside the model every night on
+      the model's own cross-section, so that a paired series committed in advance exists. It is a
+      benchmark, never a trade: the question it answers is what the model adds over sorting the
+      same names on one number.</p>
+    </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span><span class="badge badge-live">live</span>
+      <span class="muted">AG-020, synthesis item 4</span></div>
+  </header>
+
+  
+  <p>Fixed to <span class="mono strong">beta_spy_v1</span> on
+  <span class="mono">2026-09-20 12:45</span>. Each night it takes the top
+  <span class="mono">k = max(1, n/10)</span> of the model's scored names on that one value, ties
+  broken by symbol, equal weight and no exit buffer &mdash; AG-020's definition, not the model's.
+  One companion per model, ever; it cannot be changed after the first night without throwing away
+  the comparison it exists to make.</p>
+  
+
+  <div class="tiles wide" id="companion-summary"><span class="loading">loading</span></div>
+  <p class="chart-caption" id="companion-asof"></p>
+  <p class="note" id="companion-power"><span class="loading">loading</span></p>
+
+  <p class="note"><strong>The MDE is the number to read first.</strong> A paired difference
+  smaller than the minimum detectable effect &mdash; twice the block-bootstrap standard error of
+  the difference series &mdash; cannot be told from zero, whatever its sign. It is
+  undefined below 6 days, and is reported as undefined rather than as zero.</p>
+
+  <details class="explain">
+    <summary>How to read this</summary>
+    <p>Both books are scored on the same evening, on the same cross-section, and both are
+    evaluated on the same leg the rest of this page reports: the next session's open to the open
+    after. The comparison is <em>paired</em> &mdash; the difference is taken date by date and its
+    standard error is bootstrapped from the difference series, not from the two books' own
+    standard errors. Combining those would overstate the uncertainty of a difference between
+    books holding overlapping names by several times.</p>
+    <p>Only dates committed before their outcome existed are paired here. A day scored in arrears
+    is not a commitment, so it cannot settle a comparison between two commitments, whatever its
+    stamp says.</p>
+    <p>Turnover is the share of yesterday's book gone today, over consecutive scored dates. The
+    breakeven beside it is R2's convention &mdash; the whole gross divided by that fraction, the
+    round-trip cost in bps that would eat it, as +4.86 bps on 20.2%/day gave ~24 bps there
+    &mdash; and it is <strong>gross of a cost nobody has measured</strong>: costs at the open are
+    not in any number on this site.</p>
+    <p>The power line says how many paired days a difference would need before its t reaches 2,
+    at the dispersion AG-020 measured on 2,685 dates. Both answers are decades. That is the
+    point: the companion is worth running because it commits the comparison in advance, not
+    because the comparison will resolve.
+    AG-020 is an agent-fleet falsification, not a registered block.</p>
   </details>
 </section>
 
@@ -315,8 +459,10 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
     <div>
       <h2>The book</h2>
       <p class="panel-sub">What is held now, what changed recently, and how the held names did
-      relative to one another.</p>
+      relative to one another. How much of it is replaced from night to night, and what that
+      turnover costs, is in the companion panel above.</p>
     </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
   </header>
   <div class="grid2">
     <div>
@@ -364,7 +510,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-18. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-22. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
 <script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/model.js"></script>

@@ -33,10 +33,10 @@ try {
     </div>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-18 from the live 19.8 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <main>
-<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-status">Where things stand</a><a href="#s-how">How the model works</a><a href="#s-rank">Does the ranking predict returns?</a><a href="#s-explore">Explore</a></nav>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-changes">What changed</a><a href="#s-status">Where things stand</a><a href="#s-how">How the model works</a><a href="#s-rank">Does the ranking predict returns?</a><a href="#s-explore">Explore</a></nav>
 
 
 <header class="page-intro">
@@ -52,31 +52,122 @@ try {
   </div>
 </header>
 
+<section class="panel" id="s-changes">
+  <header class="panel-head">
+    <div>
+      <h2>What changed</h2>
+      <p class="panel-sub">Every change to what this site claims and how it is computed, with a
+      link to the panel where you can see it. <em>strategy</em> changes what is scored or claimed;
+      <em>reporting</em> changes what a number counts; <em>systems</em> changes the plumbing under
+      one.</p>
+    </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
+  </header>
+
+  <ul class="changelog">
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-strategy">strategy</span>
+      <span class="ch-text">One single-characteristic paper decile is now scored beside the model
+      every night on the same cross-section, so a paired live series exists to measure what the
+      model adds over a plain characteristic sort.
+      <strong>Fixed to <span class="mono">beta_spy_v1</span>
+        on 2026-09-20 12:45.</strong>
+      <a href="model/#s-companion">the companion panel &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-strategy">strategy</span>
+      <span class="ch-text">The +4.93 headline now carries what it is made of wherever it is
+      shown &mdash; roughly half the return to the book's beta tilt (AG-018), earned overnight
+      (AG-013), from a ranking that separates one decile (R3) &mdash; and is never restated
+      beta-adjusted. <a href="/#s-how">the honest numbers &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-reporting">reporting</span>
+      <span class="ch-text">The live record is now counted two ways: days committed before the
+      outcome existed, and days merely carrying the live stamp. Only the first counts toward the
+      ~100 needed, and no stamp was rewritten. <a href="/#s-status">where things stand &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-reporting">reporting</span>
+      <span class="ch-text">A symbol's model record &mdash; its rank history, its predictions and
+      whether it is in the book now &mdash; counts the <strong>active</strong> model's own rows
+      only, so the backfilled rows two 2026-07-24 edge maps left on 101 names no longer appear
+      there, and no live row moved.
+      <a href="symbol/AAPL.html#model">AAPL's model record &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-systems">systems</span>
+      <span class="ch-text">A second frozen model &mdash; trained on the implementable open-to-open
+      target and registered under <span class="mono">docs/pre-registered-S.md</span> &mdash; is now
+      scored beside the production one every night, into its own workbook and its own rows, and is
+      promotable only by that document's calendar and never by what it earns.
+      <a href="model/#s-shadow">the shadow lane &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-systems">systems</span>
+      <span class="ch-text">Every leg-based live number now names the prices it was computed
+      from, because those rows are recomputed from <span class="mono">prices_daily</span> on every
+      nightly ingest. <a href="model/#s-timing">the execution panel &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-systems">systems</span>
+      <span class="ch-text">The live book's turnover is measured and printed beside the round-trip
+      cost that would eat the whole gross &mdash; R2's convention, and gross of a cost nobody has
+      measured. <a href="model/#s-companion">turnover and breakeven &rarr;</a></span>
+    </li>
+    <li>
+      <span class="ch-date mono">2026-09-20</span>
+      <span class="badge badge-kind-systems">systems</span>
+      <span class="ch-text">The health page says how many days the options backfill has been
+      stalled and how many execution fills have been logged, so neither stall is invisible.
+      <a href="health/#s-options">option chains &rarr;</a> &middot;
+      <a href="health/#s-fills">fills &rarr;</a></span>
+    </li>
+  </ul>
+
+  <p class="note">Agent-fleet findings (AG-0nn) are named wherever they are borrowed. They are not
+  registered blocks and they are not record findings &mdash; the research ledger says which is
+  which. <a href="research/#s-closed">closed directions &rarr;</a></p>
+</section>
+
 <section class="panel" id="s-status">
   <header class="panel-head">
     <div>
       <h2>Where things stand</h2>
       <p class="panel-sub">One frozen model is scored every evening and its picks are recorded
-      before the outcome exists. The record needs about a year of live days before it can say
-      anything; until then every figure here is a plumbing check.</p>
+      before the outcome exists. The record needs about a year of days committed in advance
+      before it can say anything; until then every figure here is a plumbing check.</p>
     </div>
-    
-    <div class="panel-tags"><span class="muted">latest scored day</span>
-      <span class="mono">2026-09-18</span>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
+      <span class="muted">latest scored day</span>
+      <span class="mono">2026-09-21</span>
       <span class="badge badge-live">live</span></div>
-    
   </header>
 
   <div class="split">
     <div>
       <div class="tiles wide">
         <div class="tile big">
+          <span class="t-label">Committed in advance</span>
+          <span class="t-value">24<span class="se">of ~100 needed</span></span>
+          <div class="meter" role="progressbar" aria-label="Days committed in advance toward the ~100 needed"
+               aria-valuenow="24" aria-valuemin="0" aria-valuemax="100">
+            <span style="width: 24.0%"></span></div>
+          <span class="t-sub">76 more days committed before the outcome existed, before the
+            record carries information</span>
+        </div>
+        <div class="tile">
           <span class="t-label">Live prediction days</span>
-          <span class="t-value">53<span class="se">of ~100 needed</span></span>
-          <div class="meter" role="progressbar" aria-label="Live days toward the ~100 needed"
-               aria-valuenow="53" aria-valuemin="0" aria-valuemax="100">
-            <span style="width: 53.0%"></span></div>
-          <span class="t-sub">47 more live days before the record carries information</span>
+          <span class="t-value muted">54</span>
+          <span class="t-sub">carry the live stamp; 30 of them were scored in arrears and
+            restamped live on 2026-09-12 (FINDINGS C20)</span>
         </div>
         <div class="tile">
           <span class="t-label">Backfilled days</span>
@@ -87,25 +178,29 @@ try {
         <div class="tile">
           <span class="t-label">Latest book</span>
           <span class="t-value">48 names</span>
-          <span class="t-sub">2026-09-18 &middot;
+          <span class="t-sub">2026-09-21 &middot;
             <span class="badge badge-live">live</span></span>
         </div>
         
         <div class="tile">
           <span class="t-label">Data as of</span>
-          <span class="t-value">2026-09-18</span>
-          <span class="t-sub">prices &middot; indicators 2026-09-18 &middot;
-            targets 2026-09-17</span>
+          <span class="t-value">2026-09-21</span>
+          <span class="t-sub">prices &middot; indicators 2026-09-21 &middot;
+            targets 2026-09-18</span>
         </div>
       </div>
 
-      <p class="state-line live">A modest cross-sectional effect &mdash; roughly +3.6 bps/day of
-      stock-selection alpha at t&nbsp;&asymp;&nbsp;2.1 &mdash; found in backtests and awaiting live
-      confirmation. Every number on these pages carries its standard error and one of three
-      evidence states:</p>
+      <p class="state-line live">A modest cross-sectional effect &mdash; +4.93 bps/day to an
+      execution one day behind the signal, next open to the open after (SE&nbsp;1.83) &mdash; found
+      in backtests and awaiting live confirmation. Roughly half of it is the return to the book's
+      beta tilt (AG-018); it is never restated beta-adjusted. Every number on these pages carries
+      its standard error and one of three evidence states:</p>
       <div class="evidence-key">
   <div><span class="badge badge-live">live</span><span><strong>Live</strong> &mdash; scored the evening
-    before the outcome existed. The only rows that count as evidence.</span></div>
+    before the outcome existed. The stamp alone is not evidence:
+    only days committed before the outcome existed count, and 30 live-stamped days were
+    scored in arrears and restamped on 2026-09-12
+    (<span class="mono">docs/FINDINGS.md</span> C20).</span></div>
   <div><span class="badge badge-backfill">backfill</span><span><strong>Backfill</strong> &mdash; scored in
     arrears after an outage. Real accounting over a real book, but the position was never committed
     to in advance: a plumbing check, <strong>not evidence</strong>.</span></div>
@@ -280,22 +375,31 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 
     <div class="explainer-side">
       <h3>The honest numbers</h3>
+      <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
       <table class="data honest">
         <tbody>
         <tr><td class="mono strong">+4.93 bps/day <small>(SE&nbsp;1.83)</small></td>
-            <td>An execution one day behind the signal &mdash; next open to the open after. The only backtest return reported here, because it is the only one an execution following an 18:30 signal can take. Costs at the open unmeasured (P3)</td>
+            <td>An execution one day behind the signal &mdash; next open to the open after. The only backtest return reported here, because it is the only one an execution following an 18:30 signal can take. Costs at the open unmeasured (P3). Roughly half of it is the return to the book&rsquo;s beta tilt &mdash; slope +0.42 on the forward market, 52% of the mean on this decade, residual +2.36 at t&nbsp;1.45 (AG-018, an agent-fleet finding, not a registered block); it is never restated beta-adjusted</td>
             <td><span class="badge badge-backtest">backtest</span></td></tr>
         <tr><td class="mono strong">IC &asymp; +0.01</td>
             <td>Rank correlation between score and next-day outcome &mdash; tiny per name, usable only across ~500 names at once</td>
             <td><span class="badge badge-backtest">backtest</span></td></tr>
-        <tr><td class="mono strong">53 live days</td>
-            <td>The record that actually counts &mdash; but see the note below on what &ldquo;live&rdquo; now covers</td>
+        <tr><td class="mono strong">24 committed days</td>
+            <td>Days committed before the outcome existed &mdash; the only rows that are evidence. 54 days carry the live stamp, 30 of them scored in arrears and restamped live on 2026-09-12 (FINDINGS C20)</td>
             <td><span class="badge badge-live">live</span></td></tr>
         <tr><td class="mono strong">~1 year</td>
-            <td>What would falsify this: ~100 independent live blocks with the realized spread at or below zero</td>
+            <td>What would falsify this: ~100 independent blocks committed in advance with the realized spread at or below zero</td>
             <td><span class="badge badge-info">the test</span></td></tr>
         </tbody>
       </table>
+
+      <p class="caveat">What the +4.93 is made of, and where each piece came from. <strong>The
+      timing:</strong> 87% of the implementable return sits in the close-to-open leg on
+      2016&ndash;2021; since 2022 the two legs split evenly and neither is distinguishable from
+      zero (AG-013). <strong>The ranking:</strong> decile 1 earns +5.43, decile 2 +1.22, deciles
+      3&ndash;10 sit at zero, and inside decile 1 the five sub-buckets are not ordered
+      (R3, registered) &mdash; so this is a classifier of one decile, not a ranking to slice
+      finer. AG-013 and AG-018 are agent-fleet findings, not registered blocks.</p>
 
       <p class="caveat">Two changes to what this table reports, both made on 12 September 2026 and
       both recorded in <span class="mono">docs/FINDINGS.md</span> C20. <strong>One:</strong> the
@@ -318,6 +422,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
           <li><strong>Decile</strong> &mdash; one tenth of that day's scored names; roughly 30&ndash;50 stocks here.</li>
           <li><strong>Frozen model</strong> &mdash; fitted once on 2005&ndash;2015, never updated; every later day is out-of-sample.</li>
           <li><strong>Live vs backfill</strong> &mdash; live: scored before the outcome existed; backfill: scored in arrears &mdash; never evidence.</li>
+          <li><strong>Committed in advance</strong> &mdash; written before the outcome existed, judged by when the row was written rather than by its stamp. Since 12 September 2026 the live stamp also covers 30 days scored in arrears, so this is the count that carries evidence.</li>
           <li><strong>Implementable</strong> &mdash; what a one-day-lagged execution at the open would earn: enter at the next open, exit at the open after. The only return reported as a result. The record internally books a close-to-close return instead, which is an accounting convention, not a strategy.</li>
         </ul>
       </details>
@@ -375,7 +480,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-18. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-22. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="static/vendor/echarts.min.js"></script>
 <script>window.QE_ROOT = "";</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
 <script src="static/home.js"></script>
