@@ -33,7 +33,7 @@ try {
     </div>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.6 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <main>
 <nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-changes">What changed</a><a href="#s-status">Where things stand</a><a href="#s-how">How the model works</a><a href="#s-rank">Does the ranking predict returns?</a><a href="#s-explore">Explore</a></nav>
@@ -147,7 +147,7 @@ try {
     </div>
     <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
       <span class="muted">latest scored day</span>
-      <span class="mono">2026-09-21</span>
+      <span class="mono">2026-09-22</span>
       <span class="badge badge-live">live</span></div>
   </header>
 
@@ -156,16 +156,16 @@ try {
       <div class="tiles wide">
         <div class="tile big">
           <span class="t-label">Committed in advance</span>
-          <span class="t-value">24<span class="se">of ~100 needed</span></span>
+          <span class="t-value">25<span class="se">of ~100 needed</span></span>
           <div class="meter" role="progressbar" aria-label="Days committed in advance toward the ~100 needed"
-               aria-valuenow="24" aria-valuemin="0" aria-valuemax="100">
-            <span style="width: 24.0%"></span></div>
-          <span class="t-sub">76 more days committed before the outcome existed, before the
+               aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <span style="width: 25.0%"></span></div>
+          <span class="t-sub">75 more days committed before the outcome existed, before the
             record carries information</span>
         </div>
         <div class="tile">
           <span class="t-label">Live prediction days</span>
-          <span class="t-value muted">54</span>
+          <span class="t-value muted">55</span>
           <span class="t-sub">carry the live stamp; 30 of them were scored in arrears and
             restamped live on 2026-09-12 (FINDINGS C20)</span>
         </div>
@@ -177,16 +177,16 @@ try {
         
         <div class="tile">
           <span class="t-label">Latest book</span>
-          <span class="t-value">48 names</span>
-          <span class="t-sub">2026-09-21 &middot;
+          <span class="t-value">49 names</span>
+          <span class="t-sub">2026-09-22 &middot;
             <span class="badge badge-live">live</span></span>
         </div>
         
         <div class="tile">
           <span class="t-label">Data as of</span>
-          <span class="t-value">2026-09-21</span>
-          <span class="t-sub">prices &middot; indicators 2026-09-21 &middot;
-            targets 2026-09-18</span>
+          <span class="t-value">2026-09-22</span>
+          <span class="t-sub">prices &middot; indicators 2026-09-22 &middot;
+            targets 2026-09-21</span>
         </div>
       </div>
 
@@ -384,8 +384,8 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <tr><td class="mono strong">IC &asymp; +0.01</td>
             <td>Rank correlation between score and next-day outcome &mdash; tiny per name, usable only across ~500 names at once</td>
             <td><span class="badge badge-backtest">backtest</span></td></tr>
-        <tr><td class="mono strong">24 committed days</td>
-            <td>Days committed before the outcome existed &mdash; the only rows that are evidence. 54 days carry the live stamp, 30 of them scored in arrears and restamped live on 2026-09-12 (FINDINGS C20)</td>
+        <tr><td class="mono strong">25 committed days</td>
+            <td>Days committed before the outcome existed &mdash; the only rows that are evidence. 55 days carry the live stamp, 30 of them scored in arrears and restamped live on 2026-09-12 (FINDINGS C20)</td>
             <td><span class="badge badge-live">live</span></td></tr>
         <tr><td class="mono strong">~1 year</td>
             <td>What would falsify this: ~100 independent blocks committed in advance with the realized spread at or below zero</td>
