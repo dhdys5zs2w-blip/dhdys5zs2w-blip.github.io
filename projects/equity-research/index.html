@@ -4,485 +4,578 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>qe — research browser</title>
+<title>qe — a stock-ranking model, explained</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
 <script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
-   ?theme=light|dark previews one theme without remembering it. */
+   ?theme=light|dark previews one theme without remembering it. `nav-js` lets
+   the stylesheet fold the menus away only when script can open them again;
+   it is set here, before first paint, so the bar never jumps, and taken back
+   at `load` if fx.js never marked the nav wired (an error in app.js or fx.js),
+   so a broken script fails open with every link showing. */
+document.documentElement.classList.add("nav-js");
+addEventListener("load", function () {
+  var de = document.documentElement;
+  if (de.getAttribute("data-nav") !== "ready") de.classList.remove("nav-js");
+});
 try {
   var q = new URLSearchParams(location.search).get("theme");
   var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
   if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
 } catch (e) {}</script>
 <link rel="stylesheet" href="static/qe.css"><link rel="stylesheet" href="static/demo.css">
+<link rel="stylesheet" href="static/css/story.css">
 </head>
 <body>
 
+
+
+
+
 <header class="topnav">
-  <a class="brand" href="index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
-  <nav aria-label="Pages">
-    <a href="index.html" class="active">Overview</a>
-    <a href="screener/" class="">Screener</a>
-    <a href="model/" class="">Model</a>
-    <a href="research/" class="">Research</a>
-    <a href="health/" class="">Health</a><a href="sql/">SQL</a><a href="about/">About</a>
+  <a class="brand" href="index.html"><span class="wordmark">qe</span><span class="tagline">a stock-ranking model</span></a>
+  <button id="nav-menu-btn" class="nav-menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span>Menu</button>
+  <nav id="site-nav" class="sitenav" aria-label="Site">
+    <a href="index.html" class="active" aria-current="page">The story</a>
+    <a href="screener/">Explore stocks</a>
+    <div class="hood">
+      <button id="hood-btn" class="hood-btn" type="button" aria-expanded="false" aria-controls="hood-menu">Under the hood<span class="chev" aria-hidden="true"></span></button>
+      <div id="hood-menu" class="hood-menu">
+        <p class="hood-head">Under the hood</p>
+        <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
+        <ul class="hood-list">
+          <li><a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+          <li><a href="model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li><a href="research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
+          <li><a href="health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
+        </ul>
+      </div>
+    </div>
   </nav>
   <div class="navright">
     <div class="navsearch">
-      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <input id="nav-search" type="search" placeholder="Find a stock&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Find a stock by ticker or company name">
       <div id="nav-search-results" class="search-results" hidden></div>
     </div>
+    <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-22 from the live 22.6 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-25 from the live 23.9 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
+
 <main>
-<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-changes">What changed</a><a href="#s-status">Where things stand</a><a href="#s-how">How the model works</a><a href="#s-rank">Does the ranking predict returns?</a><a href="#s-explore">Explore</a></nav>
 
+<div class="story" id="story" data-model-id="09d8c916-37bb-4807-a2b6-266c46d0950d" data-live-start="2026-07-01">
 
-<header class="page-intro">
-  <div class="intro-text">
-    <p class="eyebrow">Quantitative equity research &middot; local-first &middot; read-only</p>
-    <h1>qe research browser</h1>
-    <p class="lede">Any stock's history and patterns, the tradable universe, and the live
-    record of one frozen model &mdash; with the error bars left on.</p>
-    <div class="hero-search">
-      <input id="hero-search" type="search" placeholder="Type a symbol or company name&hellip;" autocomplete="off" spellcheck="false" autofocus aria-label="Search symbol">
-      <div id="hero-search-results" class="search-results" hidden></div>
-    </div>
-  </div>
-</header>
-
-<section class="panel" id="s-changes">
-  <header class="panel-head">
-    <div>
-      <h2>What changed</h2>
-      <p class="panel-sub">Every change to what this site claims and how it is computed, with a
-      link to the panel where you can see it. <em>strategy</em> changes what is scored or claimed;
-      <em>reporting</em> changes what a number counts; <em>systems</em> changes the plumbing under
-      one.</p>
-    </div>
-    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
-  </header>
-
-  <ul class="changelog">
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-strategy">strategy</span>
-      <span class="ch-text">One single-characteristic paper decile is now scored beside the model
-      every night on the same cross-section, so a paired live series exists to measure what the
-      model adds over a plain characteristic sort.
-      <strong>Fixed to <span class="mono">beta_spy_v1</span>
-        on 2026-09-20 12:45.</strong>
-      <a href="model/#s-companion">the companion panel &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-strategy">strategy</span>
-      <span class="ch-text">The +4.93 headline now carries what it is made of wherever it is
-      shown &mdash; roughly half the return to the book's beta tilt (AG-018), earned overnight
-      (AG-013), from a ranking that separates one decile (R3) &mdash; and is never restated
-      beta-adjusted. <a href="/#s-how">the honest numbers &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-reporting">reporting</span>
-      <span class="ch-text">The live record is now counted two ways: days committed before the
-      outcome existed, and days merely carrying the live stamp. Only the first counts toward the
-      ~100 needed, and no stamp was rewritten. <a href="/#s-status">where things stand &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-reporting">reporting</span>
-      <span class="ch-text">A symbol's model record &mdash; its rank history, its predictions and
-      whether it is in the book now &mdash; counts the <strong>active</strong> model's own rows
-      only, so the backfilled rows two 2026-07-24 edge maps left on 101 names no longer appear
-      there, and no live row moved.
-      <a href="symbol/AAPL.html#model">AAPL's model record &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-systems">systems</span>
-      <span class="ch-text">A second frozen model &mdash; trained on the implementable open-to-open
-      target and registered under <span class="mono">docs/pre-registered-S.md</span> &mdash; is now
-      scored beside the production one every night, into its own workbook and its own rows, and is
-      promotable only by that document's calendar and never by what it earns.
-      <a href="model/#s-shadow">the shadow lane &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-systems">systems</span>
-      <span class="ch-text">Every leg-based live number now names the prices it was computed
-      from, because those rows are recomputed from <span class="mono">prices_daily</span> on every
-      nightly ingest. <a href="model/#s-timing">the execution panel &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-systems">systems</span>
-      <span class="ch-text">The live book's turnover is measured and printed beside the round-trip
-      cost that would eat the whole gross &mdash; R2's convention, and gross of a cost nobody has
-      measured. <a href="model/#s-companion">turnover and breakeven &rarr;</a></span>
-    </li>
-    <li>
-      <span class="ch-date mono">2026-09-20</span>
-      <span class="badge badge-kind-systems">systems</span>
-      <span class="ch-text">The health page says how many days the options backfill has been
-      stalled and how many execution fills have been logged, so neither stall is invisible.
-      <a href="health/#s-options">option chains &rarr;</a> &middot;
-      <a href="health/#s-fills">fills &rarr;</a></span>
-    </li>
-  </ul>
-
-  <p class="note">Agent-fleet findings (AG-0nn) are named wherever they are borrowed. They are not
-  registered blocks and they are not record findings &mdash; the research ledger says which is
-  which. <a href="research/#s-closed">closed directions &rarr;</a></p>
-</section>
-
-<section class="panel" id="s-status">
-  <header class="panel-head">
-    <div>
-      <h2>Where things stand</h2>
-      <p class="panel-sub">One frozen model is scored every evening and its picks are recorded
-      before the outcome exists. The record needs about a year of days committed in advance
-      before it can say anything; until then every figure here is a plumbing check.</p>
-    </div>
-    <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
-      <span class="muted">latest scored day</span>
-      <span class="mono">2026-09-22</span>
-      <span class="badge badge-live">live</span></div>
-  </header>
-
-  <div class="split">
-    <div>
-      <div class="tiles wide">
-        <div class="tile big">
-          <span class="t-label">Committed in advance</span>
-          <span class="t-value">25<span class="se">of ~100 needed</span></span>
-          <div class="meter" role="progressbar" aria-label="Days committed in advance toward the ~100 needed"
-               aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-            <span style="width: 25.0%"></span></div>
-          <span class="t-sub">75 more days committed before the outcome existed, before the
-            record carries information</span>
-        </div>
-        <div class="tile">
-          <span class="t-label">Live prediction days</span>
-          <span class="t-value muted">55</span>
-          <span class="t-sub">carry the live stamp; 30 of them were scored in arrears and
-            restamped live on 2026-09-12 (FINDINGS C20)</span>
-        </div>
-        <div class="tile">
-          <span class="t-label">Backfilled days</span>
-          <span class="t-value muted">0</span>
-          <span class="t-sub">scored in arrears &mdash; not evidence</span>
-        </div>
-        
-        <div class="tile">
-          <span class="t-label">Latest book</span>
-          <span class="t-value">49 names</span>
-          <span class="t-sub">2026-09-22 &middot;
-            <span class="badge badge-live">live</span></span>
-        </div>
-        
-        <div class="tile">
-          <span class="t-label">Data as of</span>
-          <span class="t-value">2026-09-22</span>
-          <span class="t-sub">prices &middot; indicators 2026-09-22 &middot;
-            targets 2026-09-21</span>
-        </div>
-      </div>
-
-      <p class="state-line live">A modest cross-sectional effect &mdash; +4.93 bps/day to an
-      execution one day behind the signal, next open to the open after (SE&nbsp;1.83) &mdash; found
-      in backtests and awaiting live confirmation. Roughly half of it is the return to the book's
-      beta tilt (AG-018); it is never restated beta-adjusted. Every number on these pages carries
-      its standard error and one of three evidence states:</p>
-      <div class="evidence-key">
-  <div><span class="badge badge-live">live</span><span><strong>Live</strong> &mdash; scored the evening
-    before the outcome existed. The stamp alone is not evidence:
-    only days committed before the outcome existed count, and 30 live-stamped days were
-    scored in arrears and restamped on 2026-09-12
-    (<span class="mono">docs/FINDINGS.md</span> C20).</span></div>
-  <div><span class="badge badge-backfill">backfill</span><span><strong>Backfill</strong> &mdash; scored in
-    arrears after an outage. Real accounting over a real book, but the position was never committed
-    to in advance: a plumbing check, <strong>not evidence</strong>.</span></div>
-  <div><span class="badge badge-backtest">backtest</span><span><strong>Backtest</strong> &mdash; the frozen
-    model scored on 2016&ndash;2026 dates it never traded. A description of the holdout,
-    <strong>not evidence</strong>.</span></div>
-</div>
-    </div>
-
-    <div>
-      
-      <h3>Active model</h3>
-      <dl class="facts col">
-        <div><dt>Kind</dt><dd class="mono">gbm &middot; h=1 &middot; long only</dd></div>
-        <div><dt>Universe</dt><dd class="mono">liquid500</dd></div>
-        <div><dt>Trained through</dt><dd class="mono">2015-12-31 <span class="muted">&middot; never refit</span></dd></div>
-        <div><dt>Exit buffer</dt><dd class="mono">30% <span class="muted">&middot; chosen before the sweep</span></dd></div>
-      </dl>
-      <p style="margin-top: 0.6rem"><a href="model/">Open the model dashboard &rarr;</a></p>
-      
-
-      
-      <h3 style="margin-top: 1.2rem">Market regime <small>as of 2026-09-08</small></h3>
-      <div class="chips">
-        <span class="chip"><span class="chip-k">vol</span><span class="chip-v">low</span></span>
-        <span class="chip"><span class="chip-k">trend</span><span class="chip-v">above</span></span>
-        <span class="chip"><span class="chip-k">dispersion</span><span class="chip-v">high</span></span>
-      </div>
-      <details class="explain">
-        <summary>What the backtest earned in these states</summary>
-        <table class="kv">
-          
-          <tr><td>vol low</td>
-              <td class="mono">1.20 bps/day
-                <span class="muted">&plusmn;1.70 SE &middot; 1062 days</span></td></tr>
-          
-          <tr><td>dispersion high</td>
-              <td class="mono">7.36 bps/day
-                <span class="muted">&plusmn;2.91 SE &middot; 1614 days</span></td></tr>
-          
-        </table>
-        <p>The figures are the implementable leg &mdash; next open to the open after, the only
-        return an execution following the 18:30 signal can take. States are fixed in advance:
-        SPY's trailing 21-day volatility in point-in-time terciles, SPY above or below its
-        200-day average, and the dispersion of members' 21-day returns in terciles. The
-        registered test (Phase P2) ran on the close-to-close leg, not this one, so its verdict
-        &mdash; the edge concentrated in mid/high volatility and high dispersion &mdash; does not
-        transfer to these numbers without its own registration.</p>
-        <p class="caveat"><span class="badge badge-backtest">backtest</span> The frozen
-model scored on dates it never traded, after the fact. A description of the
-holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
-      </details>
-      
-    </div>
-  </div>
-</section>
-
-<section class="panel explainer-panel" id="s-how">
-  <header class="panel-head">
-    <div>
-      <h2>How the model works</h2>
-      <p class="panel-sub">Prices and volume in, a ranked list out, every evening. Nothing here uses
-      fundamentals, and the model has never been refit.</p>
-    </div>
-  </header>
-
-  <div class="pipeline-wrap">
-  <svg class="pipeline" viewBox="0 0 1160 130" xmlns="http://www.w3.org/2000/svg" role="img"
-       aria-label="Pipeline: universe filter, indicators, frozen model, daily ranking, book construction, live record">
-    
-    
-      
-      <rect class="pipe-box" x="8" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="92" y="57" text-anchor="middle">Universe filter</text>
-      <foreignObject x="16" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">Top 500 by traded dollars, monthly</div>
-      </foreignObject>
-      
-      <path class="pipe-arrow" d="M 176 65 L 200 65"/>
-      <path class="pipe-arrow" d="M 194 60 L 201 65 L 194 70"/>
-      
-    
-      
-      <rect class="pipe-box" x="202" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="286" y="57" text-anchor="middle">Indicators</text>
-      <foreignObject x="210" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">19 signals from price and volume</div>
-      </foreignObject>
-      
-      <path class="pipe-arrow" d="M 370 65 L 394 65"/>
-      <path class="pipe-arrow" d="M 388 60 L 395 65 L 388 70"/>
-      
-    
-      
-      <rect class="pipe-box" x="396" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="480" y="57" text-anchor="middle">Frozen model</text>
-      <foreignObject x="404" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">Trained on 2005–2015, never refit</div>
-      </foreignObject>
-      
-      <path class="pipe-arrow" d="M 564 65 L 588 65"/>
-      <path class="pipe-arrow" d="M 582 60 L 589 65 L 582 70"/>
-      
-    
-      
-      <rect class="pipe-box" x="590" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="674" y="57" text-anchor="middle">Daily ranking</text>
-      <foreignObject x="598" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">Every name scored, ranked best to worst</div>
-      </foreignObject>
-      
-      <path class="pipe-arrow" d="M 758 65 L 782 65"/>
-      <path class="pipe-arrow" d="M 776 60 L 783 65 L 776 70"/>
-      
-    
-      
-      <rect class="pipe-box" x="784" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="868" y="57" text-anchor="middle">Book</text>
-      <foreignObject x="792" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">Top ~10% in, out below 30%</div>
-      </foreignObject>
-      
-      <path class="pipe-arrow" d="M 952 65 L 976 65"/>
-      <path class="pipe-arrow" d="M 970 60 L 977 65 L 970 70"/>
-      
-    
-      
-      <rect class="pipe-box last" x="978" y="28" width="168" height="74" rx="6"/>
-      <text class="pipe-title" x="1062" y="57" text-anchor="middle">Live record</text>
-      <foreignObject x="986" y="64" width="152" height="36">
-        <div xmlns="http://www.w3.org/1999/xhtml" class="pipe-sub">Logged append-only, before outcomes</div>
-      </foreignObject>
-      
-    
-    <text class="pipe-note" x="8" y="16">every evening, left to right</text>
-  </svg>
-  </div>
-
-  <div class="explainer-cols">
-    <div class="explainer-prose">
-      <ol class="steps">
-        <li><strong>Universe</strong><span>Each month, the 500 most-traded US stocks by 20-day
-          median dollar volume &mdash; <em>including names that later delisted</em>, because
-          dropping them would flatter every historical number.</span></li>
-        <li><strong>Signals</strong><span>19 technical indicators computed from price and volume
-          only (25 built, then pruned by correlation). There are no fundamentals anywhere in
-          this system.</span></li>
-        <li><strong>Frozen model</strong><span>A gradient-boosted model trained once, on
-          2005&ndash;2015, and never refit &mdash; on purpose. The live record is only meaningful
-          because the map is held still while reality is compared against it.</span></li>
-        <li><strong>Ranking and book</strong><span>Each evening every name the model can score
-          (up to ~500) is ranked best to worst. The top tenth &mdash; typically 49 names &mdash;
-          forms an equal-weight, long-only paper book with a 30% buffer: a name enters in the
-          top tenth and is not sold until it drops out of the top 30%, so a typical name is held
-          several days and turnover roughly halves.</span></li>
-        <li><strong>Live record</strong><span>The book is logged append-only before the outcome
-          exists, and evaluated on next-day returns. A day scored in arrears is marked backfill
-          and never counts as evidence.</span></li>
+  <nav class="story-nav subnav" id="story-nav" aria-label="Chapters">
+    <div class="sn-inner">
+      <p class="sn-title">The story</p>
+      <ol class="sn-list">
+        <li><a href="#c-top"><i class="sn-dot" aria-hidden="true"></i>Start</a></li>
+        <li><a href="#c-idea"><i class="sn-dot" aria-hidden="true"></i>The idea</a></li>
+        <li><a href="#c-sees"><i class="sn-dot" aria-hidden="true"></i>How it sees</a></li>
+        <li><a href="#c-works"><i class="sn-dot" aria-hidden="true"></i>Does it work?</a></li>
+        <li><a href="#c-live"><i class="sn-dot" aria-hidden="true"></i>Live since July</a></li>
+        <li><a href="#c-picks"><i class="sn-dot" aria-hidden="true"></i>Today's picks</a></li>
+        <li><a href="#c-guard"><i class="sn-dot" aria-hidden="true"></i>Guardrails</a></li>
+        <li><a href="#c-unknown"><i class="sn-dot" aria-hidden="true"></i>Still unknown</a></li>
+        <li><a href="#c-tried"><i class="sn-dot" aria-hidden="true"></i>Didn't pan out</a></li>
+        <li><a href="#c-deeper"><i class="sn-dot" aria-hidden="true"></i>Go deeper</a></li>
       </ol>
-      <details class="explain">
-        <summary>What the model keys on, and how big the edge really is</summary>
-        <p>What the model keys on is not fast timing. Feature attribution puts about 34% of its
-        importance on ATR% (realized volatility) and 28% on distance from the 200-day moving
-        average &mdash; it conditions on a stock's volatility-and-trend <em>state</em>.</p>
-        <p>Be blunt about scale: the claimed edge is a few basis points per day, which on a $100k
-        book is roughly tens of dollars a day before trading costs. The backtests support it
-        &mdash; and show that it is earned overnight, not during the session, and that it carries
-        into the following night, so an execution one day behind the signal keeps it. The live
-        record, which is the only test that can't be gamed, has barely begun.</p>
+      <span class="sn-bar" aria-hidden="true"><span></span></span>
+    </div>
+  </nav>
+
+  <div class="st-body">
+
+  
+  <section class="st-hero" id="c-top" aria-labelledby="st-title">
+    <div class="st-hero-grid">
+      <div class="st-hero-text">
+        <p class="st-eyebrow" data-rise style="--d: 0">A stock-ranking model, explained</p>
+        <h1 id="st-title" data-rise style="--d: 1">Every evening, a frozen model ranks about 500 of the most&#8209;traded US&nbsp;stocks.</h1>
+        <p class="st-lede" data-rise style="--d: 2">This is what it does, how it did on ten years of
+          data it had never seen, and how it has done live since July&nbsp;1 &mdash; with the
+          give-or-take left on every number.</p>
+      </div>
+      <figure class="st-field" id="st-field" data-rise style="--d: 3">
+        <svg id="universe-field" class="st-field-svg" role="img"
+             aria-label="The stocks the model ranks, one dot each, with its current picks lit"></svg>
+        <figcaption id="field-caption">The stocks it ranks, one dot each; its current picks are lit.</figcaption>
+      </figure>
+    </div>
+
+    <dl class="st-band" id="st-band" data-rise style="--d: 4">
+      <div class="st-cell">
+        <dt>Live trading days since July&nbsp;1</dt>
+        <dd>
+          <span class="st-big" id="hero-live-days" data-count="57">57</span>
+          <span class="st-sub">counted from July 1, 2026; the latest
+            Sep 24, 2026</span>
+        </dd>
+      </div>
+      <div class="st-cell">
+        <dt>The picks vs. their sector peers, since July&nbsp;1</dt>
+        <dd>
+          <span class="st-big" id="hero-live-cum">&mdash;</span>
+          <span class="st-sub st-nojs">shown when JavaScript is on</span>
+          <span class="st-gt" id="hero-live-gt">&nbsp;</span>
+          <svg class="st-spark" id="spark-live" aria-hidden="true"></svg>
+          <span class="st-sub" id="hero-live-sub">each day's edge added up, on paper, before trading costs</span>
+        </dd>
+      </div>
+      <div class="st-cell">
+        <dt>A decade it never saw, 2016&ndash;2026</dt>
+        <dd>
+          
+          <span class="st-big" id="hero-decade">+0.05%</span><span class="st-unit">a day</span>
+          <span class="st-gt" id="hero-decade-gt">give or take 0.02%</span>
+          <svg class="st-spark" id="spark-decade" aria-hidden="true"></svg>
+          <span class="st-sub" id="hero-decade-sub">roughly +12% a year over sector peers,
+            before trading costs, give or take 5%.
+            About half of it goes with a lean toward stocks that swing more than the market.</span>
+          
+        </dd>
+      </div>
+      <div class="st-cell">
+        <dt id="clock-label">Next scoring run</dt>
+        <dd>
+          <span class="st-big" id="clock-time">Nightly</span>
+          <span class="st-sub" id="clock-sub">after the US market closes</span>
+        </dd>
+      </div>
+    </dl>
+
+    <a class="st-cue" href="#c-idea">Start the story<span class="st-chev" aria-hidden="true"></span></a>
+  </section>
+
+  
+  <section class="st-ch" id="c-idea" aria-labelledby="h-idea">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>01</span>The idea in a minute</p>
+      <h2 id="h-idea">Prices in, a ranked list out, every evening.</h2>
+      <p class="st-lede">Five steps, the same every night. None of them reads company accounts or
+        the news: the model sees only prices and trading volumes &mdash; each stock's own, and its
+        sector's and the market's to compare against.</p>
+    </header>
+
+    <ol class="st-steps" id="st-steps" data-reveal>
+      <li class="st-step" style="--i: 0">
+        <span class="st-step-n" id="step-universe">500</span>
+        <strong>The universe</strong>
+        <span>The 500 most-traded US stocks, re-picked every month by dollar volume &mdash;
+          including companies that later disappeared, not only today's survivors (with one gap,
+          described under <a href="#c-unknown">the open questions</a>).</span>
+      </li>
+      <li class="st-step" style="--i: 1">
+        <span class="st-step-n">19</span>
+        <strong>Nineteen signals</strong>
+        <span>Measurements built from prices and volumes alone: how much a stock swings, where
+          it sits against its 200-day average, how it has moved lately, and how it compares with
+          its sector and the market.</span>
+      </li>
+      <li class="st-step" style="--i: 2">
+        <span class="st-step-n">2015</span>
+        <strong>A frozen model</strong>
+        <span>A gradient-boosted model &mdash; many small decision trees, each correcting the
+          last &mdash; learned from 2005&ndash;2015, once. It has not been retrained since.</span>
+      </li>
+      <li class="st-step" style="--i: 3">
+        <span class="st-step-n">#1</span>
+        <strong>A ranking</strong>
+        <span>Each evening it scores every stock and ranks them from favourite to least
+          favourite.</span>
+      </li>
+      <li class="st-step" style="--i: 4">
+        <span class="st-step-n" id="step-book">39</span>
+        <strong>The picks</strong>
+        <span>The top tenth, held in equal amounts. It only ever buys &mdash; it never bets on a
+          stock falling (what traders call selling short). A stock joins in the top 10% and stays
+          until it drops out of the top 30%, so it is usually held for several days and about a
+          fifth of the list changes each day.</span>
+      </li>
+    </ol>
+
+    <div class="st-trade" data-reveal>
+      <h3>The trade you could actually make</h3>
+      <ol class="st-beats">
+        <li><b>Day 1 · 4:00 pm ET</b><span>The market closes.</span></li>
+        <li><b>Day 1 · about 6:30 pm</b><span>The model ranks every stock.</span></li>
+        <li class="act"><b>Day 2 · 9:30 am</b><span>Buy the picks at the open.</span></li>
+        <li class="act"><b>Day 3 · 9:30 am</b><span>Sell at the open.</span></li>
+        <li class="st-span" aria-hidden="true"></li>
+      </ol>
+      <p class="st-trade-read">Every result on this page is measured that way &mdash; from the next
+        morning's open to the open after &mdash; and against the average stock in the same sector,
+        so a day when the whole market rises counts for nothing on its own. The picks do lean
+        toward stocks that swing harder than the market, though, and how much of the result that
+        lean explains is taken up under <a href="#c-works">Does it work?</a></p>
+    </div>
+
+    <p class="st-example" id="idea-example" data-reveal>The latest
+      picks were made on September 24, 2026.</p>
+  </section>
+
+  
+  <section class="st-ch" id="c-sees" aria-labelledby="h-sees">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>02</span>How the model sees the market</p>
+      <h2 id="h-sees">It leans toward stocks that move a lot, and weighs where each one sits against its long-run trend.</h2>
+      <p class="st-lede">Each dot is one of today's stocks. Across: how much it typically moves in a
+        day. Up: how far its price sits above or below its 200-day average. The model's current
+        picks are lit. Hover or tap a dot to see which stock it is; click to open it.</p>
+    </header>
+
+    <figure class="st-fig" data-reveal>
+      <p class="st-key" id="universe-key">
+        <span><i class="k-pick" aria-hidden="true"></i>the model's current picks</span>
+        <span><i class="k-rest" aria-hidden="true"></i>every other stock</span>
+        <span><i class="k-pin" aria-hidden="true"></i>beyond the edge, pinned to it</span>
+        <span><i class="k-ref" aria-hidden="true"></i>dashed: the median stock's daily move, and a price right at its 200-day average</span>
+      </p>
+      <div id="chart-universe" class="st-chart tall" role="img"
+           aria-label="Scatter of today's stocks: typical daily move across, distance from the 200-day average up, the model's picks highlighted"></div>
+      <p class="st-nojs">This picture needs JavaScript. <a href="screener/">Explore stocks</a> lists the same stocks as a table.</p>
+      <figcaption class="st-caption" id="sees-read">&nbsp;</figcaption>
+    </figure>
+
+    <p class="st-aside" data-reveal>It does not simply buy the most volatile names. How much a stock
+      swings is about a third of what the model pays attention to, and how far it sits from its
+      200-day average &mdash; a common gauge of a stock's long-run trend &mdash; about 28%. It weighs
+      the two together, so a volatile stock can rank high or low depending on where it sits; the
+      line under the chart says where today's picks sit.</p>
+  </section>
+
+  
+  <section class="st-ch" id="c-works" aria-labelledby="h-works">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>03</span>Does it work?</p>
+      <h2 id="h-works">On a decade it had never seen, the picks beat their sector peers &mdash; by a
+        little, and unevenly.</h2>
+      <p class="st-lede">The model learned from 2005&ndash;2015. Everything from
+        January 2016 to September 2026 was new to it:
+        <span id="works-days" data-count="2684">2,684</span> trading days
+        on which to check whether its picks did better than the average stock in their own
+        sector.</p>
+    </header>
+
+    <div class="st-headline" data-reveal>
+      <div class="st-hl-figure">
+        
+        <p class="st-hl-num"><span class="st-huge" id="works-mean">+0.05%</span><span class="st-hl-unit">a day, on average</span></p>
+        <p class="st-hl-gt" id="works-gt">give or take 0.02%</p>
+        
+      </div>
+      <div class="st-hl-read">
+        
+        <p id="works-read">That is +4.93 basis points (hundredths of a percent) a day,
+          give or take 1.83 &mdash; about 2.7 times its
+          give-or-take away from zero, so luck alone is an unlikely explanation, though not an
+          impossible one. Added up over a year of trading days it comes to roughly
+          +12%, before trading costs.</p>
+        
+        <div class="st-range" id="range-decade" aria-label="The decade's average day with its give-or-take range"></div>
+      </div>
+    </div>
+
+    <figure class="st-fig" data-reveal>
+      <div class="st-fig-head">
+        <h3>Every day's edge, added up</h3>
+        <span class="st-fig-meta" id="decade-meta">Jan 4, 2016 &ndash; Sep 8, 2026</span>
+      </div>
+      <div id="chart-decade" class="st-chart" role="img"
+           aria-label="The picks' edge over sector peers, added up day by day across the tested decade"></div>
+      <p class="st-nojs">This chart needs JavaScript; the average above is the same record.</p>
+      <figcaption class="st-caption">The picks' daily edge over the average stock in their sector,
+        summed day by day (not compounded), before trading costs. Rising stretches are where the
+        edge showed up; flat or falling ones &mdash; some of them whole years &mdash; are where it
+        did not.<span id="decade-read"></span></figcaption>
+    </figure>
+
+    <figure class="st-fig" data-reveal>
+      <div class="st-fig-head">
+        <h3>Year by year</h3>
+        <span class="st-fig-meta">the average day in each year; whiskers show its give or take</span>
+      </div>
+      <div id="chart-years" class="st-chart short" role="img"
+           aria-label="The average day in each year of the tested decade, with its give-or-take"></div>
+      <p class="st-nojs">This chart needs JavaScript.</p>
+      <figcaption class="st-caption" id="years-read">&nbsp;</figcaption>
+      <details class="st-table">
+        <summary>Show the numbers</summary>
+        <div class="st-tablewrap"><table>
+          <thead><tr><th>Year</th><th class="num">Average day</th><th class="num">Give or take</th>
+            <th class="num">Trading days</th><th class="num">Days ahead</th></tr></thead>
+          <tbody id="years-table"></tbody>
+        </table></div>
       </details>
+    </figure>
+
+    <div class="st-made" data-reveal>
+      <h3 class="st-h3">What that number is made of</h3>
+      <div class="st-cards">
+        <article class="st-card">
+          <p class="st-card-k">Where the ranking works</p>
+          <h4>Only the top tenth</h4>
+          <p>Below the model's favourite tenth, its ranking does not sort returns: the second-best
+            tenth is not reliably better than the middle. Everything rests on the top tenth, which
+            is why the picks are only those names.</p>
+        </article>
+        <article class="st-card">
+          <p class="st-card-k">When it is earned</p>
+          <h4>Overnight</h4>
+          <p>The edge shows up between one day's close and the next morning's open. The ranking is
+            ready on Day&nbsp;1's evening, too late for that first night &mdash; but the edge
+            carries into the next night too, from Day&nbsp;2's close to Day&nbsp;3's open, and the
+            trade above holds the picks through it.</p>
+        </article>
+        <article class="st-card" id="card-lean">
+          <p class="st-card-k">Where the size comes from</p>
+          <h4>About half goes with a lean toward market-sensitive stocks</h4><p>The picks lean toward stocks that swing further than the market when it moves.
+            Roughly half of the average day goes with that lean, and what is left over is too
+            small, so far, to tell apart from zero.</p>
+          <p>A second check points the same way. Take the picks' own returns &mdash; not measured
+            against their sector &mdash; and remove the pull of the S&amp;P&nbsp;500, which they
+            move about 1.6 times as much as: about +0.014% a day (+1.42 basis points) is left,
+            again too small to tell apart from zero.</p>
+          <p class="st-card-foot">So it is not yet shown that the model adds anything beyond that
+            lean. The headline above includes it.</p>
+        </article>
+        <article class="st-card" id="card-costs">
+          <p class="st-card-k">What trading costs</p>
+          <h4>Costs eat into it quickly</h4>
+          <p>Each stock swapped in costs a round trip &mdash; buying it, and later selling it
+            &mdash; and about a fifth of the picks are swapped each day. At a round-trip cost of
+            2.5, 10 or 20 basis points, roughly +4.4, +2.9 or +0.9 basis points a day is
+            left, each give or take about 1.8, as the
+            headline is. At 20, what is left cannot be told apart from zero.</p>
+          <div class="mb" aria-hidden="true">
+            
+            <div class="mb-row"><span>at a cost of 2.5</span><b>+4.4</b><span class="mb-bar"><span style="--w: 89.2%"></span></span></div>
+            
+            <div class="mb-row"><span>at a cost of 10</span><b>+2.9</b><span class="mb-bar"><span style="--w: 58.8%"></span></span></div>
+            
+            <div class="mb-row"><span>at a cost of 20</span><b>+0.9</b><span class="mb-bar"><span style="--w: 18.2%"></span></span></div>
+            
+            <p class="mb-unit">basis points a day left, after a round-trip cost in basis points</p>
+          </div>
+          <p class="st-card-foot">It breaks even near a round-trip cost of 0.24% (24 basis points).
+            The real cost of trading at the open has not been measured yet.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="st-ch" id="c-live" aria-labelledby="h-live">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>04</span>Live since July&nbsp;1</p>
+      <h2 id="h-live">57 live trading days so far, from the same frozen model.</h2>
+      <p class="st-lede">From July 1, 2026, every evening the model scored counts as
+        a live trading day. It is a paper record: each evening's picks are written down and scored
+        as if bought at the next open and sold at the open after, against sector peers. No real
+        trades have been logged yet.</p>
+    </header>
+
+    <div class="st-tiles" data-reveal>
+      <div class="st-tile">
+        <span class="k">Live trading days</span>
+        <span class="v" id="live-days">57</span>
+        <span class="s" id="live-days-sub">first scored Jul 7, 2026 (the run
+          that started the record reached back only that far), latest Sep 24, 2026</span>
+      </div>
+      <div class="st-tile">
+        <span class="k">Ahead of sector peers, added up</span>
+        <span class="v" id="live-cum">&mdash;</span>
+        <span class="st-nojs">shown when JavaScript is on</span>
+        <span class="s" id="live-cum-sub">&nbsp;</span>
+      </div>
+      <div class="st-tile">
+        <span class="k">The average live day</span>
+        <span class="v" id="live-avg">&mdash;</span>
+        <span class="st-nojs">shown when JavaScript is on</span>
+        <span class="s" id="live-avg-sub">&nbsp;</span>
+      </div>
+      <div class="st-tile">
+        <span class="k">Days the picks came out ahead</span>
+        <span class="v" id="live-pos">&mdash;</span>
+        <span class="st-nojs">shown when JavaScript is on</span>
+        <span class="s" id="live-pos-sub">&nbsp;</span>
+      </div>
+    </div>
+    <p class="st-note" id="after-the-fact">30 of these days were scored after the fact,
+      most of them in one catch-up run in early August, when the model was first set up to run each
+      night, and the rest after missed nightly runs; it was the same frozen model either way.</p>
+    
+
+    <figure class="st-fig" data-reveal>
+      <div class="st-fig-head">
+        <h3>The live days, added up</h3>
+        <span class="st-fig-meta" id="live-meta">Jul 7, 2026 &ndash; Sep 24, 2026</span>
+      </div>
+      <div id="chart-live" class="st-chart tall" role="img"
+           aria-label="The live days' edge over sector peers added up, beside the pace of the tested decade's average day, with each day's result below"></div>
+      <p class="st-nojs">This chart needs JavaScript.</p>
+      <figcaption class="st-caption">Top: the live days added up, beside the dashed pace the tested
+        decade's average day would have set. Bottom: each day on its own. A day's result arrives two
+        mornings after it is scored, so the newest days have none yet.<span id="live-lumps"></span></figcaption>
+    </figure>
+
+    <div class="st-compare" data-reveal>
+      <h3 class="st-h3">Is it the same edge?</h3>
+      <div class="st-range" id="range-live" aria-label="The live average day and the decade's, each with its give-or-take range"></div>
+      <p class="st-range-key">Dot: the average day. Thick bar: give or take once. Thin bar: twice
+        &mdash; the usual line for &ldquo;probably not luck&rdquo;.</p>
+      <p class="st-nojs">This comparison needs JavaScript. The tested decade's average day, with its
+        give-or-take, is under <a href="#c-works">Does it work?</a></p>
+      <p class="st-compare-read" id="live-read">&nbsp;</p>
+      <p class="st-caption" id="live-overlap"></p>
     </div>
 
-    <div class="explainer-side">
-      <h3>The honest numbers</h3>
-      <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span></div>
-      <table class="data honest">
-        <tbody>
-        <tr><td class="mono strong">+4.93 bps/day <small>(SE&nbsp;1.83)</small></td>
-            <td>An execution one day behind the signal &mdash; next open to the open after. The only backtest return reported here, because it is the only one an execution following an 18:30 signal can take. Costs at the open unmeasured (P3). Roughly half of it is the return to the book&rsquo;s beta tilt &mdash; slope +0.42 on the forward market, 52% of the mean on this decade, residual +2.36 at t&nbsp;1.45 (AG-018, an agent-fleet finding, not a registered block); it is never restated beta-adjusted</td>
-            <td><span class="badge badge-backtest">backtest</span></td></tr>
-        <tr><td class="mono strong">IC &asymp; +0.01</td>
-            <td>Rank correlation between score and next-day outcome &mdash; tiny per name, usable only across ~500 names at once</td>
-            <td><span class="badge badge-backtest">backtest</span></td></tr>
-        <tr><td class="mono strong">25 committed days</td>
-            <td>Days committed before the outcome existed &mdash; the only rows that are evidence. 55 days carry the live stamp, 30 of them scored in arrears and restamped live on 2026-09-12 (FINDINGS C20)</td>
-            <td><span class="badge badge-live">live</span></td></tr>
-        <tr><td class="mono strong">~1 year</td>
-            <td>What would falsify this: ~100 independent blocks committed in advance with the realized spread at or below zero</td>
-            <td><span class="badge badge-info">the test</span></td></tr>
-        </tbody>
-      </table>
-
-      <p class="caveat">What the +4.93 is made of, and where each piece came from. <strong>The
-      timing:</strong> 87% of the implementable return sits in the close-to-open leg on
-      2016&ndash;2021; since 2022 the two legs split evenly and neither is distinguishable from
-      zero (AG-013). <strong>The ranking:</strong> decile 1 earns +5.43, decile 2 +1.22, deciles
-      3&ndash;10 sit at zero, and inside decile 1 the five sub-buckets are not ordered
-      (R3, registered) &mdash; so this is a classifier of one decile, not a ranking to slice
-      finer. AG-013 and AG-018 are agent-fleet findings, not registered blocks.</p>
-
-      <p class="caveat">Two changes to what this table reports, both made on 12 September 2026 and
-      both recorded in <span class="mono">docs/FINDINGS.md</span> C20. <strong>One:</strong> the
-      close-to-close figures this table used to lead with &mdash; the +3.61 selection alpha, the
-      +6.00 top-minus-bottom spread, the +0.44 intraday leg and the t&nbsp;=&nbsp;2.16 factor
-      alpha &mdash; are no longer reported, because all of them book entry at a close whose signal
-      is not committed until 18:30. They remain in the registrations and in
-      <span class="mono">backtest_daily</span>. <strong>Two:</strong> 30 days that were scored in
-      arrears are now stamped live, so the live count above includes days whose outcome already
-      existed when they were scored &mdash; 19 of them scored by a model that did not yet exist.</p>
-
-      <details class="explain">
-        <summary>Glossary</summary>
-        <ul class="glossary">
-          <li><strong>Excess return</strong> &mdash; a stock's return minus its sector median, centered so each day's full cross-section averages zero.</li>
-          <li><strong>bps</strong> &mdash; basis points; 1 bp = 0.01%, so 100 bps = 1%.</li>
-          <li><strong>SE</strong> &mdash; standard error; roughly, &plusmn;2 SE spans the plausible range around an estimate.</li>
-          <li><strong>Independent block</strong> &mdash; a stretch of adjacent days counted as one observation, since days overlap.</li>
-          <li><strong>IC</strong> &mdash; rank correlation between model ranking and realized outcomes.</li>
-          <li><strong>Decile</strong> &mdash; one tenth of that day's scored names; roughly 30&ndash;50 stocks here.</li>
-          <li><strong>Frozen model</strong> &mdash; fitted once on 2005&ndash;2015, never updated; every later day is out-of-sample.</li>
-          <li><strong>Live vs backfill</strong> &mdash; live: scored before the outcome existed; backfill: scored in arrears &mdash; never evidence.</li>
-          <li><strong>Committed in advance</strong> &mdash; written before the outcome existed, judged by when the row was written rather than by its stamp. Since 12 September 2026 the live stamp also covers 30 days scored in arrears, so this is the count that carries evidence.</li>
-          <li><strong>Implementable</strong> &mdash; what a one-day-lagged execution at the open would earn: enter at the next open, exit at the open after. The only return reported as a result. The record internally books a close-to-close return instead, which is an accounting convention, not a strategy.</li>
-        </ul>
-      </details>
+    <div class="st-meter" data-reveal>
+      <div class="st-meter-head">
+        <h3 class="st-h3">How long until we know</h3>
+        <span class="st-meter-count"><b>57</b> of about 250 live trading days</span>
+      </div>
+      <div class="st-meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="250"
+           aria-valuenow="57" aria-label="Live trading days toward about a year">
+        <span class="st-meter-fill" style="--pct: 22.8%"></span>
+      </div>
+      <p class="st-meter-read">About a year of trading days &mdash; roughly 250 &mdash;
+        is what the live record needs before it can say much either way, and even then it will
+        catch a large miss more easily than it can confirm an edge as small as the tested one.
+        193 to go: at one a weekday, about
+        9 more months.</p>
     </div>
+  </section>
+
+  
+  <section class="st-ch" id="c-picks" aria-labelledby="h-picks">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>05</span>Today's picks</p>
+      <h2 id="h-picks">39 names, picked on September 24, 2026.</h2>
+      <p class="st-lede">What the model holds after its latest run. A stock joins in the top tenth and
+        stays until it drops out of the top 30%, so some of today's picks now rank a little below the
+        top tenth. Each card shows the two things the model weighs most: how much the stock
+        typically moves in a day, and where it sits against its 200-day average. Open one to see its
+        history.</p>
+    </header>
+    <div class="st-picks-wrap" data-reveal>
+      <div class="st-picks" id="picks-grid">
+        <p class="st-nojs">The cards need JavaScript. <a href="screener/">Explore stocks</a> lists every
+          stock with the model's rank beside it.</p>
+      </div>
+      <aside class="st-mix" id="picks-mix" aria-label="The picks by sector against the whole list">
+        <h3 class="st-h3">By sector</h3>
+        <p class="st-mix-sub">Bar: share of the picks. Tick: share of all the stocks it ranks.</p>
+        <div id="mix-rows"></div>
+      </aside>
+    </div>
+  </section>
+
+  
+  <section class="st-ch" id="c-guard" aria-labelledby="h-guard">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>06</span>The guardrails</p>
+      <h2 id="h-guard">Built to be hard to fool, itself included.</h2>
+      <p class="st-lede">Most models that look good on history do so because someone kept adjusting
+        them until they did. Four habits stand in the way of that here.</p>
+    </header>
+    <ol class="st-guard" data-reveal>
+      <li style="--i: 0"><b>Rules first, results second.</b><span>Every test's pass-or-fail rule was
+        written down before the test ran, so no threshold was chosen after seeing the answer.</span></li>
+      <li style="--i: 1"><b>A test on shuffled data.</b><span>The whole pipeline was run on data whose
+        outcomes had been shuffled, where there is nothing to find &mdash; and it found nothing. A
+        pipeline that finds patterns in noise would have shown it there.</span></li>
+      <li style="--i: 2"><b>Never retuned.</b><span>The model has not been adjusted on recent data.
+        Every number on this page comes from the one model, trained once.</span></li>
+      <li style="--i: 3"><b>Failures stay on the record.</b><span>Ideas that did not work are kept
+        and written up, not quietly deleted &mdash; a few of them are listed below.</span></li>
+    </ol>
+  </section>
+
+  
+  <section class="st-ch" id="c-unknown" aria-labelledby="h-unknown">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>07</span>What we don't know yet</p>
+      <h2 id="h-unknown">Four open questions.</h2>
+    </header>
+    <ul class="st-open" data-reveal>
+      <li><b>Whether live will match the test.</b><span>The live record is short. About a year of live
+        days is needed before it can say much either way about the tested edge.</span></li>
+      <li><b>What trading really costs.</b><span>No real trades have been logged yet, so the cost of
+        trading at the open is an estimate, not a measurement.</span></li>
+      <li><b>A gap in the test data.</b><span>Stocks without a current sector label &mdash; about 8% of
+        the tested stock-days &mdash; were left out of the test. What that did to the number has not
+        been measured yet.</span></li>
+      <li><b>Why it varies so much by year.</b><span>The edge has been uneven: below zero in 2022, large
+        in 2020 and 2025. A decade is not many years to learn a pattern like that from.</span></li>
+    </ul>
+  </section>
+
+  
+  <section class="st-ch" id="c-tried" aria-labelledby="h-tried">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>08</span>Ideas that didn't pan out</p>
+      <h2 id="h-tried">Tried, measured, set aside.</h2>
+    </header>
+    <details class="st-closed" data-reveal>
+      <summary><span>Six ideas that were tried or weighed, and set aside</span><span class="st-plus" aria-hidden="true"></span></summary>
+      <ul>
+        <li><b>Finer ways to use the ranking</b><span>Weighting names by score, concentrating the
+          picks, splitting them into slices: the top tenth is the only part of the ranking that
+          works, so there was nothing finer to use.</span></li>
+        <li><b>Leaning the training toward recent years</b><span>Did not help &mdash; if anything it
+          did slightly worse. (A second version, trained on data up to mid-2025 and on the trade you
+          could actually make, is tracked beside this one each night without being traded; it is not part of any number
+          on this page.)</span></li>
+        <li><b>Switching on or sizing by market mood</b><span>Turning the picks up or down with how
+          volatile the market is, or how far apart stocks' moves are, was not reliable.</span></li>
+        <li><b>An overnight-only version</b><span>Holding only from the close to the next open earns
+          less than it would cost to trade that often.</span></li>
+        <li><b>The model against a simpler ranking</b><span>Comparing the picks with a plain sort on
+          one measure, such as how strongly each stock moves with the market: too few days to tell
+          the two apart. That comparison now builds up night by night instead.</span></li>
+        <li><b>Betting against its least-favourite stocks</b><span>Selling short the bottom of the
+          list was not pursued: below the top tenth the ranking does not sort returns, so the
+          bottom is not reliably worse than the middle.</span></li>
+      </ul>
+    </details>
+  </section>
+
+  
+  <section class="st-ch st-ch-last" id="c-deeper" aria-labelledby="h-deeper">
+    <header class="st-head" data-reveal>
+      <p class="st-kicker"><span>09</span>Go deeper</p>
+      <h2 id="h-deeper">Under the hood, for the curious.</h2>
+      <p class="st-lede">The working pages behind this story: every test, every caveat and every
+        nightly run, in the project's own vocabulary.</p>
+    </header>
+    <nav class="st-deeper" aria-label="Under the hood" data-reveal>
+      <a href="screener/"><strong>Explore stocks</strong><span>Every stock the model ranks, with its
+        rank, recent moves and signals. Filter, sort, open any one.</span></a>
+      <a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly
+        record, the market map and every caveat, in full.</span></a>
+      <a href="model/"><strong>Model dashboard</strong><span>Every chart of the frozen model's record,
+        day by day.</span></a>
+      <a href="research/"><strong>Research log</strong><span>Every test that was run, the rule it was
+        judged by and the result.</span></a>
+      <a href="health/"><strong>Data health</strong><span>How fresh the data is and how the nightly
+        runs went.</span></a>
+    </nav>
+    <p class="st-end">A research project, not investment advice. &ldquo;qe&rdquo; is short for
+      quantitative equity.
+      Prices as of September 24, 2026.</p>
+  </section>
+
   </div>
-</section>
-
-
-<section class="panel" id="s-rank" data-model-id="09d8c916-37bb-4807-a2b6-266c46d0950d">
-  <header class="panel-head">
-    <div>
-      <h2>Does the ranking predict returns?</h2>
-      <p class="panel-sub">Every scored name on every scored day, sorted into tenths of the model's
-      rank. If the model orders stocks at all, the bars should rise from left to right &mdash; and
-      with about two months of days against an edge of a few bps, noise will dominate for a long
-      time.</p>
-    </div>
-    <div class="panel-tags"><span class="badge badge-live">live</span><span class="badge badge-backfill">backfill</span>
-      <span class="muted">counted separately</span></div>
-  </header>
-  <p class="muted small" id="rank-profile-meta"><span class="loading">loading</span></p>
-  <div id="chart-rank-profile" class="chart"></div>
-  <details class="explain">
-    <summary>How to read this</summary>
-    <p>This chart uses the full scored cross-section &mdash; up to ~500 names
-    a day, fewer on reduced-coverage days &mdash; not just the book. Each day
-    every scored name with a realized next day falls into a rank decile &mdash; the model's
-    least favorite tenth on the left, its favorite tenth on the right &mdash;
-    and each bar is the realized next-day excess return in bps, averaged
-    within each day first, then across all scored days, with a block-bootstrap
-    standard error. It is out-of-sample by construction: the model was frozen
-    at end-2015 and scoring began July 2026.</p>
-    <p>Note <em>which end</em> does the separating: a long-only
-    book only harvests the top decile, so strong separation at the bottom
-    alone &mdash; the model's rejects underperforming &mdash; would not be
-    captured by this construction. One more caveat: some scored days were
-    recovered in arrears. The scores are deterministic either way, but only
-    evening-of days prove the commitment came before the outcome &mdash; the
-    same rule that keeps live and backfill separate everywhere else here.</p>
-  </details>
-</section>
-
-
-<section class="panel" id="s-explore">
-  <header class="panel-head">
-    <div><h2>Explore</h2><p class="panel-sub">Where each page goes deeper.</p></div>
-  </header>
-  <div class="quicklinks">
-    <a href="screener/"><strong>Screener</strong><span>Every current member of the universe: recent returns, the indicators the model reads, option-implied volatility, and today's model rank.</span></a>
-    <a href="model/"><strong>Model dashboard</strong><span>The paper record, the rank test, the registered timing and regime results, and the current book.</span></a>
-    <a href="research/"><strong>Research ledger</strong><span>Every pre-registered block and what it concluded, beside the document that fixed its rules before it ran.</span></a>
-    <a href="health/"><strong>Data health</strong><span>Freshness, fetch outcomes, the options backfill and the run ledger.</span></a>
-  </div>
-</section>
-
+</div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-22. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-25. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "";</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
-<script src="static/home.js"></script>
+<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-09-25T09:06-05:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
+<script src="static/fx.js"></script>
+<script src="static/story.js"></script>
 </body>
 </html>

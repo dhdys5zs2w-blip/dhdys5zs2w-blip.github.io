@@ -216,9 +216,10 @@
     }
     let m;
     if ((m = url.match(/^\/api\/symbol\/([^/]+)\/(prices|patterns|indicators|model|options)(?:\/([^/?#]+))?$/))) {
-      const b = await getBundle(m[1]);
+      // the page scripts encodeURIComponent the symbol (and the indicator id)
+      const b = await getBundle(decodeURIComponent(m[1]));
       if (m[2] === "indicators" && m[3]) {
-        const s = b.indicator_series[m[3]];
+        const s = b.indicator_series[decodeURIComponent(m[3])];
         if (!s) throw new Error("HTTP 404 for " + url);
         return s;
       }
@@ -229,6 +230,8 @@
     if ((m = url.match(/^\/api\/model\/([^/]+)\/([a-z_]+)(?:\?source=([a-z]+))?$/)))
       return getJSON("data/api/model/" + m[1] + "/" + m[2] + (m[3] ? "_" + m[3] : "") + ".json");
     if (url === "/api/research") return getJSON("data/api/research.json");
+    // the overview's market map: one universe is exported, so a ?universe= query reads the same file
+    if (url === "/api/market_map" || url.startsWith("/api/market_map?")) return getJSON("data/api/market_map.json");
     throw new Error("demo: no static mapping for " + url);
   }
 

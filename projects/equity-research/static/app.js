@@ -7,7 +7,34 @@
 (function () {
   const charts = [];
 
+  /* in-flight count, announced so fx.js can draw the fetch bar */
+  let inflight = 0;
+  const announce = (d) => {
+    inflight += d;
+    document.dispatchEvent(new CustomEvent("qe:inflight", { detail: { n: inflight } }));
+  };
+
+  /* Every in-app link a script builds goes through href/symbolHref, and a
+   * static snapshot of the site (the portfolio export) announces itself as
+   * window.QE_SNAPSHOT = {exported_at}. One seam re-roots every link, and a
+   * page that would describe "now" — a countdown, a page age — describes the
+   * moment of the export instead of pretending to be live. */
+  const snapshot = window.QE_SNAPSHOT || null;
+  const href = (path) => {
+    // portfolio demo: app paths -> the static copy's folders
+    const [p, hash] = path.split("#");
+    const map = { "/": "index.html", "/screener": "screener/", "/model": "model/",
+                  "/research": "research/", "/health": "health/" };
+    return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\//, "")) + (hash ? "#" + hash : "");
+  };
+  const symbolHref = (sym) => window.QE_ROOT + "symbol/" + encodeURIComponent(sym) + ".html";
+
   async function qeFetch(url) {
+    announce(1);
+    try { return await fetchJson(url); } finally { announce(-1); }
+  }
+
+  async function fetchJson(url) {
     // portfolio demo: every /api/* call is resolved to a static file by demo-shim.js
     return window.QE_DEMO.fetch(url);
   }
@@ -91,6 +118,10 @@
   function mkChart(id) {
     const el = document.getElementById(id);
     if (!el) return null;
+    // a second call on the same element returns the chart already there, so
+    // toggles that redraw never stack duplicate resize handlers
+    const existing = echarts.getInstanceByDom(el);
+    if (existing) return existing;
     const c = echarts.init(el, "qe");
     charts.push(c);
     return c;
@@ -348,7 +379,7 @@
     const render = (matches) => {
       if (!matches.length) { close(); return; }
       box.innerHTML = matches.map((m) =>
-        '<a href="' + window.QE_ROOT + 'symbol/' + m.symbol + '.html"><span class="mono strong">' + m.symbol +
+        '<a href="' + symbolHref(m.symbol) + '"><span class="mono strong">' + esc(m.symbol) +
         '</span><span class="s-name">' + esc(m.name || "") + "</span>" +
         (m.status === "Delisted" ? '<span class="badge badge-warn">delisted</span>' : "") +
         "</a>").join("");
@@ -396,6 +427,6 @@
     });
   });
 
-  window.qe = { fetch: qeFetch, chart: mkChart, colors, bars, fmtPct, fmtNum, fmtCompact, fmtBps, pm, esc,
+  window.qe = { fetch: qeFetch, href, symbolHref, snapshot, chart: mkChart, colors, bars, fmtPct, fmtNum, fmtCompact, fmtBps, pm, esc,
                 tile, signCls, tableFilter, whiskerSeries, renderRankProfile, rankProfileMeta };
 })();

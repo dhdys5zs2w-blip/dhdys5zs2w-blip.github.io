@@ -1,0 +1,210 @@
+/* Symbol page (/symbol/<SYM>): the hero quote, the stats strip, the sticky
+ * tab bar with its sliding ink, the period chips and the chart readout.
+ *
+ * Built from the shared tokens and the "motion and play" vocabulary in
+ * qe.css (.pulse-card, .seg, .switch, kbd). Nothing here uses the
+ * live/backfill/backtest hues: being listed, being a universe member and
+ * being in the model's book are statuses, not evidence states, so they are
+ * drawn from --accent, --neutral and --warn-*. Signed values take --pos/--neg.
+ * Every transition is behind `.fx` (set by fx.js) and inert under
+ * prefers-reduced-motion (the reset in qe.css); without script the page is
+ * static and complete. */
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---- hero ------------------------------------------------------------------ */
+.sym-hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  gap: 1rem 2.2rem; align-items: stretch;
+}
+@media (max-width: 900px) { .sym-hero { grid-template-columns: minmax(0, 1fr); } }
+.sym-id { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.sym-id h1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.75rem; margin: 0.15rem 0 0.35rem; }
+.sym-hero h1 .sym-ticker {
+  font-size: clamp(2.3rem, 1.6rem + 2.4vw, 3.4rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1;
+}
+.sym-hero .subname { margin-left: 0; font-size: 1.05rem; }
+.sym-id .badges { margin-top: 0.55rem; }
+
+/* listing status: neutral, with an accent dot — never the live hue */
+.badge-status { background: var(--panel-2); border-color: var(--line); color: var(--ink-2); }
+.badge-status::before { content: ""; width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--accent); }
+/* in the model's book now: a position, built from --accent */
+.badge-book {
+  background: var(--accent-soft); border-color: var(--accent); color: var(--accent);
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.badge-book::before {
+  content: ""; width: 0.55em; height: 0.55em; border-radius: 50%;
+  border: 2px solid currentColor; box-sizing: border-box;
+}
+.badge-book:hover, .badge-book:focus-visible { background: var(--accent); color: var(--accent-ink); text-decoration: none; }
+.badge-book[hidden] { display: none; }
+
+/* ---- quote card ------------------------------------------------------------ */
+.sym-quote { padding: 0.85rem 1.1rem 0.75rem; gap: 0.3rem; justify-content: center; }
+.q-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
+.q-asof { font-size: 0.74rem; color: var(--muted); }
+.q-main { display: flex; align-items: center; gap: 0.5rem 0.8rem; flex-wrap: wrap; }
+.q-price {
+  font-size: clamp(2rem, 1.55rem + 1.5vw, 2.6rem); font-weight: 500; line-height: 1.05;
+  letter-spacing: -0.015em; color: var(--ink);
+}
+.chg-pill {
+  display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums; font-size: 0.82rem; font-weight: 500;
+  padding: 0.2rem 0.65rem; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-2);
+}
+.chg-pill[hidden] { display: none; }
+.chg-pill .arrow { font-size: 0.6rem; }
+.chg-pill .sep { color: var(--muted); }
+.chg-pill .k { font-family: var(--font-sans); font-size: 0.66rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-left: 0.15rem; }
+.chg-pill.pos { color: var(--pos); background: color-mix(in srgb, var(--pos) 11%, transparent); border-color: color-mix(in srgb, var(--pos) 32%, transparent); }
+.chg-pill.neg { color: var(--neg); background: color-mix(in srgb, var(--neg) 11%, transparent); border-color: color-mix(in srgb, var(--neg) 32%, transparent); }
+
+.q-spark-btn {
+  display: block; width: 100%; border: 0; padding: 0.15rem 0; margin: 0.1rem 0 0; background: none;
+  cursor: zoom-in; border-radius: 6px; color: inherit;
+}
+.q-spark-btn[hidden] { display: none; }
+.q-spark-btn:hover { background: var(--panel-2); }
+.q-spark { display: block; width: 100%; height: 52px; overflow: visible; }
+.q-spark .sp-area { fill: var(--accent-soft); opacity: 0.8; }
+.q-spark .sp-line { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
+.q-spark .sp-dot { fill: var(--accent); stroke: var(--panel); stroke-width: 2; }
+.fx .sym-quote .sp-line { stroke-dasharray: 1 1; stroke-dashoffset: 0; transition: stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1) 0.1s; }
+.fx .sym-quote:not(.armed) .sp-line { stroke-dashoffset: 1; }
+.fx .sym-quote .sp-area, .fx .sym-quote .sp-dot { transition: opacity 0.6s ease 1s; }
+.fx .sym-quote:not(.armed) .sp-area, .fx .sym-quote:not(.armed) .sp-dot { opacity: 0; }
+
+.range52[hidden] { display: none; }
+.r-head { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.r-head .mono { text-transform: none; letter-spacing: 0; font-size: 0.76rem; color: var(--ink-2); }
+.r-track { position: relative; height: 6px; border-radius: 99px; background: var(--line-2); margin: 0.5rem 0 0.3rem; }
+.r-fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--at, 0%); border-radius: 99px; background: var(--accent-soft); }
+.r-mark {
+  position: absolute; top: 50%; left: var(--at, 0%); width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--panel); border: 3px solid var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.fx .sym-quote .r-mark { transition: left 1.3s cubic-bezier(.2,.8,.2,1) 0.25s; }
+.fx .sym-quote .r-fill { transition: width 1.3s cubic-bezier(.2,.8,.2,1) 0.25s; }
+.fx .sym-quote:not(.armed) .r-mark { left: 0%; }
+.fx .sym-quote:not(.armed) .r-fill { width: 0%; }
+.r-ends { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--muted); }
+.q-foot { margin: 0.25rem 0 0; font-size: 0.74rem; color: var(--muted); line-height: 1.4; }
+.q-foot:empty { display: none; }
+
+/* ---- stats strip: a hairline grid of cells --------------------------------- */
+#symbol-page > .stats-strip {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.6rem), 1fr));
+  gap: 1px; padding: 0; margin: 1.1rem 0 0; overflow: hidden;
+  background: var(--line-2); border: 1px solid var(--line); border-radius: 10px;
+}
+#symbol-page > .stats-strip > .loading, #symbol-page > .stats-strip > .muted { background: var(--panel); padding: 0.7rem 0.9rem; grid-column: 1 / -1; }
+#symbol-page .stats-strip .stat { min-width: 0; }
+#symbol-page > .stats-strip .stat { background: var(--panel); padding: 0.6rem 0.9rem 0.55rem; transition: background 0.15s; }
+#symbol-page > .stats-strip .stat:hover { background: var(--panel-2); }
+#symbol-page > .stats-strip .stat .v { font-size: 1.08rem; }
+#symbol-page .stats-strip .stat .k { overflow-wrap: anywhere; }
+
+/* ---- tab bar: sticky under the top nav, ink slides to the active tab ------- */
+.sym-tabbar {
+  /* --sym-sticky-top is the top nav's measured height (symbol.js); --nav-h is
+   * only its minimum, and the bar would tuck a few pixels under the nav */
+  position: sticky; top: var(--sym-sticky-top, var(--nav-h)); z-index: 15;
+  display: flex; align-items: flex-end; gap: 1rem;
+  margin: 1.1rem calc(-1 * var(--gutter)) 1rem; padding: 0 var(--gutter);
+  background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.sym-tabbar .tabs { position: relative; flex: 1 1 auto; min-width: 0; border-bottom: 0; margin: 0 0 -1px; scrollbar-width: none; }
+.sym-tabbar .tab { margin-bottom: 0; border-radius: 6px 6px 0 0; transition: color 0.15s, background 0.15s; display: inline-flex; align-items: center; gap: 0.4rem; }
+.sym-tabbar .tab:hover { background: color-mix(in srgb, var(--panel-2) 80%, transparent); }
+.sym-tabbar .tabs.inked .tab.active { border-bottom-color: transparent; }
+.tab-ink {
+  position: absolute; left: 0; bottom: 0; height: 2px; width: 0; border-radius: 2px 2px 0 0;
+  background: var(--accent); pointer-events: none; opacity: 0;
+}
+.tabs.inked .tab-ink { opacity: 1; }
+.fx .tab-ink { transition: transform 0.34s cubic-bezier(.3,1.25,.4,1), width 0.34s cubic-bezier(.3,1.25,.4,1); }
+.tab-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.tab-dot[hidden] { display: none; }
+.tab-keys { flex: none; display: flex; align-items: center; gap: 0.25rem; margin: 0; padding-bottom: 0.55rem; font-size: 0.72rem; color: var(--muted); }
+@media (max-width: 760px), (hover: none) { .tab-keys { display: none; } }
+/* below 760 px the top nav wraps to several rows, taller than --nav-h, and
+ * would cover a sticky bar — so the tab bar scrolls with the page there */
+@media (max-width: 760px) { .sym-tabbar { position: static; } }
+
+/* the pane enters from the side the reader moved toward; on a phone it only
+ * fades, since a sideways start would widen the page for the length of it */
+.fx #symbol-page .tabpane.active { animation: sym-pane-in 0.34s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes sym-pane-in { from { opacity: 0; transform: translateX(var(--pane-shift, 0px)); } }
+@media (min-width: 761px) { #symbol-page .tabpane { --pane-shift: var(--pane-dx, 0px); } }
+
+/* ---- history tools --------------------------------------------------------- */
+.hist-tools { gap: 0.6rem 1.2rem; }
+#symbol-page .seg { position: relative; }
+#symbol-page .seg button { border-radius: 99px; margin-left: 0; position: relative; z-index: 1; }
+#symbol-page .seg button:disabled { opacity: 0.45; cursor: default; }
+.seg-thumb {
+  position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; border-radius: 99px;
+  background: var(--accent); box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 35%, transparent);
+  pointer-events: none; opacity: 0;
+}
+.fx .seg-thumb { transition: transform 0.3s cubic-bezier(.3,1.3,.45,1), width 0.3s cubic-bezier(.3,1.3,.45,1), opacity 0.2s; }
+/* only while the thumb is showing does the pressed chip hand its fill to it;
+ * otherwise the chip keeps the shared pressed style and can never read blank */
+#symbol-page .seg.thumb-on button.on { background: transparent; color: var(--accent-ink); }
+.win-readout { margin-left: auto; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.win-readout .k, .chart-readout .rd-k {
+  font-family: var(--font-sans); font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin-right: 0.4rem;
+}
+@media (max-width: 760px) { .win-readout { margin-left: 0; flex-basis: 100%; } }
+
+.chart-readout {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 1.15rem; min-height: 2.15rem;
+  padding: 0.42rem 0.75rem; margin: 0.3rem 0 0.35rem;
+  background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--radius);
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-2); font-variant-numeric: tabular-nums;
+}
+.chart-readout .rd { white-space: nowrap; }
+.chart-readout .rd-date { color: var(--ink); font-weight: 500; }
+.rd-latest {
+  font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-soft); border-radius: 99px; padding: 0.05rem 0.4rem; margin-left: 0.3rem;
+}
+
+/* ---- patterns: drawdown rows open the history chart ------------------------- */
+.dd-show {
+  border: 1px solid var(--line); background: var(--panel); color: var(--accent); border-radius: 99px;
+  font: inherit; font-size: 0.72rem; padding: 0.05rem 0.55rem; cursor: pointer; white-space: nowrap;
+}
+.dd-show:hover { border-color: var(--accent); background: var(--accent-soft); }
+.dd-show:disabled { opacity: 0.45; cursor: default; border-color: var(--line); background: var(--panel); }
+/* the heatmap's keyboard path: the canvas cells take no focus */
+.month-pick { margin: 0.5rem 0 0; gap: 0.4rem 0.6rem; }
+.month-pick[hidden] { display: none; }
+.month-pick select {
+  border: 1px solid var(--line); background: var(--panel); color: var(--ink-2); border-radius: var(--radius);
+  padding: 0.22rem 0.4rem; font: inherit; font-size: 0.8rem;
+}
+
+/* ---- model: the short rank chart need not stretch to the scatter's height -- */
+#model-tab-body .grid2 { align-items: start; }
+
+/* ---- indicators ------------------------------------------------------------- */
+.ind-step button { min-width: 2rem; font-size: 1rem; line-height: 1; padding: 0.18rem 0.6rem; }
+#indicator-select { max-width: 100%; }
+
+/* ---- phone ------------------------------------------------------------------ */
+@media (max-width: 520px) {
+  .sym-quote { padding: 0.75rem 0.85rem 0.65rem; }
+  #symbol-page .chart.tall { height: 380px; }
+  #symbol-page > .stats-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chart-readout { gap: 0.15rem 0.8rem; font-size: 0.74rem; }
+  .sym-tabbar .tab { padding-inline: 0.55rem; }
+}

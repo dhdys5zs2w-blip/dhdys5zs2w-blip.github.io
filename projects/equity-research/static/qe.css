@@ -55,7 +55,7 @@
   --radius: 6px;
   --gutter: clamp(16px, 3vw, 40px);
   --zoom-fill: rgba(44, 90, 160, 0.10);
-  --nav-h: 3.1rem;
+  --nav-h: 3.4rem;          /* the bar's real height: the search box sets it (54px) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -138,22 +138,71 @@ abbr[title], .help { text-decoration: underline dotted; text-underline-offset: 2
 hr.rule { border: 0; border-top: 1px solid var(--line-2); margin: 1rem 0; }
 
 /* ---- navigation + footer -------------------------------------------------- */
+/* Two front rooms and a workshop: "The story" and "Explore stocks" are plain
+ * links; the working pages sit behind one "Under the hood" disclosure (fx.js).
+ * Below 900 px the links fold into a Menu disclosure, so the bar stays one row
+ * and the section nav can stick beneath it. Both folds happen only under
+ * `.nav-js` (set in base.html's head): without script every link shows. */
 .topnav {
   display: flex; align-items: center; gap: 1.4rem; min-height: var(--nav-h);
   background: var(--panel); border-bottom: 1px solid var(--line);
   padding: 0.45rem var(--gutter); position: sticky; top: 0; z-index: 30;
 }
-.brand { display: flex; align-items: baseline; gap: 0.55rem; color: var(--ink); }
+.brand { display: flex; align-items: baseline; gap: 0.55rem; color: var(--ink); flex: none; }
 .brand:hover { text-decoration: none; }
 .brand .wordmark { font-family: var(--font-serif); font-weight: 600; font-size: 1.35rem; letter-spacing: -0.01em; line-height: 1; }
-.brand .tagline { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.topnav nav { display: flex; gap: 0.15rem; }
-.topnav nav a {
+.brand .tagline { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.sitenav { display: flex; align-items: center; gap: 0.15rem; }
+.sitenav > a, .hood-btn {
   color: var(--ink-2); padding: 0.32rem 0.6rem; border-radius: var(--radius); font-size: 0.92rem;
-  border-bottom: 2px solid transparent;
+  border-bottom: 2px solid transparent; white-space: nowrap;
 }
-.topnav nav a:hover { background: var(--panel-2); text-decoration: none; color: var(--ink); }
-.topnav nav a.active { color: var(--ink); font-weight: 600; border-bottom-color: var(--accent); border-radius: var(--radius) var(--radius) 0 0; }
+.hood-btn {
+  border-top: 0; border-left: 0; border-right: 0; background: none; font-family: inherit; line-height: inherit;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 0.45rem;
+}
+.sitenav > a:hover, .hood-btn:hover { background: var(--panel-2); text-decoration: none; color: var(--ink); }
+.sitenav > a.active, .hood-btn.active { color: var(--ink); font-weight: 600; border-bottom-color: var(--accent); border-radius: var(--radius) var(--radius) 0 0; }
+.hood-btn[aria-expanded="true"] { background: var(--panel-2); color: var(--ink); }
+.hood-btn .chev {
+  width: 0.4em; height: 0.4em; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-0.12em) rotate(45deg); opacity: 0.75;
+}
+.hood-btn[aria-expanded="true"] .chev { transform: translateY(0.1em) rotate(-135deg); }
+.hood { position: relative; }
+.hood-menu {
+  display: none; position: absolute; top: calc(100% + 0.6rem); left: -0.4rem; z-index: 45;
+  width: min(24rem, calc(100vw - 2rem)); padding: 0.45rem;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+}
+.hood.open .hood-menu { display: block; }
+/* without script the menu opens on focus instead, so its links stay reachable */
+html:not(.nav-js) .hood:focus-within .hood-menu { display: block; }
+/* and on hover for a mouse: a no-script Safari click never focuses the button.
+ * The strip above the menu bridges the gap, so the pointer can cross to it. */
+@media (hover: hover) and (min-width: 901px) {
+  html:not(.nav-js) .hood:hover .hood-menu { display: block; }
+  html:not(.nav-js) .hood-menu::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 0.75rem; }
+}
+.hood-head { display: none; }
+.hood-intro { margin: 0.25rem 0.6rem 0.45rem; color: var(--muted); font-size: 0.78rem; line-height: 1.4; }
+.hood-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.1rem; }
+.hood-list a { display: block; padding: 0.5rem 0.6rem 0.55rem; border-radius: 7px; color: var(--ink); }
+.hood-list a:hover { background: var(--accent-soft); text-decoration: none; }
+/* muted on the accent tint falls below 4.5:1 in the light theme; the blurb
+ * darkens with its background */
+.hood-list a:hover span, .hood-list a:focus-visible span { color: var(--ink-2); }
+.hood-list a strong { display: block; font-family: var(--font-serif); font-weight: 600; font-size: 0.98rem; line-height: 1.3; }
+.hood-list a span { display: block; color: var(--muted); font-size: 0.8rem; line-height: 1.38; margin-top: 0.1rem; }
+.hood-list a[aria-current="page"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--accent); }
+.hood-list a[aria-current="page"] strong::after {
+  /* shown, not read out: aria-current already says it (the second
+   * declaration gives it empty alt text where supported) */
+  content: "you are here"; content: "you are here" / ""; margin-left: 0.5rem; font-family: var(--font-sans); font-weight: 600; font-size: 0.6rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); vertical-align: 0.15em;
+}
+.hood-list a:focus-visible { background: var(--accent-soft); box-shadow: var(--focus); }
+.nav-menu-btn { display: none; }
 .navright { margin-left: auto; display: flex; align-items: center; gap: 0.6rem; }
 .navsearch { position: relative; }
 .navsearch input, .hero-search input {
@@ -185,11 +234,86 @@ footer {
   border-top: 1px solid var(--line); color: var(--muted);
   padding: 0.7rem var(--gutter); font-size: 0.8rem; background: var(--panel);
 }
-@media (max-width: 760px) {
-  .topnav { flex-wrap: wrap; gap: 0.5rem 1rem; }
-  .navright { margin-left: 0; width: 100%; }
-  .navsearch { flex: 1; } .navsearch input { min-width: 0; width: 100%; }
+@media (max-width: 1180px) {
+  .brand .tagline { display: none; }
+  .navsearch input { min-width: 12rem; }
 }
+@media (max-width: 900px) {
+  .topnav { gap: 0.5rem; }
+  .navright { order: 2; flex: 1 1 auto; min-width: 0; margin-left: 0; gap: 0.4rem; }
+  .navsearch { flex: 1; min-width: 0; } .navsearch input { min-width: 0; width: 100%; }
+  /* the Menu button sits right after the brand, where it is in the page and
+   * in the Tab order, so what a keyboard reaches next is what is seen next */
+  .nav-js .nav-menu-btn {
+    order: 1; flex: none; display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: var(--radius);
+    padding: 0.38rem 0.7rem; font: inherit; font-size: 0.86rem; cursor: pointer;
+  }
+  .nav-menu-btn[aria-expanded="true"] { background: var(--panel-2); border-color: var(--accent); }
+  .burger, .burger::before, .burger::after { display: block; width: 0.9rem; height: 1.5px; border-radius: 1px; background: currentColor; }
+  .burger { position: relative; }
+  .burger::before, .burger::after { content: ""; position: absolute; left: 0; }
+  .burger::before { top: -0.28rem; } .burger::after { top: 0.28rem; }
+  .nav-menu-btn[aria-expanded="true"] .burger { background: transparent; }
+  .nav-menu-btn[aria-expanded="true"] .burger::before { top: 0; transform: rotate(45deg); }
+  .nav-menu-btn[aria-expanded="true"] .burger::after { top: 0; transform: rotate(-45deg); }
+  /* the folded menu: one stacked list under the bar */
+  .nav-js .sitenav {
+    display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 45;
+    flex-direction: column; align-items: stretch; gap: 0.1rem;
+    padding: 0.5rem var(--gutter) 0.9rem; max-height: calc(100vh - var(--nav-h)); overflow-y: auto;
+    background: var(--panel); border-bottom: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .nav-js .topnav.menu-open .sitenav { display: flex; }
+  .sitenav > a { padding: 0.6rem; font-size: 1rem; }
+  .sitenav > a::after { display: none; }
+  .sitenav > a.active { border-bottom-color: transparent; border-radius: var(--radius); background: var(--panel-2); box-shadow: inset 3px 0 0 var(--accent); }
+  .hood-btn { display: none; }
+  .hood-menu {
+    display: block; position: static; width: auto; margin-top: 0.35rem; padding: 0.6rem 0 0;
+    border: 0; border-top: 1px solid var(--line-2); border-radius: 0; box-shadow: none; background: none;
+  }
+  .hood-head { display: block; margin: 0 0.6rem 0.15rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+  /* without script the links take a second row, every one of them shown, and
+   * the bar scrolls away with the page: unfolded it is several rows tall, and
+   * pinned it would keep half a phone's screen. With it goes the room every
+   * sticky strip leaves for it (--nav-h), so section navs stick at the top. */
+  html:not(.nav-js) { --nav-h: 0px; }
+  html:not(.nav-js) .topnav { position: static; }
+  html:not(.nav-js) .topnav { flex-wrap: wrap; }
+  html:not(.nav-js) .sitenav { order: 4; width: 100%; flex-wrap: wrap; }
+  html:not(.nav-js) .hood { flex-basis: 100%; }
+}
+/* A touch screen wider than a phone, without script (a tablet held sideways):
+ * Safari never focuses a tapped button and there is no hover, so the hood
+ * list could not be opened. It unfolds as a second row instead, as on a phone. */
+@media (hover: none) and (min-width: 901px) {
+  html:not(.nav-js) { --nav-h: 0px; }
+  html:not(.nav-js) .topnav { position: static; flex-wrap: wrap; row-gap: 0.3rem; }
+  html:not(.nav-js) .sitenav { order: 4; width: 100%; flex-wrap: wrap; }
+  html:not(.nav-js) .hood { flex-basis: 100%; }
+  html:not(.nav-js) .hood-btn { display: none; }
+  html:not(.nav-js) .hood-menu {
+    display: block; position: static; width: auto; padding: 0.4rem 0 0; margin-top: 0.2rem;
+    border: 0; border-top: 1px solid var(--line-2); border-radius: 0; box-shadow: none; background: none;
+  }
+  html:not(.nav-js) .hood-head { display: block; margin: 0 0.6rem 0.15rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+  html:not(.nav-js) .hood-list { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+}
+@media (max-width: 600px) { .kbd-btn { display: none; } }
+@media (max-width: 380px) { .theme-toggle .label { display: none; } }
+
+/* ---- "under the hood": the working pages say where the reader is ----------- */
+/* A signpost, not a warning: the accent tint, never amber. */
+.underhood {
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--bg)); border-bottom: 1px solid var(--line-2);
+  color: var(--ink-2); font-size: 0.85rem; line-height: 1.45;
+}
+.uh-inner { max-width: 1320px; margin: 0 auto; padding: 0.5rem var(--gutter); display: flex; align-items: flex-start; gap: 0.6rem; }
+.uh-icon { flex: none; width: 1rem; height: 1rem; margin-top: 0.14rem; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.underhood p { margin: 0; }
+.underhood strong { color: var(--ink); }
+.uh-link { white-space: nowrap; font-weight: 600; margin-left: 0.15rem; }
 
 /* ---- section navigation (long pages) --------------------------------------- */
 .subnav {
@@ -322,7 +446,6 @@ table.compare td.num .n { display: block; color: var(--muted); font-size: 0.74re
 .badge-backtest { background: var(--backtest-soft); border-color: transparent; color: var(--backtest); }
 .badge-warn { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn-ink); }
 .badge-info { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
-.badge-ok { background: var(--live-soft); border-color: transparent; color: var(--live); }
 /* "this panel moved" and the changelog's three kinds. Deliberately built from
  * the accent and warn tokens only: live/backfill/backtest are evidence states
  * and a change is not one, so no reserved hue is borrowed here and no CVD
@@ -440,8 +563,8 @@ dl.verdict-list dd .muted { font-size: 0.78rem; }
 .pipeline .pipe-note { font-family: var(--font-sans); font-size: 11px; fill: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
 .pipeline .pipe-sub { font: 11px/1.25 var(--font-sans); color: var(--muted); text-align: center; }
 .pipeline .pipe-arrow { stroke: var(--neutral); stroke-width: 1.5; fill: none; }
-.explainer-cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; }
-@media (max-width: 900px) { .explainer-cols { grid-template-columns: 1fr; } }
+.explainer-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 2rem; }
+@media (max-width: 900px) { .explainer-cols { grid-template-columns: minmax(0, 1fr); } }
 .explainer-prose p { margin: 0 0 0.85rem; max-width: 68ch; }
 .explainer-side h3 { margin-top: 0; }
 ol.steps { list-style: none; margin: 0.2rem 0 0.6rem; padding: 0; counter-reset: step; display: grid; gap: 0.7rem; }
@@ -455,6 +578,9 @@ ol.steps li strong { display: block; font-family: var(--font-serif); font-size: 
 ol.steps li span { color: var(--ink-2); font-size: 0.92rem; }
 table.honest td { vertical-align: top; font-size: 0.85rem; }
 table.honest td:first-child { white-space: nowrap; }
+/* just above the one-column fold the side column is too narrow for the figure
+ * and its SE on one line; the SE drops under it, still in the same cell */
+@media (max-width: 1000px) { table.honest td:first-child small { display: block; } }
 table.honest td:first-child .mono { font-size: 0.95rem; }
 table.honest td:last-child { white-space: nowrap; }
 details.explain {
@@ -528,3 +654,227 @@ ul.changelog .ch-text strong { color: var(--ink); }
 .loading { color: var(--muted); font-size: 0.88rem; }
 .loading::before { content: ""; display: inline-block; width: 0.7em; height: 0.7em; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; margin-right: 0.45em; vertical-align: -0.05em; animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ==== motion and play ======================================================
+ * The interaction layer (fx.js, pulse.js). Motion is spent on navigation and
+ * on a number arriving — never on its size — and none of it borrows the
+ * live/backfill/backtest hues for decoration: the calendar uses them only for
+ * the days that *are* those states. Every rule below that moves is inert
+ * under prefers-reduced-motion (the reset near the top of this file) and
+ * behind the `.fx` class fx.js sets, so without script the page is static. */
+
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+
+/* ---- nav: a gradient hairline and an animated underline ------------------- */
+.topnav { box-shadow: 0 1px 0 var(--line); border-bottom-color: transparent; }
+.topnav::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--series2) 70%, transparent);
+  opacity: 0.55;
+}
+.sitenav > a, .hood-btn { position: relative; transition: color 0.15s, background 0.15s; }
+.sitenav > a::after, .hood-btn::after {
+  content: ""; position: absolute; left: 0.6rem; right: 0.6rem; bottom: -2px; height: 2px; border-radius: 2px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.22s cubic-bezier(.2,.8,.2,1);
+}
+.sitenav > a:hover::after, .hood-btn:hover::after { transform: scaleX(0.5); }
+.sitenav > a.active, .hood-btn.active { border-bottom-color: transparent; }
+.sitenav > a.active::after, .hood-btn.active::after { transform: scaleX(1); }
+/* the menus drop in; the chevron and the burger turn with them */
+.fx .hood.open .hood-menu, .fx .topnav.menu-open .sitenav { animation: drop-in 0.17s cubic-bezier(.2,.8,.2,1) both; }
+.fx .hood-btn .chev, .fx .burger::before, .fx .burger::after { transition: transform 0.2s cubic-bezier(.2,.8,.2,1), top 0.2s; }
+@keyframes drop-in { from { opacity: 0; transform: translateY(-6px); } }
+.brand .wordmark {
+  background: linear-gradient(120deg, var(--ink) 40%, var(--accent) 60%, var(--ink) 80%);
+  background-size: 250% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text;
+  color: transparent; transition: background-position 0.8s ease;
+}
+.brand:hover .wordmark { background-position: 0 0; }
+.kbd-btn { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 0.28rem 0.45rem; cursor: pointer; color: var(--ink-2); }
+.kbd-btn:hover { background: var(--panel-2); border-color: var(--accent); }
+kbd {
+  font-family: var(--font-mono); font-size: 0.72rem; padding: 0.05rem 0.35rem; border-radius: 4px;
+  border: 1px solid var(--line); border-bottom-width: 2px; background: var(--panel-2); color: var(--ink-2);
+}
+.kbd-btn kbd { border: 0; background: none; padding: 0; }
+
+/* ---- fetch bar ------------------------------------------------------------ */
+.fetch-bar {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 60; pointer-events: none; opacity: 0;
+  background: linear-gradient(90deg, var(--accent), var(--series2)); box-shadow: 0 0 8px var(--accent);
+}
+.fetch-bar.on { opacity: 1; width: 80%; transition: width 6s cubic-bezier(.1,.7,.2,1), opacity 0.1s; }
+.fetch-bar.on.done { width: 100%; opacity: 0; transition: width 0.25s ease, opacity 0.35s ease 0.2s; }
+
+/* ---- panels rise in, and follow the cursor -------------------------------- */
+.fx .panel:not(.in), .fx .pulse-card:not(.in), .fx .card:not(.in) { opacity: 0; transform: translateY(14px); }
+.fx .panel, .fx .pulse-card, .fx .card {
+  transition: opacity 0.55s cubic-bezier(.2,.7,.2,1), transform 0.55s cubic-bezier(.2,.7,.2,1), border-color 0.2s, box-shadow 0.2s;
+}
+.fx .panel { position: relative; }
+.fx .panel::before, .fx .pulse-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0), var(--accent-soft), transparent 60%);
+  transition: opacity 0.3s;
+}
+.fx .panel:hover::before, .fx .pulse-card:hover::before { opacity: 0.55; }
+.fx .panel > *, .fx .pulse-card > * { position: relative; }
+.fx .panel:hover { border-color: color-mix(in srgb, var(--accent) 28%, var(--line)); }
+.fx .tile.boxed, .fx .chip { transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s; }
+.fx .tile.boxed:hover, .fx .chip:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--line); }
+.fx .meter > span { animation: meter-in 1.2s cubic-bezier(.2,.8,.2,1) both; transform-origin: left; }
+@keyframes meter-in { from { transform: scaleX(0); } }
+
+/* ---- the pulse ------------------------------------------------------------- */
+.pulse {
+  display: grid; gap: 0.9rem; margin: 0.4rem 0 0.9rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 0.95fr) minmax(0, 1.45fr);
+}
+@media (max-width: 1180px) { .pulse { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .pulse { grid-template-columns: 1fr; } }
+.pulse-card {
+  position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  padding: 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; overflow: hidden;
+}
+.pulse-card .t-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.pulse-sub { color: var(--muted); font-size: 0.76rem; line-height: 1.38; }
+
+.pulse-ring { flex-direction: row; align-items: center; gap: 0.9rem; }
+.ring-wrap { position: relative; width: 92px; height: 92px; flex: none; }
+.ring { width: 100%; height: 100%; transform: rotate(-90deg); display: block; }
+.ring-track { fill: none; stroke: var(--line-2); stroke-width: 9; }
+.ring-fill {
+  fill: none; stroke: var(--accent); stroke-width: 9; stroke-linecap: round;
+  stroke-dasharray: 100 100; stroke-dashoffset: calc(100 - var(--ring));
+}
+/* a ring is progress, drawn in the accent; only a ring that counts committed
+   live days wears the live hue, by opting in */
+.ring.live .ring-fill { stroke: var(--live); }
+.fx .pulse:not(.armed) .ring-fill { stroke-dashoffset: 100; }
+.fx .ring-fill { transition: stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1) 0.15s; }
+.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-num { font-family: var(--font-mono); font-weight: 500; font-size: 1.7rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.ring-of { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+.pulse-text { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+
+.streak-num { display: flex; align-items: baseline; gap: 0.45rem; }
+.streak-num > span:first-child { font-family: var(--font-mono); font-weight: 500; font-size: 2.2rem; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.streak-unit { color: var(--muted); font-size: 0.85rem; }
+.pulse-streak::after {
+  content: ""; position: absolute; right: -30px; top: -30px; width: 110px; height: 110px; border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%); opacity: 0; transition: opacity 0.6s;
+}
+.pulse-streak.lit::after { opacity: 1; }
+.fx .pulse-streak.lit::after { animation: breathe 3.2s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.18); } }
+
+.clock-num { font-size: 1.9rem; font-weight: 500; line-height: 1.1; letter-spacing: 0.02em; }
+.day-track { position: relative; height: 8px; border-radius: 99px; background: var(--line-2); margin: 0.35rem 0 0.15rem; }
+.day-quiet { position: absolute; top: 0; bottom: 0; background: var(--warn-line); opacity: 0.45; border-radius: 99px; }
+.day-fire { position: absolute; top: -3px; width: 2px; height: 14px; margin-left: -1px; background: var(--ink-2); border-radius: 2px; }
+.day-now {
+  position: absolute; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.fx .day-now::after {
+  content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--accent);
+  animation: ping 2s cubic-bezier(0,0,.2,1) infinite;
+}
+@keyframes ping { 75%, 100% { transform: scale(2.2); opacity: 0; } }
+.pulse-clock.quiet { border-color: var(--warn-line); background: linear-gradient(180deg, var(--warn-bg), var(--panel) 70%); }
+.pulse-clock.quiet .clock-num { color: var(--warn-ink); }
+
+.cal-head { display: flex; justify-content: space-between; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
+.evcal { display: flex; gap: 3px; overflow-x: auto; padding: 0.3rem 0 0.2rem; scrollbar-width: thin; direction: rtl; }
+.evcol { display: flex; flex-direction: column; gap: 3px; direction: ltr; }
+.cell { display: inline-block; width: 13px; height: 13px; border-radius: 3px; background: var(--line-2); flex: none; }
+.cell.c-void { background: transparent; }
+.cell.c-none { background: var(--line-2); }
+.cell.c-committed { background: var(--live); }
+.cell.c-restamped { background: var(--live-soft); box-shadow: inset 0 0 0 1.5px var(--live); }
+.cell.c-backfill { background: var(--backfill); }
+.fx .evcal .cell:not(.c-void) { transform: scale(0); transition: transform 0.35s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i, 0) * 6ms); }
+.fx .evcal.in .cell { transform: scale(1); }
+.evcal .cell:not(.c-void):hover { transform: scale(1.35) !important; transition-delay: 0s; }
+.cal-key { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; font-size: 0.72rem; color: var(--muted); }
+.cal-key span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.cal-key .cell { width: 10px; height: 10px; }
+
+/* ---- ticker ----------------------------------------------------------------- */
+.ticker {
+  display: flex; align-items: center; gap: 0.8rem; margin: 0 0 1rem; padding: 0.4rem 0.8rem;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+}
+.ticker-label { flex: none; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); max-width: 13rem; line-height: 1.3; }
+.ticker-viewport { flex: 1; overflow: hidden; mask-image: linear-gradient(90deg, transparent, var(--ink) 4%, var(--ink) 96%, transparent); }
+.ticker-track { display: flex; width: max-content; }
+.ticker-track > .tick-dup { display: flex; }
+.fx .ticker-track { animation: marquee var(--dur, 60s) linear infinite; }
+.ticker:hover .ticker-track, .ticker:focus-within .ticker-track { animation-play-state: paused; }
+@media (max-width: 520px) { .ticker { flex-direction: column; align-items: stretch; gap: 0.3rem; } .ticker-label { max-width: none; } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.tick { display: inline-flex; gap: 0.45rem; padding: 0.1rem 0.9rem; border-right: 1px solid var(--line-2); color: var(--ink); white-space: nowrap; font-size: 0.85rem; }
+.tick:hover { background: var(--accent-soft); text-decoration: none; border-radius: 4px; }
+
+/* ---- market map --------------------------------------------------------------- */
+.chart.map { height: 560px; }
+@media (max-width: 760px) { .chart.map { height: 460px; } }
+.map-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; margin: 0 0 0.6rem; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 99px; padding: 2px; background: var(--panel-2); }
+.seg button { border: 0; border-radius: 99px; padding: 0.22rem 0.8rem; font: inherit; font-size: 0.8rem; cursor: pointer; background: transparent; color: var(--ink-2); transition: background 0.18s, color 0.18s; }
+.switch { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--ink-2); cursor: pointer; user-select: none; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch .knob { width: 2.1rem; height: 1.2rem; border-radius: 99px; background: var(--line); position: relative; transition: background 0.2s; }
+.switch .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: calc(1.2rem - 4px); height: calc(1.2rem - 4px); border-radius: 50%; background: var(--panel); box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform 0.22s cubic-bezier(.3,1.4,.5,1); }
+.switch input:checked + .knob { background: var(--accent); }
+.switch input:checked + .knob::after { transform: translateX(0.9rem); }
+.switch input:focus-visible + .knob { box-shadow: var(--focus); }
+.map-scale { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; color: var(--muted); margin: 0.3rem 0 0; }
+.map-scale i { flex: 0 1 16rem; height: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--neg), var(--panel-2), var(--pos)); border: 1px solid var(--line-2); }
+
+/* ---- command palette + shortcuts ------------------------------------------------ */
+.palette { position: fixed; inset: 0; z-index: 80; display: flex; justify-content: center; align-items: flex-start; padding-top: 12vh; }
+.palette[hidden] { display: none; }
+.palette-scrim { position: absolute; inset: 0; background: color-mix(in srgb, var(--ink) 30%, transparent); backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.14s; }
+.palette-box {
+  position: relative; width: min(640px, calc(100vw - 32px)); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; box-shadow: 0 24px 64px rgba(0,0,0,.28); overflow: hidden;
+  transform: translateY(-8px) scale(0.98); opacity: 0; transition: transform 0.16s cubic-bezier(.2,.8,.2,1), opacity 0.14s;
+}
+.palette.open .palette-scrim { opacity: 1; }
+.palette.open .palette-box { transform: none; opacity: 1; }
+.palette-input { display: flex; align-items: center; gap: 0.6rem; padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--line-2); }
+.palette-icon { color: var(--accent); font-size: 1.3rem; line-height: 1; }
+.palette-input input { flex: 1; border: 0; outline: none; background: none; color: var(--ink); font: inherit; font-size: 1.05rem; }
+.palette-input input:focus-visible { box-shadow: none; }
+.palette-list { max-height: 50vh; overflow-y: auto; padding: 0.3rem; }
+.palette-group { font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); padding: 0.55rem 0.6rem 0.2rem; }
+.palette-item { display: flex; align-items: baseline; gap: 0.65rem; padding: 0.48rem 0.65rem; border-radius: 7px; cursor: pointer; }
+.palette-item.sel { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.palette-item .p-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.palette-item .p-hint { font-size: 0.74rem; color: var(--muted); font-family: var(--font-mono); }
+.palette-empty { padding: 1rem; color: var(--muted); text-align: center; }
+.palette-foot { display: flex; gap: 1rem; flex-wrap: wrap; padding: 0.45rem 0.9rem; border-top: 1px solid var(--line-2); font-size: 0.72rem; color: var(--muted); background: var(--panel-2); }
+.help-sheet .palette-box { padding: 1rem 1.2rem; }
+dl.keys { margin: 0; display: grid; gap: 0.45rem; }
+dl.keys > div { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+dl.keys dt, dl.keys dd { margin: 0; } dl.keys dd { color: var(--ink-2); font-size: 0.9rem; }
+
+/* ---- replay ------------------------------------------------------------------- */
+.replay-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem; border: 1px solid var(--line); background: var(--panel);
+  color: var(--ink); border-radius: 99px; padding: 0.28rem 0.85rem 0.28rem 0.6rem; font: inherit; font-size: 0.82rem; cursor: pointer;
+}
+.replay-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+.replay-btn .ico { width: 0; height: 0; border-left: 8px solid var(--accent); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+.replay-btn.playing .ico { width: 8px; height: 10px; border: 0; border-left: 3px solid var(--accent); border-right: 3px solid var(--accent); }
+.replay-read { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+/* printed or captured pages show every panel, whatever has scrolled into view */
+@media print {
+  .fx .panel:not(.in), .fx .pulse-card:not(.in), .fx .card:not(.in) { opacity: 1; transform: none; }
+  .ticker, .fetch-bar, .palette { display: none !important; }
+}
+/* the honest-numbers table is wider than a phone; it scrolls inside itself
+   rather than pushing the page sideways */
+@media (max-width: 560px) { table.data.honest { display: block; overflow-x: auto; max-width: 100%; } }

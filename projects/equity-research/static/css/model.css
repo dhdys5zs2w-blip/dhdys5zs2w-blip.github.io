@@ -1,0 +1,160 @@
+/* Model dashboard — the page layer over qe.css.
+ *
+ * What moves here moves for navigation (the section rail, numbered sections,
+ * the arrival flash when a key or link lands on one) or for a figure arriving
+ * (the committed ring filling, a verdict being stamped, bars growing once).
+ * None of it scales with how good a number is, and none of it borrows the
+ * live/backfill/backtest hues: this file names no reserved token at all — the
+ * ring's stroke is the shared component's, and it draws days that are live.
+ * Every rule that moves sits behind `.fx` (set by fx.js only when motion is
+ * allowed) and is neutralised again by qe.css's reduced-motion reset. */
+
+/* ---- numbered sections ------------------------------------------------------
+ * The digit before each panel title is the key that jumps to it (1–9), and the
+ * same count the section nav shows, so a reader can say "section 4" and mean
+ * one place. Pure CSS: it reads the same without script. */
+#model-page { counter-reset: msec; }
+#model-page > section.panel { counter-increment: msec; }
+#model-page > section.panel > .panel-head h2::before {
+  content: counter(msec);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 1.45rem; height: 1.45rem; margin-right: 0.6rem; padding: 0 0.3rem; vertical-align: 0.15em;
+  font-family: var(--font-mono); font-size: 0.74rem; font-weight: 500; color: var(--muted);
+  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--panel-2);
+}
+#model-page > section.panel:focus { outline: none; }
+#model-page > section.panel:focus-visible { box-shadow: 0 0 0 1px var(--accent); }
+
+/* a section reached by a key, a nav link or a deep link flashes once */
+@keyframes model-arrive {
+  0% { box-shadow: 0 0 0 1px var(--accent), 0 0 0 0 var(--accent-soft); }
+  35% { box-shadow: 0 0 0 1px var(--accent), 0 0 0 8px var(--accent-soft); }
+  100% { box-shadow: 0 0 0 1px transparent, 0 0 0 14px transparent; }
+}
+.fx #model-page > section.panel.arrive { animation: model-arrive 1.2s cubic-bezier(.2,.7,.2,1); }
+
+/* ---- the section nav: key hints and a progress rail ------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .subnav.numbered { counter-reset: snav; }
+  .subnav.numbered a { counter-increment: snav; }
+  .subnav.numbered a::before {
+    content: counter(snav); margin-right: 0.38rem; font-family: var(--font-mono); font-size: 0.68rem;
+    color: var(--muted); font-weight: 400;
+  }
+  .subnav.numbered a.active::before { color: var(--accent); }
+}
+.subnav-keys { margin-left: auto; padding-left: 1rem; white-space: nowrap; font-size: 0.72rem; color: var(--muted); }
+.subnav-keys kbd { font-size: 0.66rem; }
+@media (hover: none), (pointer: coarse), (max-width: 1100px) { .subnav-keys { display: none; } }
+
+/* One segment per section, sized by the section's height and filled as the
+ * reading line passes through it. It sits on the subnav's bottom edge and
+ * sticks with it; the layout around it does not move (the negative top margin
+ * and the bottom margin cancel the subnav's own). */
+.model-rail {
+  position: sticky; z-index: 21; height: 3px; display: flex; gap: 3px; pointer-events: none;
+  margin: calc(-1rem - 3px) calc(-1 * var(--gutter)) 1rem; padding: 0 var(--gutter);
+}
+.model-rail i { position: relative; flex: 1 1 0; min-width: 6px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
+.model-rail i::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: var(--accent);
+  transform: scaleX(var(--f, 0)); transform-origin: left;
+}
+.fx .model-rail i::after { transition: transform 0.12s linear; }
+.model-rail i.cur { background: var(--line); }
+
+/* ---- at a glance: the hero ------------------------------------------------- */
+#s-overview {
+  background:
+    radial-gradient(90% 120% at 0% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
+    var(--panel);
+}
+.glance-hero { display: flex; align-items: center; gap: 1rem 1.5rem; flex-wrap: wrap; margin: 0.3rem 0 0.9rem; }
+.glance-ring.ring-wrap { width: 138px; height: 138px; }
+.glance-ring .ring-track, .glance-ring .ring-fill { stroke-width: 8; }
+.glance-ring .ring-tick { stroke: var(--muted); stroke-width: 1.4; stroke-linecap: round; opacity: 0.55; }
+.glance-ring .ring-num { font-size: 2.45rem; }
+.glance-ring .ring-of { font-size: 0.64rem; letter-spacing: 0.01em; }
+/* empty until it arrives — but only once model.js has primed it, so a page
+ * whose script never ran still shows the whole ring */
+.fx .glance-ring.primed:not(.armed) .ring-fill { stroke-dashoffset: 100; }
+.fx .glance-ring.hold .ring-fill { transition: none; }
+.glance-words { flex: 1 1 17rem; min-width: 0; display: flex; flex-direction: column; gap: 0.32rem; }
+.glance-label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.glance-count { margin: 0; color: var(--ink); font-size: 1rem; line-height: 1.4; }
+.glance-count > .mono { font-size: 1.15rem; }
+.glance-aside { margin: 0; max-width: 56ch; font-size: 0.84rem; line-height: 1.45; color: var(--muted); }
+.glance-aside .mono { color: var(--ink-2); }
+.glance-tiles { margin-top: 0; padding-top: 0.75rem; border-top: 1px solid var(--line-2); }
+
+/* ---- registered verdicts as stamp cards -------------------------------------
+ * The stamp takes the verdict's own pos/neg class; the stripe takes it only
+ * when every verdict in the block agrees, so a block that is part not-detected
+ * stays neutral. The stamp presses in once, on first view, in page order —
+ * every verdict the same way, whatever it says — and is hidden for that only
+ * after model.js has primed the list: without the script every verdict shows. */
+.stamps-title { margin: 1.15rem 0 0.55rem; }
+dl.verdict-list.stamps {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: 0.6rem; margin: 0; font-size: 0.85rem; align-items: start;
+}
+.stamp-card {
+  position: relative; display: flex; flex-direction: column; gap: 0.5rem; min-width: 0;
+  padding: 0.6rem 0.8rem 0.75rem 0.95rem; background: var(--panel-2);
+  border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden;
+}
+.stamp-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--line); }
+.stamp-card.tone-pos::before { background: var(--pos); }
+.stamp-card.tone-neg::before { background: var(--neg); }
+.stamp-card dt { font-size: 0.8rem; line-height: 1.35; }
+.stamp-card dt a { color: var(--ink-2); }
+.stamp-card dt a::after { content: " \2192"; color: var(--accent); opacity: 0; }
+.stamp-card:hover dt a::after, .stamp-card dt a:focus-visible::after { opacity: 1; }
+.stamp-card dd { margin: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.verdict.stamp {
+  transform: rotate(-1.2deg); padding: 0.2rem 0.55rem; white-space: normal; overflow-wrap: anywhere;
+  box-shadow: inset 0 0 0 2px var(--panel-2), inset 0 0 0 3px color-mix(in srgb, currentColor 30%, transparent);
+}
+.fx .stamp-card { transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s; }
+.fx .stamp-card:hover { transform: translateY(-2px); border-color: var(--line); box-shadow: var(--shadow); }
+.fx .stamp-card dt a::after { transition: opacity 0.15s; }
+.fx .stamps.primed:not(.in) .stamp { opacity: 0; transform: scale(1.4) rotate(-7deg); }
+.fx .stamps .stamp {
+  transition: opacity 0.22s ease-out, transform 0.42s cubic-bezier(.3,1.55,.5,1);
+  transition-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+.fx .stamps.hold .stamp { transition: none; }
+
+/* ---- tiles built by the page script ----------------------------------------- */
+#paper-summary .tile.boxed, #companion-summary .tile.boxed { padding: 0.6rem 0.8rem 0.65rem; }
+#paper-summary { gap: 0.6rem; }
+
+/* ---- regimes: the current-state chips find their bars ----------------------- */
+#regime-current button.chip { font: inherit; color: var(--ink); cursor: pointer; }
+#regime-current button.chip:hover, #regime-current button.chip:focus-visible {
+  border-color: var(--accent); background: var(--accent-soft);
+}
+
+/* ---- shadows of this model: a long note scrolls sideways in its wrapper
+ * instead of stretching one row to a phone's full height ------------------- */
+#s-shadow td.shadow-note { min-width: 24rem; }
+
+/* ---- the book --------------------------------------------------------------- */
+.trades-head small + small { margin-left: 0.6rem; }
+#trades-table tbody tr[hidden] { display: none; }
+.load-failed { color: var(--muted); font-size: 0.85rem; }
+
+@media (max-width: 560px) {
+  .glance-hero { justify-content: flex-start; }
+  .glance-ring.ring-wrap { width: 118px; height: 118px; }
+  .glance-ring .ring-num { font-size: 2.1rem; }
+  #model-page > section.panel > .panel-head h2::before { min-width: 1.3rem; height: 1.3rem; margin-right: 0.45rem; }
+}
+
+/* printed or captured pages show every stamp, whatever has scrolled into view */
+@media print {
+  .fx .stamps.primed:not(.in) .stamp { opacity: 1; transform: rotate(-1.2deg); }
+  .fx .glance-ring.primed:not(.armed) .ring-fill { stroke-dashoffset: calc(100 - var(--ring)); }
+  .model-rail, .subnav-keys { display: none !important; }
+}

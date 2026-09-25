@@ -1,0 +1,241 @@
+/* Data health (/health) — the operations page, in the overview's motion
+ * vocabulary (qe.css "motion and play"): lamps, the options ring, bars that
+ * fill once on arrival, a client-clock schedule strip.
+ *
+ * Colour rules this file keeps. A lamp or a bar that says "fine" is --accent,
+ * one that says "look here" is --warn-*, one with nothing to judge is
+ * --neutral. The reserved evidence hues appear in exactly one place: the live
+ * record's split bar, whose three parts ARE those states (committed days are
+ * live, restamped days carry the live stamp and are told apart by an outline
+ * as on the overview calendar, backfilled days are backfill). The options ring
+ * overrides the overview ring's --live stroke, because coverage is not live
+ * evidence. Everything that moves is behind .fx (set by fx.js) or .armed (set
+ * by health.js) and is neutralised under prefers-reduced-motion by the reset
+ * in qe.css, so without script the page is static and complete. */
+
+/* ---- intro aside: the schedule strip and the age of this page -------------- */
+.page-intro > .hl-aside { flex: 0 1 25rem; min-width: min(100%, 19rem); align-items: stretch; gap: 0.5rem; }
+.hl-sched {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 0.65rem 0.85rem 0.55rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+.hl-sched .t-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.hl-sched-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+.hl-sched-count { font-size: 1.25rem; font-weight: 500; line-height: 1.1; letter-spacing: 0.02em; }
+.hl-sched-sub { color: var(--muted); font-size: 0.76rem; line-height: 1.4; margin: 0.1rem 0 0; }
+.hl-sched.quiet { border-color: var(--warn-line); background: linear-gradient(180deg, var(--warn-bg), var(--panel) 75%); }
+.hl-sched.quiet .hl-sched-count { color: var(--warn-ink); }
+.hl-track { margin: 0.4rem 0 0.2rem; }
+.hl-age-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 0.8rem; flex-wrap: wrap; }
+.hl-age { margin: 0; font-size: 0.76rem; color: var(--muted); line-height: 1.4; flex: 1 1 12rem; }
+.hl-age .mono { color: var(--ink-2); }
+.hl-age-row.stale .hl-age { color: var(--warn-ink); }
+.hl-age-row.stale .hl-reload { border-color: var(--warn-line); background: var(--warn-bg); }
+.hl-reload { text-decoration: none; flex: none; }
+.hl-reload:hover { text-decoration: none; }
+.hl-reload-ico { display: inline-block; color: var(--accent); font-size: 1rem; line-height: 1; transition: transform 0.45s cubic-bezier(.2,.8,.2,1); }
+.hl-reload:hover .hl-reload-ico, .hl-reload:focus-visible .hl-reload-ico { transform: rotate(200deg); }
+.hl-reload.spin .hl-reload-ico { animation: hl-spin 0.7s linear infinite; }
+@keyframes hl-spin { to { transform: rotate(360deg); } }
+
+/* ---- lamps: steady when fine, a slow amber ping when not ------------------- */
+.lamp {
+  position: relative; display: inline-block; flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%;
+  background: var(--line); margin-right: 0.45rem; vertical-align: 0.02em;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+[data-state="ok"] .lamp { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+[data-state="warn"] .lamp { background: var(--warn-line); box-shadow: 0 0 0 3px var(--warn-bg); }
+[data-state="idle"] .lamp { background: var(--neutral); box-shadow: 0 0 0 3px var(--line-2); }
+.fx [data-state="warn"] .lamp::after {
+  content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--warn-line);
+  animation: hl-ping 2.6s cubic-bezier(0, 0, .2, 1) infinite;
+}
+@keyframes hl-ping { 70%, 100% { transform: scale(2.1); opacity: 0; } }
+
+/* ---- the check board --------------------------------------------------------- */
+.hl-board { margin: 0 0 0.9rem; }
+.hl-board-line { font-size: 0.86rem; color: var(--ink-2); margin: 0 0 0.5rem; max-width: 80ch; }
+.hl-board-line strong { color: var(--ink); }
+.hl-board-line a { font-weight: 600; }
+.hl-checks { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem 0.45rem; }
+.hl-check {
+  display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 99px;
+  padding: 0.22rem 0.75rem 0.22rem 0.6rem; font-size: 0.8rem; color: var(--ink-2); background: var(--panel-2);
+  transition: border-color 0.2s, background 0.2s, transform 0.18s;
+}
+.hl-check:hover { text-decoration: none; border-color: var(--accent); color: var(--ink); }
+.hl-check[data-state="warn"] { border-color: var(--warn-line); background: var(--warn-bg); color: var(--warn-ink); }
+.fx .hl-check:hover { transform: translateY(-1px); }
+.fx .hl-checks li { animation: hl-pop 0.45s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--i, 0) * 60ms + 0.1s); }
+@keyframes hl-pop { from { opacity: 0; transform: translateY(6px) scale(0.96); } }
+/* a chip's state in words for a screen reader: the lamp's colour and ping say it
+   to the eye only, and the ping is gone under reduced motion */
+.hl-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ---- status tiles --------------------------------------------------------------- */
+.hl-tiles { gap: 0.7rem; }
+.hl-tile { position: relative; overflow: hidden; }
+.hl-tile[data-state="warn"] { border-color: var(--warn-line); box-shadow: inset 3px 0 0 var(--warn-line); }
+.hl-tile .t-label { display: flex; align-items: center; }
+.hl-tile .t-sub.mono { overflow-wrap: anywhere; }
+.hl-lag:empty { display: none; }
+.hl-tile[data-state="warn"] .hl-lag { color: var(--warn-ink); }
+.hl-tile .meter { margin: 0.35rem 0 0.1rem; height: 0.35rem; }
+/* the live record's three parts; see the header for why these hues */
+.hl-split { display: flex; height: 0.45rem; gap: 2px; margin: 0.4rem 0 0.15rem; border-radius: 99px; overflow: hidden; }
+.hl-split > span { flex: 0 0 var(--w); min-width: 0; border-radius: 2px; }
+.hl-split > span[style*="--w: 0.0%"] { display: none; }
+.hl-split .c-committed { background: var(--live); }
+.hl-split .c-restamped { background: var(--live-soft); box-shadow: inset 0 0 0 1.5px var(--live); }
+.hl-split .c-backfill { background: var(--backfill); }
+.fx .hl-split > span { transform-origin: left; animation: meter-in 1.1s cubic-bezier(.2,.8,.2,1) both; }
+.fx .hl-split > span:nth-child(2) { animation-delay: 0.15s; }
+.fx .hl-split > span:nth-child(3) { animation-delay: 0.3s; }
+.hl-split-key { margin: 0 0 0.1rem; font-size: 0.68rem; gap: 0.15rem 0.7rem; }
+.hl-split-key .cell { width: 9px; height: 9px; }
+
+/* ---- the two-column body ----------------------------------------------------- */
+.hl-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1rem; align-items: start; margin: 1rem 0; }
+.hl-grid > .panel, .hl-col > .panel { margin: 0; }
+.hl-col { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+@media (max-width: 980px) { .hl-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- freshness: how far each table reaches -------------------------------------- */
+.hl-fresh { list-style: none; margin: 0.2rem 0 0; padding: 0; }
+.hl-fresh-row, .hl-fresh-scale {
+  display: grid; grid-template-columns: 6.6rem 6.4rem minmax(6rem, 1fr) minmax(0, 10.5rem);
+  gap: 0.2rem 0.8rem; align-items: center; padding: 0.34rem 0; border-bottom: 1px solid var(--line-2);
+}
+.hl-fresh-scale { border-bottom: 0; padding: 0 0 0.1rem; font-size: 0.66rem; color: var(--muted); }
+.hl-f-name { color: var(--ink-2); font-size: 0.9rem; }
+.hl-f-date { font-size: 0.86rem; }
+.hl-f-lag { font-size: 0.76rem; color: var(--muted); line-height: 1.3; }
+.hl-fresh-row[data-state="warn"] .hl-f-lag { color: var(--warn-ink); font-weight: 600; }
+.hl-f-bar { position: relative; height: 0.7rem; border-radius: 99px; background: var(--line-2); }
+.hl-f-bar:empty { background: transparent; }
+.hl-f-bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: var(--w); border-radius: 99px; background: var(--accent);
+  transform-origin: left;
+}
+.hl-f-bar .allow {
+  position: absolute; top: 0; bottom: 0; left: var(--a0); width: var(--aw); border-radius: 0 99px 99px 0;
+  background: repeating-linear-gradient(135deg, var(--accent-soft) 0 3px, transparent 3px 6px);
+  box-shadow: inset 0 0 0 1px var(--accent-soft);
+}
+.hl-fresh-row[data-state="warn"] .fill { background: var(--warn-line); }
+.hl-f-bar .mk { position: absolute; top: -0.25rem; bottom: -0.25rem; width: 0; left: var(--x); }
+.hl-f-bar .mk-prices { border-left: 2px solid var(--ink-2); margin-left: -1px; }
+.hl-f-bar .mk-due { border-left: 2px dashed var(--muted); margin-left: -1px; }
+.hl-fresh-scale .hl-scale { position: relative; height: 1.9rem; }
+.hl-scale span { position: absolute; bottom: 0; transform: translateX(-100%); padding-right: 0.2rem; white-space: nowrap; line-height: 1.15; text-align: right; }
+.hl-scale span b { display: block; font-weight: 600; color: var(--ink-2); }
+.hl-fresh-scale .hl-scale-key { font-size: 0.68rem; display: flex; gap: 0.2rem 0.7rem; flex-wrap: wrap; }
+.hl-scale-key i { display: inline-block; width: 0.9rem; height: 0; vertical-align: middle; margin-right: 0.3rem; }
+.hl-scale-key .k-prices { border-top: 2px solid var(--ink-2); }
+.hl-scale-key .k-due { border-top: 2px dashed var(--muted); }
+.fx .hl-fresh:not(.armed) .fill { transform: scaleX(0); }
+.fx .hl-fresh .fill { transition: transform 0.9s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i, 0) * 90ms); }
+@media (max-width: 620px) {
+  .hl-fresh-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .hl-fresh-row .hl-f-bar, .hl-fresh-row .hl-f-lag { grid-column: 1 / -1; }
+  .hl-fresh-scale { grid-template-columns: minmax(0, 1fr); }
+  .hl-fresh-scale > span:not(.hl-scale):not(.hl-scale-key) { display: none; }
+}
+
+/* ---- fetch outcomes: one stacked bar, rows that find their segment ---------------- */
+.hl-stack { display: flex; height: 1.1rem; gap: 2px; border-radius: 6px; overflow: hidden; margin: 0.1rem 0 0.45rem; background: var(--line-2); }
+.hl-seg { flex: 0 0 var(--w); min-width: 2px; transition: opacity 0.2s, filter 0.2s; }
+.fx .hl-seg { animation: meter-in 0.9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 90ms); transform-origin: left; }
+.k-ok { background: var(--accent); }
+.k-err { background: var(--warn-line); }
+.k-other { background: var(--neutral); }
+.hl-stack.hot .hl-seg:not(.hot) { opacity: 0.28; }
+.hl-outcomes tr.hot { background: var(--accent-soft); }
+.hl-outcomes tr.hot td { color: var(--ink); }
+.hl-outcomes tr[tabindex]:focus-visible { box-shadow: none; outline: 2px solid var(--accent); outline-offset: -2px; }
+.hl-key { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; font-size: 0.74rem; color: var(--muted); margin: 0 0 0.6rem; }
+.hl-key span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.hl-key i { width: 0.7rem; height: 0.7rem; border-radius: 3px; display: inline-block; }
+.hl-dot { display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 2px; margin-right: 0.5rem; vertical-align: 0.05em; }
+.hl-share { display: inline-block; width: 3.4rem; height: 0.4rem; border-radius: 99px; background: var(--line-2); margin-right: 0.55rem; vertical-align: 0.1em; overflow: hidden; }
+.hl-share i { display: block; height: 100%; width: var(--w); min-width: 2px; border-radius: 99px; }
+.hl-pct { display: inline-block; min-width: 3.4em; text-align: right; }
+@media (max-width: 460px) { .hl-share { display: none; } }
+
+.hl-u-lag { display: block; font-size: 0.74rem; color: var(--muted); margin-top: 0.1rem; }
+.hl-u-lag:empty { display: none; }
+
+/* ---- the options backfill ring ----------------------------------------------------- */
+.hl-opt { display: flex; gap: 1rem 1.4rem; align-items: center; flex-wrap: wrap; margin: 0.2rem 0 0.2rem; }
+.hl-opt-facts { flex: 1 1 15rem; min-width: 0; }
+.hl-opt-facts .tile { margin-bottom: 0.5rem; }
+.hl-ring { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; flex: none; }
+.hl-ring .ring-wrap { width: 136px; height: 136px; }
+.hl-ring .ring-fill { stroke: var(--accent); }        /* coverage is not live evidence */
+.hl-ring .ring-num { font-size: 1.45rem; }
+.hl-togo { fill: none; stroke: color-mix(in srgb, var(--accent) 28%, var(--line-2)); stroke-width: 9; }
+.fx .hl-options:not(.armed) .hl-togo { opacity: 0; }
+.fx .hl-togo { transition: opacity 0.6s ease 1.4s; }
+.hl-gate { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+.hl-gate-label { font-size: 0.72rem; color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; }
+.hl-gate-label i { width: 2px; height: 0.8rem; background: var(--ink); border-radius: 2px; display: inline-block; }
+.hl-gate-label i.togo { width: 0.8rem; height: 0.55rem; background: color-mix(in srgb, var(--accent) 28%, var(--line-2)); }
+.hl-ring { gap: 0.2rem; }
+.fx .hl-options:not(.armed) .ring-fill { stroke-dashoffset: 100; }
+.hl-stall { gap: 0; }
+.hl-stall .lamp { width: 0.45rem; height: 0.45rem; }
+
+/* ---- recent runs: a vertical timeline ---------------------------------------------- */
+.hl-runs { list-style: none; margin: 0.2rem 0 0; padding: 0 0.2rem 0 0.2rem; position: relative; }
+/* beside the options ring the ledger scrolls in place rather than stretching the row */
+@media (min-width: 981px) {
+  .hl-runs { max-height: 27rem; overflow-y: auto; scrollbar-width: thin; overscroll-behavior: contain;
+    mask-image: linear-gradient(180deg, var(--ink) 92%, transparent); padding-bottom: 1.2rem; }
+}
+/* The mask clips everything outside the border box, the global 3px focus shadow
+   included, so the ring is drawn inside, and the fade is lifted while the list
+   has focus so the ring's bottom edge is not faded out with the last row. */
+.hl-runs { border-radius: 6px; container-type: inline-size; }
+.hl-runs:focus-visible { mask-image: none; box-shadow: inset 0 0 0 2px var(--accent); }
+.hl-runs::before { content: ""; position: absolute; left: 0.47rem; top: 0.4rem; bottom: 0.6rem; width: 2px; background: var(--line-2); border-radius: 2px; }
+.hl-run-day { position: relative; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; padding: 0.55rem 0 0.2rem 1.35rem; }
+.hl-run-day:first-child { padding-top: 0; }
+.hl-run {
+  position: relative; display: grid; grid-template-columns: 1.15rem 3.1rem minmax(4.5rem, 1fr) auto 4.6rem 4.8rem;
+  gap: 0.2rem 0.6rem; align-items: center; padding: 0.3rem 0.4rem 0.3rem 0; border-radius: 6px; font-size: 0.86rem;
+}
+.hl-run:hover { background: var(--panel-2); }
+.hl-run .lamp { margin: 0 0 0 0.12rem; z-index: 1; }
+.hl-run-time { color: var(--ink-2); }
+.hl-run-stage { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hl-run-dur, .hl-run-sha { color: var(--muted); font-size: 0.8rem; text-align: right; white-space: nowrap; }
+.hl-pill {
+  display: inline-flex; padding: 0.06rem 0.5rem; border-radius: 99px; font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); white-space: nowrap;
+  justify-self: start;
+}
+.hl-run[data-state="warn"] .hl-pill { background: var(--warn-bg); color: var(--warn-ink); box-shadow: inset 0 0 0 1px var(--warn-line); }
+.hl-run[hidden], .hl-run-day[hidden] { display: none; }
+.fx .hl-runs.armed .hl-run { animation: hl-slide 0.4s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 28ms); }
+@keyframes hl-slide { from { opacity: 0; transform: translateX(-8px); } }
+.hl-run-filter { flex-wrap: wrap; }
+.hl-run-filter[hidden] { display: none; }            /* .seg sets display, which beats [hidden] */
+/* two lines per run once the list is narrower than its six columns need: on a
+   phone, and beside the options ring from 981 px until the panel widens */
+@container (max-width: 29rem) {
+  .hl-run { grid-template-columns: 1.15rem 3.1rem minmax(0, 1fr) auto; }
+  .hl-run-dur { grid-column: 3; text-align: left; }
+  .hl-run-sha { grid-column: 4; }
+}
+@supports not (container-type: inline-size) {
+  @media (max-width: 1180px) {
+    .hl-run { grid-template-columns: 1.15rem 3.1rem minmax(0, 1fr) auto; }
+    .hl-run-dur { grid-column: 3; text-align: left; }
+    .hl-run-sha { grid-column: 4; }
+  }
+}
+
+@media print {
+  .hl-aside { display: none; }
+}

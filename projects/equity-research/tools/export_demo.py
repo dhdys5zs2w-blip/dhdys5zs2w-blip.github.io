@@ -314,6 +314,8 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
         html = re.sub(rf'href="/{p}(#[^"]*)?"',
                       lambda m, p=p: f'href="{prefix}{p}/{m.group(1) or ""}"', html)
     html = html.replace('href="/"', f'href="{prefix}index.html"')
+    # overview anchors (/#s-map, /#s-status, …) belong to the demo's own index, not the site root
+    html = html.replace('href="/#', f'href="{prefix}index.html#')
     html = html.replace(str(DB_PATH), "qe.duckdb")
     # the universe picker submits a query the static copy cannot serve; one universe is exported
     html = re.sub(r'<form method="get" action="/screener".*?</form>',
@@ -324,7 +326,10 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
     # scripts: the shim resolves every /api/* call to a static file; it must load before app.js
     tag = f'<script src="{prefix}static/app.js"></script>'
     assert tag in html, "app.js script tag not found"
-    html = html.replace(tag, f'<script>window.QE_ROOT = {json.dumps(prefix)};</script>'
+    # QE_SNAPSHOT tells the pages they are a copy: the overview states the nightly schedule
+    # instead of counting down to it, and /health judges freshness as of the export
+    snap = json.dumps({"exported_at": ctx["exported_at"]})
+    html = html.replace(tag, f'<script>window.QE_ROOT = {json.dumps(prefix)}; window.QE_SNAPSHOT = {snap};</script>'
                              f'<script src="{prefix}static/demo-shim.js"></script>{tag}', 1)
     css = f'<link rel="stylesheet" href="{prefix}static/qe.css">'
     assert css in html, "qe.css link not found"
@@ -334,34 +339,58 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
     return html
 
 
+# Hand-written files that live in the demo's static/ beside the copied app files.
+HAND_WRITTEN_STATIC = {"demo-shim.js", "demo.css"}
+
+# app.js's two link seams (the platform's tests/test_web_seams.py pins that every link a page
+# script builds goes through them), re-rooted for the static subpath.
+APP_HREF = "const href = (path) => path;"
+DEMO_HREF = (
+    "const href = (path) => {\n"
+    "    // portfolio demo: app paths -> the static copy's folders\n"
+    "    const [p, hash] = path.split(\"#\");\n"
+    "    const map = { \"/\": \"index.html\", \"/screener\": \"screener/\", \"/model\": \"model/\",\n"
+    "                  \"/research\": \"research/\", \"/health\": \"health/\" };\n"
+    "    return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\\//, \"\")) + (hash ? \"#\" + hash : \"\");\n"
+    "  };"
+)
+APP_SYMBOL_HREF = 'const symbolHref = (sym) => "/symbol/" + encodeURIComponent(sym);'
+DEMO_SYMBOL_HREF = 'const symbolHref = (sym) => window.QE_ROOT + "symbol/" + encodeURIComponent(sym) + ".html";'
+
+
 def patch_static(src: Path, dst: Path) -> None:
-    """Copy the app's static tree and patch the three files that assume the app's own origin."""
+    """Copy the app's static tree (every script, every page stylesheet, the vendored files) and
+    patch the two places that assume the app's own origin: app.js's transport and link seams,
+    and qe.css's font URLs. Hand-written demo files in dst are left alone."""
     if dst.exists():
-        for name in ("app.js", "home.js", "model.js", "screener.js", "symbol.js", "qe.css"):
-            (dst / name).unlink(missing_ok=True)
-        shutil.rmtree(dst / "vendor", ignore_errors=True)
+        for p in dst.iterdir():
+            if p.name in HAND_WRITTEN_STATIC:
+                continue
+            if p.is_dir():
+                shutil.rmtree(p)
+            else:
+                p.unlink()
     dst.mkdir(parents=True, exist_ok=True)
-    for name in ("home.js", "screener.js", "symbol.js"):
-        shutil.copy2(src / name, dst / name)
-    shutil.copytree(src / "vendor", dst / "vendor")
+    for p in sorted(src.iterdir()):
+        if p.name.startswith(".") or p.name in ("app.js", "qe.css"):
+            continue
+        if p.is_dir():
+            shutil.copytree(p, dst / p.name)
+        elif p.suffix in (".js", ".css"):
+            shutil.copy2(p, dst / p.name)
 
     app = (src / "app.js").read_text()
-    body_re = re.compile(r"async function qeFetch\(url\) \{.*?\n  \}\n", re.S)
+    # the transport only: qeFetch keeps announcing to the fetch bar, fetchJson reads the files
+    body_re = re.compile(r"async function fetchJson\(url\) \{.*?\n  \}\n", re.S)
     app, n = body_re.subn(
-        "async function qeFetch(url) {\n"
+        "async function fetchJson(url) {\n"
         "    // portfolio demo: every /api/* call is resolved to a static file by demo-shim.js\n"
         "    return window.QE_DEMO.fetch(url);\n  }\n", app, count=1)
-    assert n == 1, "qeFetch body not patched"
-    old = "'<a href=\"/symbol/' + m.symbol + '\">"
-    assert app.count(old) == 1, "search link not found in app.js"
-    app = app.replace(old, "'<a href=\"' + window.QE_ROOT + 'symbol/' + m.symbol + '.html\">")
+    assert n == 1, "fetchJson body not patched"
+    for old, new in ((APP_HREF, DEMO_HREF), (APP_SYMBOL_HREF, DEMO_SYMBOL_HREF)):
+        assert app.count(old) == 1, f"link seam not found in app.js: {old}"
+        app = app.replace(old, new)
     (dst / "app.js").write_text(app)
-
-    model = (src / "model.js").read_text()
-    old = "href='/symbol/\" + r.symbol + \"'"
-    assert model.count(old) == 2, "symbol links not found in model.js"
-    model = model.replace(old, "href='\" + window.QE_ROOT + \"symbol/\" + r.symbol + \".html'")
-    (dst / "model.js").write_text(model)
 
     css = (src / "qe.css").read_text()
     assert css.count('url("/static/vendor/fonts/') == 4
@@ -485,9 +514,11 @@ def main() -> None:
 
     app = create_app(db_path=DB_PATH, quiet_window=None)
     client = TestClient(app)
-    exported = datetime.now().strftime("%Y-%m-%d")
+    exported_at = datetime.now().astimezone()
+    exported = exported_at.strftime("%Y-%m-%d")
     ctx = {"universe": UNIVERSE, "universe_n": len(members), "start": DEMO_START.year,
-           "exported": exported, "db_gb": f"{DB_PATH.stat().st_size / 1e9:.1f}"}
+           "exported": exported, "exported_at": exported_at.isoformat(timespec="minutes"),
+           "db_gb": f"{DB_PATH.stat().st_size / 1e9:.1f}"}
 
     def get_json(path: str) -> dict[str, Any]:
         r = client.get(path)
@@ -556,6 +587,17 @@ def main() -> None:
         write_json(api / "model" / model_id / f"deciles_{source}.json",
                    get_json(f"/api/model/{model_id}/deciles?source={source}"))
     write_json(api / "research.json", get_json("/api/research"))
+    # the overview's pulse and market map (2026-09-23)
+    write_json(api / "model" / model_id / "pulse.json", get_json(f"/api/model/{model_id}/pulse"))
+    write_json(api / "market_map.json", get_json("/api/market_map"))
+    # The companion panel's payload is optional: when the platform cannot serve it the page
+    # already says "did not load", which is the honest static rendering too.
+    r = client.get(f"/api/model/{model_id}/companion")
+    if r.status_code == 200:
+        write_json(api / "model" / model_id / "companion.json", r.json())
+    else:
+        (api / "model" / model_id / "companion.json").unlink(missing_ok=True)
+        print(f"companion payload skipped: HTTP {r.status_code}")
 
     if not args.skip_pages:
         (out / "index.html").write_text(rewrite_html(get_html("/"), "", ctx))
