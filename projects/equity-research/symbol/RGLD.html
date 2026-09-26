@@ -7,7 +7,16 @@
 <title>RGLD — qe</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
 <script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
-   ?theme=light|dark previews one theme without remembering it. */
+   ?theme=light|dark previews one theme without remembering it. `nav-js` lets
+   the stylesheet fold the menus away only when script can open them again;
+   it is set here, before first paint, so the bar never jumps, and taken back
+   at `load` if fx.js never marked the nav wired (an error in app.js or fx.js),
+   so a broken script fails open with every link showing. */
+document.documentElement.classList.add("nav-js");
+addEventListener("load", function () {
+  var de = document.documentElement;
+  if (de.getAttribute("data-nav") !== "ready") de.classList.remove("nav-js");
+});
 try {
   var q = new URLSearchParams(location.search).get("theme");
   var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
@@ -18,26 +27,42 @@ try {
 </head>
 <body>
 
+
+
+
+
 <header class="topnav">
-  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
-  <nav aria-label="Pages">
-    <a href="../index.html" class="">Overview</a>
-    <a href="../screener/" class="">Screener</a>
-    <a href="../model/" class="">Model</a>
-    <a href="../research/" class="">Research</a>
-    <a href="../health/" class="">Health</a><a href="../sql/">SQL</a><a href="../about/">About</a>
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">a stock-ranking model</span></a>
+  <button id="nav-menu-btn" class="nav-menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span>Menu</button>
+  <nav id="site-nav" class="sitenav" aria-label="Site">
+    <a href="../index.html">The story</a>
+    <a href="../screener/" class="active">Explore stocks</a>
+    <div class="hood">
+      <button id="hood-btn" class="hood-btn" type="button" aria-expanded="false" aria-controls="hood-menu">Under the hood<span class="chev" aria-hidden="true"></span></button>
+      <div id="hood-menu" class="hood-menu">
+        <p class="hood-head">Under the hood</p>
+        <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
+        <ul class="hood-list">
+          <li><a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+          <li><a href="../model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li><a href="../research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
+          <li><a href="../health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
+        </ul>
+      </div>
+    </div>
   </nav>
   <div class="navright">
     <div class="navsearch">
-      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <input id="nav-search" type="search" placeholder="Find a stock&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Find a stock by ticker or company name">
       <div id="nav-search-results" class="search-results" hidden></div>
     </div>
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-23 from the live 23.1 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-26 from the live 24.9 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
+
 <main>
 
 
@@ -280,9 +305,9 @@ scored universe &mdash; line breaks are membership gaps, not missing data.</p>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-23. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-26. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../";</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-26T14:00-05:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/symbol.js"></script>
 </body>
