@@ -25,7 +25,7 @@ try {
 <link rel="stylesheet" href="../static/qe.css"><link rel="stylesheet" href="../static/demo.css">
 <link rel="stylesheet" href="../static/css/research.css">
 </head>
-<body>
+<body><a class="skip-link" href="#content">Skip to main content</a>
 
 
 
@@ -42,8 +42,8 @@ try {
       <div id="hood-menu" class="hood-menu">
         <p class="hood-head">Under the hood</p>
         <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
-        <ul class="hood-list">
-          <li><a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+        <ul class="hood-list"><li><a href="../sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li><li><a href="../about/"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
+          <li><a href="../lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
           <li><a href="../model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
           <li><a href="../research/" aria-current="page"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
           <li><a href="../health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
@@ -59,7 +59,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-26 from the live 24.9 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-28 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -69,6 +69,7 @@ try {
       own terms and with every caveat. <a href="../index.html" class="uh-link">New here? Start with the story&nbsp;&rarr;</a></p>
   </div>
 </aside>
+<div id="content" class="skip-target" tabindex="-1"></div>
 <main>
 <nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-closed">Closed directions</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
 <header class="page-intro rs-intro">
@@ -3607,9 +3608,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-26. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-28. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-26T14:00-05:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-28T23:20-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/research.js"></script>
 </body>

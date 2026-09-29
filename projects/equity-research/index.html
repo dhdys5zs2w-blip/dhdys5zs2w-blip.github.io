@@ -25,7 +25,7 @@ try {
 <link rel="stylesheet" href="static/qe.css"><link rel="stylesheet" href="static/demo.css">
 <link rel="stylesheet" href="static/css/story.css">
 </head>
-<body>
+<body><a class="skip-link" href="#content">Skip to main content</a>
 
 
 
@@ -42,8 +42,8 @@ try {
       <div id="hood-menu" class="hood-menu">
         <p class="hood-head">Under the hood</p>
         <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
-        <ul class="hood-list">
-          <li><a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+        <ul class="hood-list"><li><a href="sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li><li><a href="about/"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
+          <li><a href="lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
           <li><a href="model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
           <li><a href="research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
           <li><a href="health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
@@ -59,10 +59,11 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-26 from the live 24.9 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-28 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 
+<div id="content" class="skip-target" tabindex="-1"></div>
 <main>
 
 <div class="story" id="story" data-model-id="09d8c916-37bb-4807-a2b6-266c46d0950d" data-live-start="2026-07-01">
@@ -109,9 +110,9 @@ try {
       <div class="st-cell">
         <dt>Live trading days since July&nbsp;1</dt>
         <dd>
-          <span class="st-big" id="hero-live-days" data-count="58">58</span>
-          <span class="st-sub">counted from July 1, 2026; the latest
-            Sep 25, 2026</span>
+          <span class="st-big" id="hero-live-days" data-count="59">59</span><span class="st-sub" id="hero-live-days-sub">evenings with picks since
+            July 1, 2026: the first Jul 7, 2026, the latest
+            Sep 28, 2026</span>
         </dd>
       </div>
       <div class="st-cell">
@@ -122,6 +123,7 @@ try {
           <span class="st-gt" id="hero-live-gt">&nbsp;</span>
           <svg class="st-spark" id="spark-live" aria-hidden="true"></svg>
           <span class="st-sub" id="hero-live-sub">each day's edge added up, on paper, before trading costs</span>
+          <span class="st-sub st-lump" id="hero-live-lumps"></span>
         </dd>
       </div>
       <div class="st-cell">
@@ -133,15 +135,18 @@ try {
           <svg class="st-spark" id="spark-decade" aria-hidden="true"></svg>
           <span class="st-sub" id="hero-decade-sub">roughly +12% a year over sector peers,
             before trading costs, give or take 5%.
-            About half of it goes with a lean toward stocks that swing more than the market.</span>
+            About half of it may simply come from holding market-sensitive stocks &mdash; ones that rise
+            and fall further than the market.</span>
           
         </dd>
       </div>
       <div class="st-cell">
-        <dt id="clock-label">Next scoring run</dt>
+        <dt>The model's picks right now</dt>
         <dd>
-          <span class="st-big" id="clock-time">Nightly</span>
-          <span class="st-sub" id="clock-sub">after the US market closes</span>
+          <span class="st-big">49</span><span class="st-unit">stocks</span>
+          <span class="st-sub">chosen on Sep 28, 2026, held in equal
+            amounts &middot; <a href="#c-picks">see them</a></span>
+          <span class="st-sub st-next">New picks each evening after a US trading day<span id="clock-sub">.</span></span>
         </dd>
       </div>
     </dl>
@@ -163,7 +168,8 @@ try {
       <li class="st-step" style="--i: 0">
         <span class="st-step-n" id="step-universe">500</span>
         <strong>The universe</strong>
-        <span>The 500 most-traded US stocks, re-picked every month by dollar volume &mdash;
+        <span>The 500 most-traded US stocks, re-picked every month by how much money changes hands
+          in each (shares traded times price) &mdash;
           including companies that later disappeared, not only today's survivors (with one gap,
           described under <a href="#c-unknown">the open questions</a>).</span>
       </li>
@@ -171,8 +177,9 @@ try {
         <span class="st-step-n">19</span>
         <strong>Nineteen signals</strong>
         <span>Measurements built from prices and volumes alone: how much a stock swings, where
-          it sits against its 200-day average, how it has moved lately, and how it compares with
-          its sector and the market.</span>
+          its price sits against its 200-day average (its average closing price over the last 200
+          trading days), how it has moved lately, and how it compares with its sector and the
+          market.</span>
       </li>
       <li class="st-step" style="--i: 2">
         <span class="st-step-n">2015</span>
@@ -200,20 +207,22 @@ try {
       <h3>The trade you could actually make</h3>
       <ol class="st-beats">
         <li><b>Day 1 · 4:00 pm ET</b><span>The market closes.</span></li>
-        <li><b>Day 1 · about 6:30 pm</b><span>The model ranks every stock.</span></li>
-        <li class="act"><b>Day 2 · 9:30 am</b><span>Buy the picks at the open.</span></li>
-        <li class="act"><b>Day 3 · 9:30 am</b><span>Sell at the open.</span></li>
+        <li><b>Day 1 · that evening</b><span>The model ranks every stock.</span></li>
+        <li class="act"><b>Day 2 · 9:30 am ET</b><span>Buy the picks at the open.</span></li>
+        <li class="act"><b>Day 3 · 9:30 am ET</b><span>Sell at the open.</span></li>
         <li class="st-span" aria-hidden="true"></li>
       </ol>
-      <p class="st-trade-read">Every result on this page is measured that way &mdash; from the next
+      <p class="st-trade-read">Every result on this page is measured that way unless it says
+        otherwise &mdash; from the next
         morning's open to the open after &mdash; and against the average stock in the same sector,
         so a day when the whole market rises counts for nothing on its own. The picks do lean
-        toward stocks that swing harder than the market, though, and how much of the result that
-        lean explains is taken up under <a href="#c-works">Does it work?</a></p>
+        toward market-sensitive stocks, though &mdash; ones that rise and fall further than the
+        market &mdash; and how much of the result that lean explains is taken up under
+        <a href="#c-works">Does it work?</a></p>
     </div>
 
     <p class="st-example" id="idea-example" data-reveal>The latest
-      picks were made on September 25, 2026.</p>
+      picks were made on September 28, 2026.</p>
   </section>
 
   
@@ -222,7 +231,8 @@ try {
       <p class="st-kicker"><span>02</span>How the model sees the market</p>
       <h2 id="h-sees">It leans toward stocks that move a lot, and weighs where each one sits against its long-run trend.</h2>
       <p class="st-lede">Each dot is one of today's stocks. Across: how much it typically moves in a
-        day. Up: how far its price sits above or below its 200-day average. The model's current
+        day &mdash; its average daily price range over the last 14 trading days, as a share of its
+        price. Up: how far its price sits above or below its 200-day average. The model's current
         picks are lit. Hover or tap a dot to see which stock it is; click to open it.</p>
     </header>
 
@@ -230,7 +240,7 @@ try {
       <p class="st-key" id="universe-key">
         <span><i class="k-pick" aria-hidden="true"></i>the model's current picks</span>
         <span><i class="k-rest" aria-hidden="true"></i>every other stock</span>
-        <span><i class="k-pin" aria-hidden="true"></i>beyond the edge, pinned to it</span>
+        <span><i class="k-pin" aria-hidden="true"></i>a few extreme stocks, drawn at the chart's edge</span>
         <span><i class="k-ref" aria-hidden="true"></i>dashed: the median stock's daily move, and a price right at its 200-day average</span>
       </p>
       <div id="chart-universe" class="st-chart tall" role="img"
@@ -256,7 +266,8 @@ try {
         January 2016 to September 2026 was new to it:
         <span id="works-days" data-count="2684">2,684</span> trading days
         on which to check whether its picks did better than the average stock in their own
-        sector.</p>
+        sector. About half of the edge it found may simply come from holding market-sensitive
+        stocks; what the model adds beyond that is not yet distinguishable from zero.</p>
     </header>
 
     <div class="st-headline" data-reveal>
@@ -281,7 +292,7 @@ try {
     <figure class="st-fig" data-reveal>
       <div class="st-fig-head">
         <h3>Every day's edge, added up</h3>
-        <span class="st-fig-meta" id="decade-meta">Jan 4, 2016 &ndash; Sep 8, 2026</span>
+        <span class="st-fig-meta" id="decade-meta">2016 &ndash; 2026</span>
       </div>
       <div id="chart-decade" class="st-chart" role="img"
            aria-label="The picks' edge over sector peers, added up day by day across the tested decade"></div>
@@ -295,7 +306,8 @@ try {
     <figure class="st-fig" data-reveal>
       <div class="st-fig-head">
         <h3>Year by year</h3>
-        <span class="st-fig-meta">the average day in each year; whiskers show its give or take</span>
+        <span class="st-fig-meta">the average day in each year; whiskers show its give or take once &mdash;
+          twice that is the usual line for &ldquo;probably not luck&rdquo;</span>
       </div>
       <div id="chart-years" class="st-chart short" role="img"
            aria-label="The average day in each year of the tested decade, with its give-or-take"></div>
@@ -316,28 +328,51 @@ try {
       <div class="st-cards">
         <article class="st-card">
           <p class="st-card-k">Where the ranking works</p>
-          <h4>Only the top tenth</h4>
-          <p>Below the model's favourite tenth, its ranking does not sort returns: the second-best
+          <h4>Only the top tenth</h4><div class="st-tenths" aria-hidden="true">
+            <span class="on">top tenth</span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="st-tenths-key" aria-hidden="true">favourite &larr; the ranking, in tenths &rarr; least favourite</p>
+          <p>Below the model's favourite tenth, its ranking stops telling better stocks from worse: the second-best
             tenth is not reliably better than the middle. Everything rests on the top tenth, which
             is why the picks are only those names.</p>
         </article>
         <article class="st-card">
           <p class="st-card-k">When it is earned</p>
-          <h4>Overnight</h4>
-          <p>The edge shows up between one day's close and the next morning's open. The ranking is
-            ready on Day&nbsp;1's evening, too late for that first night &mdash; but the edge
-            carries into the next night too, from Day&nbsp;2's close to Day&nbsp;3's open, and the
-            trade above holds the picks through it.</p>
+          <h4>Mostly overnight</h4><div class="st-nights" aria-hidden="true">
+            <span>Day&nbsp;2 open</span><span class="day">day</span><span class="night">night</span><span>Day&nbsp;3 open</span>
+          </div>
+          <p>Most of the edge has shown up between one day's close and the next morning's open
+            &mdash; clearly so in 2016&ndash;2021; since 2022 it has split more evenly between night
+            and day. The ranking is ready on Day&nbsp;1's evening, too late for that first night
+            &mdash; but the edge carries into the next night too, from Day&nbsp;2's close to
+            Day&nbsp;3's open, and the trade above holds the picks through it.</p>
+          <p class="st-card-foot">Holding only overnight, from each close to the next open, was
+            tried too: it earns less than trading that often would cost (see
+            <a href="#c-tried">ideas that didn't pan out</a>).</p>
         </article>
         <article class="st-card" id="card-lean">
           <p class="st-card-k">Where the size comes from</p>
-          <h4>About half goes with a lean toward market-sensitive stocks</h4><p>The picks lean toward stocks that swing further than the market when it moves.
-            Roughly half of the average day goes with that lean, and what is left over is too
-            small, so far, to tell apart from zero.</p>
-          <p>A second check points the same way. Take the picks' own returns &mdash; not measured
-            against their sector &mdash; and remove the pull of the S&amp;P&nbsp;500, which they
-            move about 1.6 times as much as: about +0.014% a day (+1.42 basis points) is left,
-            again too small to tell apart from zero.</p>
+          <h4>About half may come from holding market-sensitive stocks</h4><div class="st-lean" aria-hidden="true">
+            <div class="ln-row"><span>the S&amp;P&nbsp;500 moves</span><span class="ln-bar"><span style="--w: 62.5%"></span></span><b>1%</b></div>
+            <div class="ln-row ln-pick"><span>the picks, on average</span><span class="ln-bar"><span style="--w: 100%"></span></span><b>about 1.6%</b></div>
+          </div>
+          <p>The picks lean toward market-sensitive stocks: ones that rise and fall further than
+            the market when it moves. (A different measure from the
+            <a href="#c-sees">daily move plotted earlier</a>, which counts any move, not only those
+            that follow the market.) Such stocks tend to gain more than their sector peers when
+            the market rises. Roughly half of the average day may simply come from that lean, on
+            one way of measuring it, and what is left over is too small, so far, to tell apart
+            from zero.</p>
+          <p>The lean cuts both ways: the same stocks tend to fall further than their peers when
+            the market falls, so it should cost the picks in a falling market. 2022, a falling
+            year for the market, is the one year below zero &mdash; though only slightly, within
+            its give or take.</p>
+          <p>A second check points the same way. The picks' own returns &mdash; not measured
+            against their sector &mdash; move about 1.6 times as much as the S&amp;P&nbsp;500
+            index of large US companies, as drawn above. Set aside the part that simply follows
+            the index and about +0.014% a day (+1.42 basis points) is left, again too small to
+            tell apart from zero. The two checks measure different things, so their sizes need
+            not match; they agree on that last point.</p>
           <p class="st-card-foot">So it is not yet shown that the model adds anything beyond that
             lean. The headline above includes it.</p>
         </article>
@@ -346,21 +381,28 @@ try {
           <h4>Costs eat into it quickly</h4>
           <p>Each stock swapped in costs a round trip &mdash; buying it, and later selling it
             &mdash; and about a fifth of the picks are swapped each day. At a round-trip cost of
-            2.5, 10 or 20 basis points, roughly +4.4, +2.9 or +0.9 basis points a day is
-            left, each give or take about 1.8, as the
-            headline is. At 20, what is left cannot be told apart from zero.</p>
+            0.025%, 0.10% or 0.20% (2.5, 10 or 20 basis points), roughly
+            +0.044%, +0.029% or +0.009%
+            a day is left, against +0.049% before
+            costs, each give or take about 0.018%, as
+            the headline is. At 0.10% or 0.20%, what is left
+            cannot be told apart from zero.</p>
           <div class="mb" aria-hidden="true">
+            <div class="mb-row mb-head"><span>round-trip cost</span><b>left each day</b></div>
             
-            <div class="mb-row"><span>at a cost of 2.5</span><b>+4.4</b><span class="mb-bar"><span style="--w: 89.2%"></span></span></div>
+            <div class="mb-row"><span>0.025%</span><b>+0.044%</b><span class="mb-bar"><span style="--w: 89.2%"></span></span></div>
             
-            <div class="mb-row"><span>at a cost of 10</span><b>+2.9</b><span class="mb-bar"><span style="--w: 58.8%"></span></span></div>
+            <div class="mb-row"><span>0.10%</span><b>+0.029%</b><span class="mb-bar"><span style="--w: 58.8%"></span></span></div>
             
-            <div class="mb-row"><span>at a cost of 20</span><b>+0.9</b><span class="mb-bar"><span style="--w: 18.2%"></span></span></div>
+            <div class="mb-row"><span>0.20%</span><b>+0.009%</b><span class="mb-bar"><span style="--w: 18.2%"></span></span></div>
             
-            <p class="mb-unit">basis points a day left, after a round-trip cost in basis points</p>
-          </div>
-          <p class="st-card-foot">It breaks even near a round-trip cost of 0.24% (24 basis points).
-            The real cost of trading at the open has not been measured yet.</p>
+            <p class="mb-unit">full bar: the +0.049% a day before costs</p>
+          </div><p class="st-card-foot">Where the truth falls: the lowest, 0.025%, is about what published
+            studies find for the very largest US companies, and the picks lean toward more volatile
+            stocks, which tend to cost more to trade; the project's working assumption is 0.10%, and
+            0.20% is a deliberately harsh case. It breaks even near a round-trip cost of 0.24%
+            (24 basis points). The real cost of trading at the open has not been measured, because
+            no real trades have been made.</p>
         </article>
       </div>
     </div>
@@ -370,25 +412,32 @@ try {
   <section class="st-ch" id="c-live" aria-labelledby="h-live">
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>04</span>Live since July&nbsp;1</p>
-      <h2 id="h-live">58 live trading days so far, from the same frozen model.</h2>
+      <h2 id="h-live">59 live trading days so far, from the same frozen model.</h2>
       <p class="st-lede">From July 1, 2026, every evening the model scored counts as
         a live trading day. It is a paper record: each evening's picks are written down and scored
         as if bought at the next open and sold at the open after, against sector peers. No real
         trades have been logged yet.</p>
     </header>
+    
+    <p class="st-note" id="after-the-fact">30 of these days were scored after the fact, in
+      catch-up runs &mdash; one when the nightly runs were first set up in early August,
+      which filled in the evenings back to July 7, the first with picks,
+      and others after missed nightly runs; it was the same frozen model either way.</p>
+    
 
     <div class="st-tiles" data-reveal>
       <div class="st-tile">
         <span class="k">Live trading days</span>
-        <span class="v" id="live-days">58</span>
-        <span class="s" id="live-days-sub">first scored Jul 7, 2026 (the run
-          that started the record reached back only that far), latest Sep 25, 2026</span>
+        <span class="v" id="live-days">59</span>
+        <span class="s" id="live-days-sub">counted from Jul 1, 2026;
+          the first with picks Jul 7, 2026, the latest Sep 28, 2026</span>
       </div>
       <div class="st-tile">
         <span class="k">Ahead of sector peers, added up</span>
         <span class="v" id="live-cum">&mdash;</span>
         <span class="st-nojs">shown when JavaScript is on</span>
         <span class="s" id="live-cum-sub">&nbsp;</span>
+        <span class="s st-lump" id="live-cum-lumps"></span>
       </div>
       <div class="st-tile">
         <span class="k">The average live day</span>
@@ -403,15 +452,11 @@ try {
         <span class="s" id="live-pos-sub">&nbsp;</span>
       </div>
     </div>
-    <p class="st-note" id="after-the-fact">30 of these days were scored after the fact,
-      most of them in one catch-up run in early August, when the model was first set up to run each
-      night, and the rest after missed nightly runs; it was the same frozen model either way.</p>
-    
 
     <figure class="st-fig" data-reveal>
       <div class="st-fig-head">
         <h3>The live days, added up</h3>
-        <span class="st-fig-meta" id="live-meta">Jul 7, 2026 &ndash; Sep 25, 2026</span>
+        <span class="st-fig-meta" id="live-meta">Jul 7, 2026 &ndash; Sep 28, 2026</span>
       </div>
       <div id="chart-live" class="st-chart tall" role="img"
            aria-label="The live days' edge over sector peers added up, beside the pace of the tested decade's average day, with each day's result below"></div>
@@ -435,16 +480,16 @@ try {
     <div class="st-meter" data-reveal>
       <div class="st-meter-head">
         <h3 class="st-h3">How long until we know</h3>
-        <span class="st-meter-count"><b>58</b> of about 250 live trading days</span>
+        <span class="st-meter-count"><b>59</b> of about 250 live trading days</span>
       </div>
       <div class="st-meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="250"
-           aria-valuenow="58" aria-label="Live trading days toward about a year">
-        <span class="st-meter-fill" style="--pct: 23.2%"></span>
+           aria-valuenow="59" aria-label="Live trading days toward about a year">
+        <span class="st-meter-fill" style="--pct: 23.6%"></span>
       </div>
       <p class="st-meter-read">About a year of trading days &mdash; roughly 250 &mdash;
         is what the live record needs before it can say much either way, and even then it will
         catch a large miss more easily than it can confirm an edge as small as the tested one.
-        192 to go: at one a weekday, about
+        191 to go: at one a weekday, about
         9 more months.</p>
     </div>
   </section>
@@ -453,11 +498,12 @@ try {
   <section class="st-ch" id="c-picks" aria-labelledby="h-picks">
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>05</span>Today's picks</p>
-      <h2 id="h-picks">49 names, picked on September 25, 2026.</h2>
+      <h2 id="h-picks">49 names, picked on September 28, 2026.</h2>
       <p class="st-lede">What the model holds after its latest run. A stock joins in the top tenth and
-        stays until it drops out of the top 30%, so some of today's picks now rank a little below the
-        top tenth. Each card shows the two things the model weighs most: how much the stock
-        typically moves in a day, and where it sits against its 200-day average. Open one to see its
+        stays until it drops out of the top 30%, so some of today's picks now rank below the top
+        tenth, though still inside the top 30%. Each card shows the two things the model weighs
+        most: how much the stock typically moves in a day &mdash; drawn as a bar, with a tick at the
+        median stock &mdash; and where it sits against its 200-day average. Open one to see its
         history.</p>
     </header>
     <div class="st-picks-wrap" data-reveal>
@@ -477,20 +523,28 @@ try {
   <section class="st-ch" id="c-guard" aria-labelledby="h-guard">
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>06</span>The guardrails</p>
-      <h2 id="h-guard">Built to be hard to fool, itself included.</h2>
+      <h2 id="h-guard">Four habits that make it harder to fool ourselves.</h2>
       <p class="st-lede">Most models that look good on history do so because someone kept adjusting
-        them until they did. Four habits stand in the way of that here.</p>
-    </header>
-    <ol class="st-guard" data-reveal>
-      <li style="--i: 0"><b>Rules first, results second.</b><span>Every test's pass-or-fail rule was
-        written down before the test ran, so no threshold was chosen after seeing the answer.</span></li>
-      <li style="--i: 1"><b>A test on shuffled data.</b><span>The whole pipeline was run on data whose
+        them until they did. These habits stand in the way of that here, and each can be checked on
+        the working pages.</p>
+    </header><ol class="st-guard" data-reveal>
+      <li style="--i: 0"><svg class="st-gicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><path d="M8.6 12.6l2.4 2.4 4.4-4.8"/></svg>
+        <b>Rules first, results second.</b><span>Every test's pass-or-fail rule was
+        written down before the test ran, so no threshold was chosen after seeing the answer.
+        <a href="research/#s-registrations">Every test and its rule</a></span></li>
+      <li style="--i: 1"><svg class="st-gicon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h3.5c4.5 0 6.5 10 11 10H21"/><path d="M3 17h3.5c4.5 0 6.5-10 11-10H21"/><path d="M18.5 4.5L21 7l-2.5 2.5"/><path d="M18.5 14.5L21 17l-2.5 2.5"/></svg>
+        <b>A test on shuffled data.</b><span>The whole pipeline was run on data whose
         outcomes had been shuffled, where there is nothing to find &mdash; and it found nothing. A
-        pipeline that finds patterns in noise would have shown it there.</span></li>
-      <li style="--i: 2"><b>Never retuned.</b><span>The model has not been adjusted on recent data.
-        Every number on this page comes from the one model, trained once.</span></li>
-      <li style="--i: 3"><b>Failures stay on the record.</b><span>Ideas that did not work are kept
-        and written up, not quietly deleted &mdash; a few of them are listed below.</span></li>
+        pipeline that finds patterns in noise would have shown it there.
+        <a href="research/">The research log</a></span></li>
+      <li style="--i: 2"><svg class="st-gicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></svg>
+        <b>Never retuned.</b><span>The model has not been adjusted on recent data.
+        Every number on this page comes from the one model, trained once.
+        <a href="model/">The model's record</a></span></li>
+      <li style="--i: 3"><svg class="st-gicon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9"/><path d="M10 13h4"/></svg>
+        <b>Failures stay on the record.</b><span>Ideas that did not work are kept
+        and written up, not quietly deleted &mdash; a few of them are listed below.
+        <a href="research/#s-closed">The ones set aside</a></span></li>
     </ol>
   </section>
 
@@ -501,15 +555,19 @@ try {
       <h2 id="h-unknown">Four open questions.</h2>
     </header>
     <ul class="st-open" data-reveal>
-      <li><b>Whether live will match the test.</b><span>The live record is short. About a year of live
-        days is needed before it can say much either way about the tested edge.</span></li>
+      <li><b>Whether live will match the test.</b><span>The model never learned from the tested
+        decade, but the people who designed it could see those years, so a record kept going
+        forward is the cleaner check. It is short: about a year of live days is needed before it
+        can say much either way about the tested edge.</span></li>
       <li><b>What trading really costs.</b><span>No real trades have been logged yet, so the cost of
-        trading at the open is an estimate, not a measurement.</span></li>
-      <li><b>A gap in the test data.</b><span>Stocks without a current sector label &mdash; about 8% of
-        the tested stock-days &mdash; were left out of the test. What that did to the number has not
-        been measured yet.</span></li>
-      <li><b>Why it varies so much by year.</b><span>The edge has been uneven: below zero in 2022, large
-        in 2020 and 2025. A decade is not many years to learn a pattern like that from.</span></li>
+        trading at the open is an estimate, not a measurement.</span></li><li><b>A gap in the test data.</b><span>Stocks without a current sector label were left out of
+        the test &mdash; on an average day, about 8% of the stocks in its list. The data vendor
+        labels only companies still listed, so the ones left out include companies that later
+        failed, which could flatter the result, and companies that were taken over, often at a
+        premium, which could work the other way. Which way it went, and by how much, has not been
+        measured yet.</span></li>
+      <li><b>Why it varies so much by year.</b><span>The edge has been uneven: slightly below zero in
+        2022 (within its give or take), large in 2020 and 2025. A decade is not many years to learn a pattern like that from.</span></li>
     </ul>
   </section>
 
@@ -518,29 +576,44 @@ try {
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>08</span>Ideas that didn't pan out</p>
       <h2 id="h-tried">Tried, measured, set aside.</h2>
-    </header>
-    <details class="st-closed" data-reveal>
-      <summary><span>Six ideas that were tried or weighed, and set aside</span><span class="st-plus" aria-hidden="true"></span></summary>
-      <ul>
-        <li><b>Finer ways to use the ranking</b><span>Weighting names by score, concentrating the
-          picks, splitting them into slices: the top tenth is the only part of the ranking that
-          works, so there was nothing finer to use.</span></li>
-        <li><b>Leaning the training toward recent years</b><span>Did not help &mdash; if anything it
-          did slightly worse. (A second version, trained on data up to mid-2025 and on the trade you
-          could actually make, is tracked beside this one each night without being traded; it is not part of any number
-          on this page.)</span></li>
-        <li><b>Switching on or sizing by market mood</b><span>Turning the picks up or down with how
-          volatile the market is, or how far apart stocks' moves are, was not reliable.</span></li>
-        <li><b>An overnight-only version</b><span>Holding only from the close to the next open earns
-          less than it would cost to trade that often.</span></li>
-        <li><b>The model against a simpler ranking</b><span>Comparing the picks with a plain sort on
-          one measure, such as how strongly each stock moves with the market: too few days to tell
-          the two apart. That comparison now builds up night by night instead.</span></li>
-        <li><b>Betting against its least-favourite stocks</b><span>Selling short the bottom of the
-          list was not pursued: below the top tenth the ranking does not sort returns, so the
-          bottom is not reliably worse than the middle.</span></li>
-      </ul>
-    </details>
+      <p class="st-lede">Six ideas that were tried or weighed and did not make it in. Each shows its
+        verdict; open one for the reason.</p>
+    </header><ul class="st-ideas" data-reveal>
+      <li style="--i: 0"><details class="st-idea">
+        <summary><b>Finer ways to use the ranking</b><span class="st-verdict">Only the top tenth carries the edge.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Weighting names by score, concentrating the picks, splitting them into slices: the top
+          tenth is the only part of the ranking that works, so there was nothing finer to use.</p>
+      </details></li>
+      <li style="--i: 1"><details class="st-idea">
+        <summary><b>Leaning the training toward recent years</b><span class="st-verdict">Did slightly worse.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Did not help &mdash; if anything it did slightly worse. (A second version, trained on data
+          up to mid-2025 and on the trade you could actually make, is tracked beside this one each
+          night without being traded; it is not part of any number on this page.)</p>
+      </details></li>
+      <li style="--i: 2"><details class="st-idea">
+        <summary><b>Switching on or sizing by market mood</b><span class="st-verdict">Not reliable.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Turning the picks up or down with how volatile the market is, or how far apart stocks'
+          moves are, was not reliable.</p>
+      </details></li>
+      <li style="--i: 3"><details class="st-idea">
+        <summary><b>An overnight-only version</b><span class="st-verdict">Earns less than it costs to trade.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Buying at each close and selling at the next open catches the part of the edge that shows
+          up overnight, but it trades every name every day, and that earns less than it would cost
+          to trade that often.</p>
+      </details></li>
+      <li style="--i: 4"><details class="st-idea">
+        <summary><b>The model against a simpler ranking</b><span class="st-verdict">Too few days to tell apart.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Comparing the picks with a plain sort on one measure, such as how strongly each stock
+          moves with the market: too few days to tell the two apart. That comparison now builds up
+          night by night instead.</p>
+      </details></li>
+      <li style="--i: 5"><details class="st-idea">
+        <summary><b>Betting against its least-favourite stocks</b><span class="st-verdict">Not pursued.</span><span class="st-plus" aria-hidden="true"></span></summary>
+        <p>Selling short the bottom of the list was not pursued: below the top tenth the ranking
+          stops telling better stocks from worse, so the bottom is not reliably worse than the
+          middle.</p>
+      </details></li>
+    </ul>
   </section>
 
   
@@ -554,7 +627,7 @@ try {
     <nav class="st-deeper" aria-label="Under the hood" data-reveal>
       <a href="screener/"><strong>Explore stocks</strong><span>Every stock the model ranks, with its
         rank, recent moves and signals. Filter, sort, open any one.</span></a>
-      <a href="/lab"><strong>Research notebook</strong><span>The working overview: the nightly
+      <a href="lab/"><strong>Research notebook</strong><span>The working overview: the nightly
         record, the market map and every caveat, in full.</span></a>
       <a href="model/"><strong>Model dashboard</strong><span>Every chart of the frozen model's record,
         day by day.</span></a>
@@ -564,17 +637,17 @@ try {
         runs went.</span></a>
     </nav>
     <p class="st-end">A research project, not investment advice. &ldquo;qe&rdquo; is short for
-      quantitative equity.
-      Prices as of September 25, 2026.</p>
+      quantitative equity: stock research done with numbers.
+      Prices as of September 28, 2026.</p>
   </section>
 
   </div>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-26. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-28. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-09-26T14:00-05:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
+<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-09-28T23:20-04:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
 <script src="static/fx.js"></script>
 <script src="static/story.js"></script>
 </body>

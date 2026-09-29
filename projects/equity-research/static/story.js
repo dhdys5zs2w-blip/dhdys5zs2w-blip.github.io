@@ -2,8 +2,9 @@
  * it, one chapter per idea. This script draws what the server could not —
  * the charts, the universe as dots, today's picks, the countdown — from three
  * requests made once each: /api/story, /api/market_map and the model's
- * schedule. Nothing is polled; the countdown is a client clock, read in the
- * platform's own time zone (US Eastern).
+ * schedule. Nothing is polled. The schedule's times carry no zone, so the
+ * page prints no clock time at all: it names the evening the next picks are
+ * expected, and counts no minutes to it (see startClock).
  *
  * What it keeps:
  *  - Every figure comes from those payloads or from the page's own server
@@ -180,7 +181,9 @@
     const Y = (y) => (H - pad - (y - lo) / Math.max(1e-9, hi - lo) * (H - 2 * pad)).toFixed(1);
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.setAttribute("preserveAspectRatio", "none");
-    svg.innerHTML = '<line class="spark-zero" x1="0" x2="' + W + '" y1="' + Y(0) + '" y2="' + Y(0) + '"/>' +
+    // the baseline spans exactly what the line does, so the line never looks
+    // as if it stopped short of it
+    svg.innerHTML = '<line class="spark-zero" x1="' + pad + '" x2="' + (W - pad) + '" y1="' + Y(0) + '" y2="' + Y(0) + '"/>' +
       '<path class="spark-line ' + cls + '" pathLength="1" vector-effect="non-scaling-stroke" d="' +
       s.map((p, i) => (i ? "L" : "M") + X(p[0]) + " " + Y(p[1])).join(" ") + '"/>';
     requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add("in")));
@@ -243,15 +246,31 @@
 
     liveNumbers(lv, bt);
     const ld = lv.dates || [];
-    if (ld.length) put("live-meta", day(ld[0]) + " – " + day(ld[ld.length - 1]) + ", the days with a result so far");
+    // the newest evenings have no result yet: say where the results end
+    const resultsEnd = lastDated(ld, lv.daily_bps || []);
+    if (ld.length) {
+      put("live-meta", day(ld[0]) + " – " + day(ld[ld.length - 1]) +
+        (resultsEnd && resultsEnd !== ld[ld.length - 1] ? "; results so far through " + day(resultsEnd) : ""));
+    }
     whenNear($("chart-live"), () => drawLive(lv, bt));
-    readLumps(lv);
+    liveSeen = lv;
+    readLumps(lv, listSizes);
     rangePlot($("range-live"), [decadeRow, {
       label: "Live since July 1", sub: (lv.n_days_with_return || 0) + " days with a result",
       mean: lv.mean_bps, se: lv.se_bps, cls: "live",
     }]);
     readLive(lv, bt);
     readOverlap(lv, bt, end);
+  }
+
+  // The two payloads the live caption reads arrive in either order.
+  let liveSeen = null, listSizes = null;
+  function takeSizes(p) {
+    const days = (p && p.days) || [];
+    if (!days.length) return;
+    listSizes = {};
+    days.forEach((x) => { if (x.date && x.n_names) listSizes[String(x.date).slice(0, 10)] = x.n_names; });
+    if (liveSeen) readLumps(liveSeen, listSizes);
   }
 
   function storyMissing() {
@@ -294,6 +313,9 @@
     const BT = C.backtest;   // the tested decade's own series
     const cum = bt.implementable_cum_bps || [];
     const data = (bt.dates || []).map((d, i) => [d, cum[i] == null ? null : cum[i] / 100]);
+    // the final dates carry no result yet: the axis ends where the results do,
+    // the same date the chart's heading names
+    while (data.length && data[data.length - 1][1] == null) data.pop();
     const chart = qe.chart("chart-decade");
     chart.setOption({
       animation: !reduced, animationDuration: 2400, animationEasing: "cubicOut",
@@ -306,7 +328,10 @@
             (p.value[1] == null ? "—" : signed(p.value[1], 1) + "%") + "</b>";
         },
       },
-      xAxis: { type: "time", splitLine: { show: false }, axisLabel: { hideOverlap: true } },
+      // the axis's two end labels would be bare day numbers ("4", "8"); the
+      // years between them say all a reader needs
+      xAxis: { type: "time", splitLine: { show: false },
+               axisLabel: { hideOverlap: true, showMinLabel: false, showMaxLabel: false } },
       yAxis: { type: "value", min: (v) => Math.min(0, Math.floor(v.min / 10) * 10), axisLabel: { formatter: (v) => v + "%" } },
       series: [{
         name: "The tested decade", type: "line", data, showSymbol: false, connectNulls: false,
@@ -329,6 +354,11 @@
     const vals = rows.map((r) => (r.mean_bps == null ? null : r.mean_bps / 100));
     const whisk = rows.map((r, i) => (r.se_bps == null || r.mean_bps == null ? null
       : [i, (r.mean_bps - r.se_bps) / 100, (r.mean_bps + r.se_bps) / 100])).filter((x) => x);
+    const ends = whisk.map((w) => w[1]).concat(whisk.map((w) => w[2]), vals.filter((v) => v != null), [0]);
+    // ends on whole ticks, with a little room past the furthest whisker cap
+    const step = niceStep(Math.min(...ends), Math.max(...ends), 5);
+    const lowest = Math.floor((Math.min(...ends) - step / 8) / step) * step;
+    const highest = Math.ceil((Math.max(...ends) + step / 8) / step) * step;
     const chart = qe.chart("chart-years");
     chart.setOption({
       animation: !reduced, animationDuration: 900, animationDelay: (i) => i * 70,
@@ -344,7 +374,10 @@
         },
       },
       xAxis: { type: "category", data: cats },
-      yAxis: { type: "value", axisLabel: { formatter: (v) => (v === 0 ? "0" : signed(v, 2) + "%") } },
+      // the axis spans every whisker, not only the bars: a clipped whisker
+      // would understate that year's give-or-take
+      yAxis: { type: "value", min: lowest, max: highest, interval: step,
+               axisLabel: { formatter: (v) => (Math.abs(v) < step / 1e6 ? "0" : signed(v, 2) + "%") } },
       series: [
         { name: "The tested decade, by year", type: "bar", barMaxWidth: 34,
           data: qe.bars(vals, () => C.backtest) },   // the tested decade's own series
@@ -367,28 +400,58 @@
     }
     const rows = all.filter((r) => r.mean_bps != null);
     if (!rows.length) return;
-    const below = rows.filter((r) => r.mean_bps < 0).map((r) => String(r.year));
+    // a year below zero by less than twice its give-or-take cannot be told
+    // apart from zero by the page's own rule, and is called "slightly" below
+    const neg = rows.filter((r) => r.mean_bps < 0);
+    const clear = neg.filter((r) => r.se_bps != null && r.mean_bps + 2 * r.se_bps < 0).map((r) => String(r.year));
+    const slight = neg.filter((r) => !(r.se_bps != null && r.mean_bps + 2 * r.se_bps < 0)).map((r) => String(r.year));
+    const belowText = (clear.length ? "Below zero in " + listing(clear) + "; " : "") +
+      (slight.length ? (clear.length ? "slightly" : "Slightly") + " below zero in " + listing(slight) + ", within " +
+        (slight.length === 1 ? "its" : "their") + " give or take; " : "");
     const top = rows.slice().sort((a, b) => b.mean_bps - a.mean_bps).slice(0, 2).map((r) => r.year).sort().map(String);
-    put("years-read", (below.length ? "Below zero in " + listing(below) + "; " : "Above zero every year; ") +
+    put("years-read", (neg.length ? belowText : "Above zero every year; ") +
       "strongest in " + listing(top) + ". An edge that is there in total is not the same as an edge that is " +
-      "there every year." + (partial ? " *" + partial + " runs through " + day(end) + "." : ""));
+      "there every year." + yearsClear(rows, bt) + (partial ? " *" + partial + " runs through " + day(end) + "." : ""));
+  }
+
+  // The whiskers show the give-or-take once; the page's line for "probably
+  // not luck" is twice it. Say which years clear that line on their own, so a
+  // bar whose whisker stays above zero is not read as clearing it — and
+  // whether the decade does, taken whole.
+  function yearsClear(rows, bt) {
+    const known = rows.filter((r) => r.se_bps != null);
+    if (!known.length) return "";
+    const clear = known.filter((r) => r.mean_bps - 2 * r.se_bps > 0).map((r) => String(r.year));
+    const whole = bt && bt.implementable_bps != null && bt.implementable_se_bps != null &&
+      bt.implementable_bps - 2 * bt.implementable_se_bps > 0;
+    const also = whole ? "; the decade taken whole is." : ".";
+    if (!clear.length) return " On its own, no single year is clear of zero by twice its give-or-take" + also;
+    if (clear.length === known.length) return " Every year is clear of zero by twice its give-or-take on its own.";
+    return " On " + (clear.length === 1 ? "its" : "their") + " own, only " + listing(clear) + (clear.length === 1 ? " is" : " are") +
+      " clear of zero by twice " + (clear.length === 1 ? "its" : "their") + " give-or-take" + also;
   }
 
   // How lumpy the decade's total is: the share of it that the two biggest
   // years supplied. A year's part of the sum is its average day times its days.
   function readDecade(bt) {
+    // the total the line ends on, with its give-or-take: that of a sum of n
+    // days is n times that of their average, as for the live total
+    const sum = lastValue(bt.implementable_cum_bps || []);
+    const n = bt.n_days_implementable || 0;
+    const totalText = sum == null || !n || bt.implementable_se_bps == null ? ""
+      : " Added up, the " + n.toLocaleString("en-US") + " days come to " + signed(sum / 100, 0) + "%, give or take " +
+        (bt.implementable_se_bps * n / 100).toFixed(0) + "%.";
     const rows = (bt.by_year || []).filter((r) => r.mean_bps != null && r.n_days);
-    if (rows.length < 4) return;
     const part = (r) => r.mean_bps * r.n_days;
     const total = rows.reduce((a, r) => a + part(r), 0);
-    if (!(total > 0)) return;
+    if (rows.length < 4 || !(total > 0)) { if (totalText) put("decade-read", totalText); return; }
     const top = rows.slice().sort((a, b) => part(b) - part(a)).slice(0, 2);
     const share = top.reduce((a, r) => a + part(r), 0) / total;
     const years = listing(top.map((r) => String(r.year)).sort());
-    put("decade-read", share > 0.5
+    put("decade-read", totalText + (share > 0.5
       ? " More than half of the added-up total — about " + Math.round(100 * share) + "% of it — came from just two years, " +
         years + "; the other " + (rows.length - 2) + " years together make up the rest."
-      : " The two biggest years, " + years + ", supplied about " + Math.round(100 * share) + "% of the added-up total.");
+      : " The two biggest years, " + years + ", supplied about " + Math.round(100 * share) + "% of the added-up total."));
   }
 
   function liveNumbers(lv, bt) {
@@ -434,31 +497,69 @@
 
   // How much of the live total rests on its two largest days, in the
   // direction of the total. A short record is lumpy, and a newcomer judging
-  // the sum should see how few days carry it.
-  function readLumps(lv) {
+  // the sum should see how few days carry it — so when two days carry most
+  // of it, the page says so beside the total everywhere the total is shown
+  // (the hero and the live tile), not only under the chart.
+  // The two days and their sum are printed to two decimals so the parts add
+  // up on the page. `sizes`, once the schedule payload has arrived, maps a
+  // date to how many names the picks held that evening. The picks are a
+  // tenth of the stocks scored, so a short list means fewer stocks than
+  // usual had a score; the cause is not stated, because it is known for some
+  // evenings and not for every evening this could name.
+  function readLumps(lv, sizes) {
     const d = lv.daily_bps || [], dates = lv.dates || [];
     const cum = lastValue(lv.cum_pct || []);
-    if ((lv.n_days_with_return || 0) < 5 || cum == null || cum === 0) return;
+    const n = lv.n_days_with_return || 0;
+    if (n < 5 || cum == null || cum === 0) return;
     const up = cum > 0;
     const two = d.map((v, i) => [v, i]).filter((x) => x[0] != null)
       .sort((a, b) => (up ? b[0] - a[0] : a[0] - b[0])).slice(0, 2);
     const sum = two.reduce((a, x) => a + x[0], 0) / 100;
-    const days = listing(two.map((x) => short(dates[x[1]]) + " (" + signed(x[0] / 100, 1) + "%)"));
-    put("live-lumps", " The " + (up ? "best" : "worst") + " two days, " + days + ", add up to " + signed(sum, 1) +
-      "% of the " + signed(cum, 1) + "% total" + (Math.abs(sum) > Math.abs(cum) / 2 ? " — more than half of it." : "."));
+    const most = Math.abs(sum) > Math.abs(cum) / 2;
+    const days = listing(two.map((x) => short(dates[x[1]]) + " (" + signed(x[0] / 100, 2) + "%)"));
+    let text = " The " + (up ? "best" : "worst") + " two days, " + days + ", add up to " + signed(sum, 2) +
+      "% of the " + signed(cum, 1) + "% total" + (most ? " — more than half of it." : ".");
+    let heroThin = "";
+    const usual = sizes ? median(Object.values(sizes)) : null;
+    if (usual) {
+      const thin = two.filter((x) => sizes[dates[x[1]]] != null && sizes[dates[x[1]]] < 0.9 * usual);
+      const k = thin.map((x) => sizes[dates[x[1]]]);
+      const same = k.length && k.every((v) => v === k[0]);
+      const held = (same ? String(k[0]) : listing(k.map(String))) + " names rather than the usual " + Math.round(usual);
+      if (thin.length === 2) {
+        text += " Both were evenings when the picks held only " + held + ", because fewer stocks than usual had a score.";
+        heroThin = ", evenings when the picks held only " + held;
+      } else if (thin.length === 1) {
+        text += " " + short(dates[thin[0][1]]) + " was an evening when the picks held only " + held +
+          ", because fewer stocks than usual had a score.";
+      }
+    }
+    put("live-lumps", text);
+    // beside the total: only when two days carry more than half of it, and
+    // with what the other days add up to, from the same series
+    const rest = most ? "the other " + (n - 2) + " days add up to " + signed(cum - sum, 1) + "%" : "";
+    put("hero-live-lumps", most ? "More than half of it came from two days, " +
+      listing(two.map((x) => short(dates[x[1]]))) + heroThin + "; " + rest + "." : "");
+    // (the tile is narrow: it names the days and leaves the list sizes to the caption)
+    put("live-cum-lumps", most ? "More than half from two days, " + listing(two.map((x) => short(dates[x[1]]))) +
+      "; " + rest + "." : "");
   }
 
   // The tested decade runs into the summer the live record starts in, so the
-  // two rows of the comparison share some days. Say how many.
+  // two rows of the comparison share some days: few of the decade's, but
+  // possibly most of the live row's. Say both, so the rows are not read as
+  // two independent checks.
   function readOverlap(lv, bt, end) {
     const d = lv.daily_bps || [];
     const liveDays = new Set((lv.dates || []).filter((x, i) => d[i] != null));
     const cum = bt.implementable_cum_bps || [];
     const shared = (bt.dates || []).filter((x, i) => cum[i] != null && liveDays.has(x)).length;
-    if (!shared) return;
-    put("live-overlap", "The two rows are not fully separate: the tested decade runs to " + day(end) + ", so " +
-      shared + " of its " + (bt.n_days_implementable || 0).toLocaleString("en-US") +
-      " days are also live days here — a small share of it.");
+    if (!shared || !liveDays.size) return;
+    const r = shared / liveDays.size;
+    const part = r >= 1 ? "all" : r > 0.5 ? "most" : r === 0.5 ? "half" : "some";
+    put("live-overlap", "The two rows share days: the tested decade runs to " + day(end) + ", so " + shared +
+      " of the " + liveDays.size + " live days with a result are in it too — a small share of the decade's " +
+      (bt.n_days_implementable || 0).toLocaleString("en-US") + " days, but " + part + " of the live row's.");
   }
 
   function drawLive(lv, bt) {
@@ -469,12 +570,15 @@
     const b = bt.implementable_bps;
     const pace = dates.map((d, i) => (b == null ? null : b * (i + 1) / 100));
     const daily = (lv.daily_bps || []).map((v) => (v == null ? null : v / 100));
+    let last = (lv.cum_pct || []).length - 1;
+    while (last >= 0 && lv.cum_pct[last] == null) last--;
     const names = ["The live days, added up", "At the tested decade's average pace", "Each day"];
     // on a phone the legend wraps to two lines; the plot starts below it
     const top = ($("chart-live").clientWidth || 800) < 560 ? 64 : 40;
+    const LINE_MS = 1800;
     const chart = qe.chart("chart-live");
     chart.setOption({
-      animation: !reduced, animationDuration: 1800, animationEasing: "cubicOut",
+      animation: !reduced, animationDuration: LINE_MS, animationEasing: "cubicOut",
       legend: { top: 0, left: 0, data: names.slice(0, 2) },
       axisPointer: { link: [{ xAxisIndex: "all" }] },
       tooltip: {
@@ -499,8 +603,15 @@
       series: [
         { name: names[0], type: "line", data: lv.cum_pct, xAxisIndex: 0, yAxisIndex: 0, showSymbol: false,
           color: LIVE, lineStyle: { width: 2.5 }, areaStyle: { opacity: 0.08 }, z: 3,
-          endLabel: { show: true, color: C.ink, fontFamily: C.mono, fontSize: 11,
-                      formatter: (o) => (o.value == null ? "" : signed(o.value, 1) + "%") } },
+          // the total is pinned to the last point with a result and appears
+          // once the line has reached it: shown earlier, the final figure sat
+          // beside a line still drawn only part of the way, and the two disagreed
+          markPoint: last < 0 ? undefined : {
+            symbol: "circle", symbolSize: 7,
+            animation: !reduced, animationDelay: LINE_MS, animationDuration: 250,
+            data: [{ coord: [dates[last], lv.cum_pct[last]], value: lv.cum_pct[last] }],
+            label: { show: true, position: "right", distance: 6, color: C.ink, fontFamily: C.mono, fontSize: 11,
+                     formatter: (o) => signed(o.value, 1) + "%" } } },
         { name: names[1], type: "line", data: pace, xAxisIndex: 0, yAxisIndex: 0, showSymbol: false,
           color: C.grey, lineStyle: { width: 1.5, type: "dashed" } },
         { name: names[2], type: "bar", data: qe.bars(daily, (v) => (v >= 0 ? C.pos : C.neg)),
@@ -559,11 +670,11 @@
     const ranked = names.filter((n) => n.rank != null).sort((a, b) => a.rank - b.rank);
     const top = ranked[0];
     if (!top) return;
-    const unranked = names.length - ranked.length;
     const medAtr = median(names.map((n) => n.atr_pct));
+    // the count is of the stocks it scored that evening; a few in the list can
+    // lack one, and naming them here raised a question the page cannot answer
     let html = "On " + qe.esc(day(m.signals_date || m.as_of, true)) + ", the model's favourite of the " +
-      ranked.length + " stocks it ranked" + (unranked ? " (the other " + unranked + " in the list had no score that evening)" : "") +
-      " was " + '<a class="sym" href="' + qe.symbolHref(top.symbol) + '">' +
+      ranked.length + " stocks it scored that evening was " + '<a class="sym" href="' + qe.symbolHref(top.symbol) + '">' +
       qe.esc(top.symbol) + "</a>" + (top.name ? " (" + qe.esc(top.name) + ")" : "") + ".";
     if (top.atr_pct != null && medAtr != null) {
       html += " It typically moves " + (top.atr_pct * 100).toFixed(1) + "% of its price in a day, where the median stock " +
@@ -604,8 +715,11 @@
     const fav = picks.filter((p) => p.n.rank != null).sort((a, b) => a.n.rank - b.n.rank)[0];
     if (fav) {
       const tag = [fav.n.symbol, "#" + fav.n.rank].join(" · ");
+      // on a small plate of the panel's colour, so it stays legible over the
+      // dots around it
       fav.label = { show: true, position: fav.value[0] > xHi * 0.7 ? "left" : "right", distance: 7, color: C.ink,
-                    fontFamily: C.mono, fontSize: 12, fontWeight: 600, formatter: () => tag };
+                    fontFamily: C.mono, fontSize: 12, fontWeight: 600, formatter: () => tag,
+                    backgroundColor: C.panel, borderColor: C.line, borderWidth: 1, borderRadius: 4, padding: [2, 5] };
     }
     const medX = median(xs);
     let armed = null;
@@ -624,7 +738,7 @@
             (n.rank != null ? "ranked #" + n.rank : "not ranked") +
             "<br>typical daily move: " + (n.atr_pct * 100).toFixed(1) + "% of its price" +
             "<br>" + Math.abs(n.dist_sma200 * 100).toFixed(0) + "% " + (n.dist_sma200 < 0 ? "below" : "above") +
-            " its 200-day average" + (d.pinned ? "<br><i>beyond the chart's edge, pinned to it</i>" : "") +
+            " its 200-day average" + (d.pinned ? "<br><i>too extreme for this chart's scale, so drawn at its edge</i>" : "") +
             '<br><span style="color:' + C.muted + '">' + (touch ? "tap again to open" : "click to open") + "</span>";
         },
       },
@@ -683,10 +797,15 @@
     const all = [];
     groups.forEach((g) => g.held.forEach((n) => all.push(n)));
     const lead = all.filter((n) => n.rank != null).sort((a, b) => a.rank - b.rank).slice(0, PICKS_FIRST);
+    // each card's move bar runs to the most volatile pick; its tick is the
+    // median stock of the whole list, as the chapter's text says
+    const moves = all.map((n) => n.atr_pct).filter((x) => x != null && isFinite(x));
+    const scale = { max: moves.length ? Math.max(...moves) : 0,
+                    med: median((m.sectors || []).flatMap((s) => s.names.map((n) => n.atr_pct))) };
     let k = 0;
     const bySector = groups.map((g) => '<section class="st-sector"><h3>' + qe.esc(sectorName(g.sector)) +
       "<span>" + g.held.length + (g.held.length === 1 ? " pick" : " picks") + " of " + g.n + "</span></h3>" +
-      '<div class="st-pick-grid">' + g.held.map((n) => pickCard(n, k++)).join("") + "</div></section>").join("");
+      '<div class="st-pick-grid">' + g.held.map((n) => pickCard(n, k++, scale)).join("") + "</div></section>").join("");
     if (lead.length >= all.length || !lead.length) {
       box.innerHTML = bySector;
     } else {
@@ -695,7 +814,7 @@
       box.innerHTML = '<div class="st-picks-head"><p id="picks-showing">' + firstText + "</p>" +
         '<button type="button" class="st-more" id="picks-more" aria-expanded="false" aria-controls="picks-all">Show all ' +
         all.length + " picks, by sector</button></div>" +
-        '<div class="st-pick-grid" id="picks-first">' + lead.map((n, i) => pickCard(n, i)).join("") + "</div>" +
+        '<div class="st-pick-grid" id="picks-first">' + lead.map((n, i) => pickCard(n, i, scale)).join("") + "</div>" +
         '<div id="picks-all" hidden>' + bySector + "</div>";
       const btn = $("picks-more"), first = $("picks-first"), rest = $("picks-all");
       btn.addEventListener("click", () => {
@@ -714,19 +833,24 @@
   // A pick shows the two measurements chapter 2 plotted, not its last day's
   // move: one day of one stock says nothing about the model, and a page of
   // red and green squares reads as a verdict on it.
-  function pickCard(n, i) {
+  function pickCard(n, i, scale) {
     const sig = [];
     if (n.atr_pct != null) sig.push("moves " + (n.atr_pct * 100).toFixed(1) + "% a day");
     if (n.dist_sma200 != null) {
       sig.push(Math.abs(n.dist_sma200 * 100).toFixed(0) + "% " + (n.dist_sma200 < 0 ? "below" : "above") + " its 200\u2011day\u00a0avg.");
     }
+    // the daily move drawn as well as written: a bar against the most volatile
+    // pick, a tick at the median stock (decoration; the words carry it)
+    const bar = n.atr_pct == null || !scale || !(scale.max > 0) ? "" :
+      '<span class="pick-move" aria-hidden="true"><span style="--w:' + Math.min(100, 100 * n.atr_pct / scale.max).toFixed(1) + '%"></span>' +
+      (scale.med == null ? "" : '<i style="--m:' + Math.min(100, 100 * scale.med / scale.max).toFixed(1) + '%"></i>') + "</span>";
     return '<a class="pick" style="--i:' + i + '" href="' + qe.symbolHref(n.symbol) + '" title="' +
       qe.esc(n.symbol) + (n.name ? " — " + qe.esc(n.name) : "") + ': open its page">' +
       '<span class="pick-sym">' + qe.esc(n.symbol) + "</span>" +
       '<span class="pick-rank">' + (n.rank != null ? "#" + qe.esc(String(n.rank)) : "") + "</span>" +
       '<span class="pick-name">' + qe.esc(n.name || "") + "</span>" +
       (sig.length ? sig.map((s) => '<span class="pick-sig">' + s + "</span>").join("") : '<span class="pick-sig">no signals recorded</span>') +
-      "</a>";
+      bar + "</a>";
   }
 
   function drawMix(m, groups) {
@@ -744,24 +868,20 @@
       '%"></span><i style="--u:' + (100 * r.base / top).toFixed(1) + '%"></i></span></div>').join("");
   }
 
-  /* ---- the schedule: a countdown in US Eastern time ---------------------------------- */
-  // The runs fire on the platform's own clock, which keeps US Eastern time, so
-  // the countdown reads "now" in that zone whatever the viewer's own is. A run
-  // scores something only after a weekday session, so the next run is the next
-  // weekday evening.
+  /* ---- the schedule: when the next picks are expected --------------------------------- */
+  // A newcomer needs the rhythm, not the scheduler: new picks come each
+  // evening after a US trading day, and the page names the evening the next
+  // are expected. It prints no clock time and no zone, and counts no minutes:
+  // the schedule's times carry no zone, and on 2026-09-26 the scheduler fired
+  // at 18:30 US Eastern while the host's clock read Central, so any time on
+  // any one clock could be an hour out. The run fires every evening but picks
+  // come only after a weekday session, so the next picks are the next weekday
+  // evening's; a market holiday is not known here, hence "expected".
   const hm = (s) => { const [h, mm] = String(s).split(":").map(Number); return h * 60 + mm; };
-  const pad = (n) => String(n).padStart(2, "0");
-  const clock = (mins) => pad(Math.floor(mins / 60) % 24) + ":" + pad(mins % 60);
   const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  function easternNow() {
-    try {
-      const parts = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "long",
-        hour: "numeric", minute: "numeric", hourCycle: "h23" }).formatToParts(new Date());
-      const get = (t) => (parts.find((p) => p.type === t) || {}).value;
-      const wd = WEEKDAYS.indexOf(get("weekday"));
-      const mins = (Number(get("hour")) % 24) * 60 + Number(get("minute"));
-      return wd < 0 || !isFinite(mins) ? null : { wd, mins };
-    } catch (err) { return null; }
+  function localNow() {
+    const d = new Date();
+    return { wd: d.getDay(), mins: d.getHours() * 60 + d.getMinutes() };
   }
   // Minutes from `now` to the next weekday run at `run`, and how to name that day.
   function nextRun(now, run) {
@@ -776,24 +896,21 @@
   function startClock(schedule) {
     const fires = ((schedule && schedule.fire_times) || []).map(hm).filter((x) => isFinite(x)).sort((a, b) => a - b);
     if (!fires.length) return;
-    const run = fires[0], retries = fires.slice(1);
-    const retryText = retries.length ? ", with a retry at " + retries.map(clock).join(" and ") + " if needed" : "";
-    put("clock-time", clock(run) + " ET");
-    // a static snapshot states the schedule; a countdown would be counting to
-    // an evening long past
+    const run = fires[0];
+    // a static snapshot says when it was taken; "the next" would name an
+    // evening long past
     if (qe.snapshot) {
-      put("clock-label", "Scoring runs");
-      put("clock-sub", "every weekday evening, US Eastern time" + retryText + ". This page is a snapshot from " +
-        String(qe.snapshot.exported_at).slice(0, 10) + ".");
+      const taken = /^\d{4}-\d{2}-\d{2}/.test(String(qe.snapshot.exported_at || "")) ?
+        " from " + day(String(qe.snapshot.exported_at).slice(0, 10), true) : "";
+      put("clock-sub", ". This page is a snapshot" + taken + ".");
       return;
     }
+    // the evening is read on the viewer's clock and only named, never counted
+    // down to: within the hour either side of the run it could be either
+    const EVENING = { tonight: "tonight", today: "later today", tomorrow: "tomorrow evening" };
     const tick = () => {
-      const now = easternNow();
-      const next = now && nextRun(now, run);
-      if (!next) { put("clock-sub", "every weekday evening, US Eastern time" + retryText); return; }
-      const h = Math.floor(next.left / 60), mm = next.left % 60;
-      const within = next.left < 1440 ? ", in " + (h ? h + " h " : "") + mm + " min" : "";
-      put("clock-sub", next.when + within + ". It runs each weekday evening after the close, US Eastern time" + retryText + ".");
+      const next = nextRun(localNow(), run);
+      put("clock-sub", next ? " — the next are expected " + (EVENING[next.when] || next.when + " evening") + "." : ".");
     };
     tick();
     setInterval(tick, 20000);
@@ -808,6 +925,6 @@
   });
   if (MODEL) {
     qe.fetch("/api/model/" + encodeURIComponent(MODEL) + "/pulse")
-      .then((p) => startClock(p.schedule)).catch((err) => console.error(err));
+      .then((p) => { startClock(p.schedule); takeSizes(p); }).catch((err) => console.error(err));
   }
 })();

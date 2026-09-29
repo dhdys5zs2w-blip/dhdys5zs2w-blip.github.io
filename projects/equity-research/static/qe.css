@@ -143,6 +143,15 @@ hr.rule { border: 0; border-top: 1px solid var(--line-2); margin: 1rem 0; }
  * Below 900 px the links fold into a Menu disclosure, so the bar stays one row
  * and the section nav can stick beneath it. Both folds happen only under
  * `.nav-js` (set in base.html's head): without script every link shows. */
+/* The first Tab stop on every page, out of sight until it is focused: it jumps
+ * past the bar (and a working page's banner) to the page itself. */
+.skip-link {
+  position: fixed; left: var(--gutter); top: 0.5rem; z-index: 60; transform: translateY(-200%);
+  padding: 0.45rem 0.8rem; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600;
+  background: var(--panel); color: var(--accent); border: 1px solid var(--accent); box-shadow: var(--shadow);
+}
+.skip-link:focus { transform: none; text-decoration: none; }
+.skip-target:focus { outline: none; box-shadow: none; }
 .topnav {
   display: flex; align-items: center; gap: 1.4rem; min-height: var(--nav-h);
   background: var(--panel); border-bottom: 1px solid var(--line);
@@ -195,11 +204,16 @@ html:not(.nav-js) .hood:focus-within .hood-menu { display: block; }
 .hood-list a strong { display: block; font-family: var(--font-serif); font-weight: 600; font-size: 0.98rem; line-height: 1.3; }
 .hood-list a span { display: block; color: var(--muted); font-size: 0.8rem; line-height: 1.38; margin-top: 0.1rem; }
 .hood-list a[aria-current="page"] { background: var(--panel-2); box-shadow: inset 3px 0 0 var(--accent); }
+/* muted on --panel-2 measured 4.58:1 in the light theme: a pass, but only just */
+.hood-list a[aria-current="page"] span { color: var(--ink-2); }
 .hood-list a[aria-current="page"] strong::after {
   /* shown, not read out: aria-current already says it (the second
-   * declaration gives it empty alt text where supported) */
+   * declaration gives it empty alt text where supported). One atomic unit: in
+   * a narrow column it moves to the next line whole, leaving the page's name
+   * unbroken, rather than splitting itself or taking the name's last word. */
   content: "you are here"; content: "you are here" / ""; margin-left: 0.5rem; font-family: var(--font-sans); font-weight: 600; font-size: 0.6rem;
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); vertical-align: 0.15em;
+  display: inline-block; white-space: nowrap;
 }
 .hood-list a:focus-visible { background: var(--accent-soft); box-shadow: var(--focus); }
 .nav-menu-btn { display: none; }

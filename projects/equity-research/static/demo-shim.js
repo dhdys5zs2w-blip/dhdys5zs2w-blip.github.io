@@ -230,6 +230,7 @@
     if ((m = url.match(/^\/api\/model\/([^/]+)\/([a-z_]+)(?:\?source=([a-z]+))?$/)))
       return getJSON("data/api/model/" + m[1] + "/" + m[2] + (m[3] ? "_" + m[3] : "") + ".json");
     if (url === "/api/research") return getJSON("data/api/research.json");
+    if (url === "/api/story") return getJSON("data/api/story.json");
     // the overview's market map: one universe is exported, so a ?universe= query reads the same file
     if (url === "/api/market_map" || url.startsWith("/api/market_map?")) return getJSON("data/api/market_map.json");
     throw new Error("demo: no static mapping for " + url);

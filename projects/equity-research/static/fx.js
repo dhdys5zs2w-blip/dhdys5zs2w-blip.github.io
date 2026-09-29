@@ -177,9 +177,11 @@
 
   /* ---- command palette ---------------------------------------------------- */
   // `also` is matched too, so the names a returning reader knows ("screener",
-  // "overview", "ledger") still find the renamed pages.
+  // "overview", "ledger") still find the renamed pages. "overview" is the
+  // notebook's alone: the old overview moved there, and a returning reader who
+  // types it wants that page, not the story that took its address.
   const PAGES = [
-    { label: "The story", hint: "g o", also: "home start overview front", href: qe.href("/") },
+    { label: "The story", hint: "g o", also: "home start front", href: qe.href("/") },
     { label: "Explore stocks", hint: "g s", also: "screener universe symbols", href: qe.href("/screener") },
     { label: "Research notebook", hint: "g l", also: "lab overview pulse", href: qe.href("/lab") },
     { label: "Model dashboard", hint: "g m", also: "record book", href: qe.href("/model") },

@@ -310,7 +310,7 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
                   lambda m: f'href="{prefix}model/{m.group(1) or ""}"', html)
     html = re.sub(r'href="/model(#[^"]*)?"',
                   lambda m: f'href="{prefix}model/{m.group(1) or ""}"', html)
-    for p in ("screener", "research", "health"):
+    for p in ("screener", "research", "health", "lab"):
         html = re.sub(rf'href="/{p}(#[^"]*)?"',
                       lambda m, p=p: f'href="{prefix}{p}/{m.group(1) or ""}"', html)
     html = html.replace('href="/"', f'href="{prefix}index.html"')
@@ -320,9 +320,14 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
     # the universe picker submits a query the static copy cannot serve; one universe is exported
     html = re.sub(r'<form method="get" action="/screener".*?</form>',
                   f'<p class="muted">universe <span class="mono">{UNIVERSE}</span></p>', html, flags=re.S)
-    # nav: the two hand-written pages
-    html = html.replace('>Health</a>',
-                        f'>Health</a><a href="{prefix}sql/">SQL</a><a href="{prefix}about/">About</a>', 1)
+    # nav: the demo's two hand-written pages join the "Under the hood" menu
+    hood = '<ul class="hood-list">'
+    assert hood in html, "hood menu not found in the nav"
+    html = html.replace(hood, hood +
+                        f'<li><a href="{prefix}sql/"><strong>SQL console</strong><span>Query the exported '
+                        'tables in your browser.</span></a></li>'
+                        f'<li><a href="{prefix}about/"><strong>About this demo</strong><span>How this static '
+                        'copy of the site was made.</span></a></li>', 1)
     # scripts: the shim resolves every /api/* call to a static file; it must load before app.js
     tag = f'<script src="{prefix}static/app.js"></script>'
     assert tag in html, "app.js script tag not found"
@@ -350,7 +355,7 @@ DEMO_HREF = (
     "    // portfolio demo: app paths -> the static copy's folders\n"
     "    const [p, hash] = path.split(\"#\");\n"
     "    const map = { \"/\": \"index.html\", \"/screener\": \"screener/\", \"/model\": \"model/\",\n"
-    "                  \"/research\": \"research/\", \"/health\": \"health/\" };\n"
+    "                  \"/research\": \"research/\", \"/health\": \"health/\", \"/lab\": \"lab/\" };\n"
     "    return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\\//, \"\")) + (hash ? \"#\" + hash : \"\");\n"
     "  };"
 )
@@ -587,7 +592,8 @@ def main() -> None:
         write_json(api / "model" / model_id / f"deciles_{source}.json",
                    get_json(f"/api/model/{model_id}/deciles?source={source}"))
     write_json(api / "research.json", get_json("/api/research"))
-    # the overview's pulse and market map (2026-09-23)
+    # the story front page (2026-09-24) and the notebook's pulse and market map (2026-09-23)
+    write_json(api / "story.json", get_json("/api/story"))
     write_json(api / "model" / model_id / "pulse.json", get_json(f"/api/model/{model_id}/pulse"))
     write_json(api / "market_map.json", get_json("/api/market_map"))
     # The companion panel's payload is optional: when the platform cannot serve it the page
@@ -601,8 +607,9 @@ def main() -> None:
 
     if not args.skip_pages:
         (out / "index.html").write_text(rewrite_html(get_html("/"), "", ctx))
+        # "/" is the story (index.html); the working overview now lives at /lab
         for page, path in (("screener", "/screener"), ("model", f"/model/{model_id}"),
-                           ("research", "/research"), ("health", "/health")):
+                           ("research", "/research"), ("health", "/health"), ("lab", "/lab")):
             (out / page).mkdir(parents=True, exist_ok=True)
             (out / page / "index.html").write_text(rewrite_html(get_html(path), "../", ctx))
         patch_static(QE_ROOT / "src" / "qe" / "web" / "static", out / "static")
