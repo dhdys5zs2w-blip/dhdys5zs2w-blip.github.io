@@ -4,6 +4,29 @@
  * Regenerate both with tools/build_page_data.py. Degrades to the static notes
  * in the markup if a file is missing or JavaScript is off. */
 
+/* ----------------------------------------------------------- theme hook --- */
+/* The site's theme toggle (assets/site.js) can force light or dark by setting
+ * html[data-theme]; with no attribute the page follows the OS. The charts below
+ * are drawn on <canvas> with colours read from CSS custom properties at draw
+ * time, so they (1) ask for the EFFECTIVE theme, not just the OS preference, and
+ * (2) redraw when it changes: on site.js's 'themechange' event, or - only when
+ * site.js is absent - on an OS change while no theme is forced (site.js already
+ * turns that OS change into a 'themechange'). */
+var SOC_THEME = {
+  isDark: function () {
+    var t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark" || t === "light") return t === "dark";
+    return !!(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+  },
+  onChange: function (fn) {
+    addEventListener("themechange", function () { fn(); });
+    if (!window.matchMedia) return;
+    var mq = matchMedia("(prefers-color-scheme: dark)");
+    var os = function () { if (!window.Site && !document.documentElement.hasAttribute("data-theme")) fn(); };
+    if (mq.addEventListener) mq.addEventListener("change", os); else if (mq.addListener) mq.addListener(os);
+  }
+};
+
 /* ---------------------------------------------------------------- chart --- */
 (function () {
   "use strict";
@@ -15,9 +38,7 @@
     var v = getComputedStyle(document.documentElement).getPropertyValue(name);
     return (v && v.trim()) || fallback;
   }
-  function isDark() {
-    return matchMedia("(prefers-color-scheme: dark)").matches;
-  }
+  function isDark() { return SOC_THEME.isDark(); }
   function regimeColor(r, alpha) {
     var d = isDark();
     var base = {
@@ -442,15 +463,11 @@
     full();
     var t;
     addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { draw(canvas, null, null); }, 120); });
-    if (window.matchMedia) {
-      var mq = matchMedia("(prefers-color-scheme: dark)");
-      var onTheme = function () {
-        draw(canvas, null, null);
-        paintLegend();                    // swatches are baked into innerHTML
-        setReadout(readout, null);
-      };
-      if (mq.addEventListener) mq.addEventListener("change", onTheme); else mq.addListener(onTheme);
-    }
+    SOC_THEME.onChange(function () {
+      draw(canvas, null, null);
+      paintLegend();                    // swatches are baked into innerHTML
+      setReadout(readout, null);
+    });
   }
 
   fetch("data/example.json")
@@ -470,7 +487,7 @@
   }
   function num(v, nd) { return v == null ? "—" : Number(v).toFixed(nd); }
   function regimeTint(r) {
-    var d = matchMedia("(prefers-color-scheme: dark)").matches;
+    var d = SOC_THEME.isDark();
     var c = {
       safe:     d ? [58, 122, 86]  : [150, 200, 170],
       building: d ? [122, 105, 45] : [235, 215, 150],
@@ -519,10 +536,12 @@
     ctx.setLineDash([4, 3]); ctx.globalAlpha = .8;
     ctx.beginPath(); ctx.moveTo(padL, y(1)); ctx.lineTo(padL + W, y(1)); ctx.stroke();
     ctx.setLineDash([]); ctx.globalAlpha = 1;
+    // the reference line is labelled on the axis, where no series can cross it; the legend
+    // below the chart spells it out ("1.0 · told you nothing")
     ctx.fillStyle = css("--muted", "#6b6b6b");
     ctx.font = "10px ui-monospace, Menlo, monospace";
-    ctx.textAlign = "left";
-    ctx.fillText("1.0 · no information", padL + 6, y(1) - 5);
+    ctx.textAlign = "right";
+    ctx.fillText("1.0×", padL - 6, y(1) + 3);
 
     function series(arr, color, width, dash) {
       ctx.strokeStyle = color; ctx.lineWidth = width;
@@ -575,52 +594,55 @@
       drawCalibration(canvas, p);
       var t;
       addEventListener("resize", function () { clearTimeout(t); t = setTimeout(function () { drawCalibration(canvas, p); }, 120); });
-      if (window.matchMedia) {
-        var mq = matchMedia("(prefers-color-scheme: dark)");
-        var f = function () { drawCalibration(canvas, p); };
-        if (mq.addEventListener) mq.addEventListener("change", f); else mq.addListener(f);
+    }
+    // everything below that bakes a theme colour into markup is repainted with the chart
+    SOC_THEME.onChange(function () { if (canvas) drawCalibration(canvas, p); paintCalibLegend(); paintRegimes(); });
+
+    paintCalibLegend();
+    function paintCalibLegend() {
+      var leg = root.querySelector("[data-x=calib-legend]");
+      if (leg) {
+        var mut = css("--muted", "#6b6b6b");
+        leg.innerHTML =
+          '<span><i class="ln" style="background:' + css("--accent", "#2563eb") + '"></i>Fragility score</span>' +
+          '<span><i class="ln" style="background:repeating-linear-gradient(90deg,' + mut +
+            ' 0 5px,transparent 5px 8px)"></i>Last hour’s volatility <span class="ax">(no model)</span></span>' +
+          '<span><i class="ln" style="background:' + mut + ';opacity:.5"></i>1.0 \u00b7 <span class="ax">told you nothing</span></span>';
       }
     }
 
-    var leg = root.querySelector("[data-x=calib-legend]");
-    if (leg) {
-      var mut = css("--muted", "#6b6b6b");
-      leg.innerHTML =
-        '<span><i class="ln" style="background:' + css("--accent", "#2563eb") + '"></i>Fragility score</span>' +
-        '<span><i class="ln" style="background:repeating-linear-gradient(90deg,' + mut +
-          ' 0 5px,transparent 5px 8px)"></i>Last hour’s volatility <span class="ax">(no model)</span></span>' +
-        '<span><i class="ln" style="background:' + mut + ';opacity:.5"></i>1.0 \u00b7 <span class="ax">told you nothing</span></span>';
-    }
-
     // the model's own regime labels, pooled across the eight companies
-    var rt = root.querySelector("[data-x=regimes]");
-    if (rt) {
-      var ORDER = ["safe", "building", "elevated", "critical"];
-      var NAME = { safe: "Safe", building: "Building", elevated: "Elevated", critical: "Critical" };
-      var agg = {};
-      keys.forEach(function (k) {
-        (per[k].by_regime || []).forEach(function (r) {
-          (agg[r.regime] = agg[r.regime] || []).push(r);
+    paintRegimes();
+    function paintRegimes() {
+      var rt = root.querySelector("[data-x=regimes]");
+      if (rt) {
+        var ORDER = ["safe", "building", "elevated", "critical"];
+        var NAME = { safe: "Safe", building: "Building", elevated: "Elevated", critical: "Critical" };
+        var agg = {};
+        keys.forEach(function (k) {
+          (per[k].by_regime || []).forEach(function (r) {
+            (agg[r.regime] = agg[r.regime] || []).push(r);
+          });
         });
-      });
-      // a company counts as "in order" when its four labels rise monotonically
-      var inOrder = keys.filter(function (k) {
-        var m = {};
-        (per[k].by_regime || []).forEach(function (r) { m[r.regime] = r.rel_fwd_vol; });
-        var seq = ORDER.map(function (r) { return m[r]; }).filter(function (v) { return v != null; });
-        if (seq.length !== 4) return false;
-        for (var i = 1; i < seq.length; i++) if (seq[i] < seq[i - 1]) return false;
-        return true;
-      }).length;
-      rt.innerHTML = ORDER.filter(function (r) { return agg[r]; }).map(function (r) {
-        var rows = agg[r];
-        var share = rows.reduce(function (a, x) { return a + (x.share || 0); }, 0) / rows.length;
-        var rel = rows.reduce(function (a, x) { return a + (x.rel_fwd_vol || 0); }, 0) / rows.length;
-        return '<tr><td><span class="pill" style="background:' + regimeTint(r) + '">' + NAME[r] + '</span></td>' +
-          '<td class="num">' + share.toFixed(0) + '%</td>' +
-          '<td class="num">' + rel.toFixed(2) + '\u00d7</td>' +
-          '<td class="num">' + (r === "critical" ? inOrder + " of " + keys.length : "") + '</td></tr>';
-      }).join("");
+        // a company counts as "in order" when its four labels rise monotonically
+        var inOrder = keys.filter(function (k) {
+          var m = {};
+          (per[k].by_regime || []).forEach(function (r) { m[r.regime] = r.rel_fwd_vol; });
+          var seq = ORDER.map(function (r) { return m[r]; }).filter(function (v) { return v != null; });
+          if (seq.length !== 4) return false;
+          for (var i = 1; i < seq.length; i++) if (seq[i] < seq[i - 1]) return false;
+          return true;
+        }).length;
+        rt.innerHTML = ORDER.filter(function (r) { return agg[r]; }).map(function (r) {
+          var rows = agg[r];
+          var share = rows.reduce(function (a, x) { return a + (x.share || 0); }, 0) / rows.length;
+          var rel = rows.reduce(function (a, x) { return a + (x.rel_fwd_vol || 0); }, 0) / rows.length;
+          return '<tr><td><span class="pill" style="background:' + regimeTint(r) + '">' + NAME[r] + '</span></td>' +
+            '<td class="num">' + share.toFixed(0) + '%</td>' +
+            '<td class="num">' + rel.toFixed(2) + '\u00d7</td>' +
+            '<td class="num">' + (r === "critical" ? inOrder + " of " + keys.length : "") + '</td></tr>';
+        }).join("");
+      }
     }
 
     root.querySelector("[data-x=rows]").innerHTML = keys.map(function (k) {

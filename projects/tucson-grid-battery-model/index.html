@@ -5,6 +5,10 @@
 <meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tucson Grid & Battery Model — Ben Meyer</title>
 <meta name="description" content="Ben Meyer's study of what battery storage does to Tucson's grid peak, using a year of public hourly demand data: explore the year and size a battery yourself.">
+<meta name="theme-color" content="#f5f1e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231c1a17'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='29' text-anchor='middle' fill='%23f5f1e8'%3EBM%3C/text%3E%3Crect x='15' y='50' width='34' height='2' fill='%236f95e0'/%3E%3C/svg%3E">
+<script>!function(d){d.classList.add("js");try{var t=localStorage.getItem("bm-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}try{if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("reveal")}catch(e){}}(document.documentElement)</script>
+<link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../assets/case-study.css">
 <style>
 /* page-specific rules only */
@@ -19,12 +23,32 @@
 .seg button:hover { color: var(--text); }
 .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
 .presets { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); gap: 14px 24px; margin: 16px 0 6px; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 14px 24px; margin: 16px 0 6px; }
+/* a label that wraps (the energy readout) never pushes its slider below its neighbours' */
+.ctl { display: flex; flex-direction: column; }
+.ctl input[type=range] { margin-top: auto; }
 .ctl label, .ctl .lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 0.86rem; color: var(--muted); margin-bottom: 6px; }
 .ctl output { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
 .ctl input[type=range] { width: 100%; margin: 0; accent-color: var(--accent); }
 .ctl.off { opacity: 0.45; }
-.facts.sim { margin: 18px 0 6px; }
+.facts.sim { margin: 18px 0 6px; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+/* the results run to seven digits at the sliders' limits (4,380,000 MWh): a size that still fits a sixth of the row */
+.facts.sim .fact .n { font-size: clamp(1.6rem, 2.3vw, 2rem); }
+/* six results: one row of six, else two rows of three with a hairline between them, else pairs */
+/* (the gutter sits in the next cell's padding, not a margin, so the hairline runs unbroken through the rules) */
+@media (max-width: 1000px) {
+  .facts.sim { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .facts.sim .fact { margin-right: 0; }
+  .facts.sim .fact:not(:nth-child(3n+1)) { padding-left: 20px; }
+  .facts.sim .fact:nth-child(3n) { border-right: 0; }
+  .facts.sim .fact:nth-child(-n+3) { border-bottom: 1px solid var(--border); }
+}
+@media (max-width: 560px) {
+  .facts.sim { grid-template-columns: 1fr 1fr; }
+  .facts.sim .fact:nth-child(odd) { padding-left: 0; }
+  .facts.sim .fact:nth-child(even) { padding-left: 14px; }
+  .facts.sim .fact:nth-child(3) { border-right: 1px solid var(--border); }
+}
 .fact .n small { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
 .delta { display: block; font-size: 0.9rem; font-weight: 600; margin-top: 2px; }
 .delta.good { color: var(--ok); }
@@ -34,14 +58,26 @@ details.tv summary { cursor: pointer; }
 details.tv .tablewrap { margin-top: 8px; }
 details.tv table.data { font-size: 0.82rem; }
 .shots.wide { grid-template-columns: repeat(auto-fit, minmax(min(440px, 100%), 1fr)); }
+/* three figures in two columns: the last one takes the second row, centred, instead of leaving half of it empty */
+.shots.wide > figure:last-child:nth-child(odd) { grid-column: 1 / -1; width: 100%; max-width: 720px; justify-self: center; }
+/* figures side by side share an image track and a caption track, so both caption rules start on one line
+   although the two plates differ in height */
+@supports (grid-template-rows: subgrid) {
+  .shots.wide > figure { grid-row: span 2; display: grid; grid-template-rows: subgrid; row-gap: 0; }
+  .shots.wide > figure > .zoomable, .shots.wide > figure > img { align-self: start; }
+}
 .callout.warn[hidden] { display: none; }
 .sel { font: inherit; font-size: 0.82rem; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+/* iOS zooms the page into any control set under 16px */
+@media (pointer: coarse) { .sel { font-size: 16px; } }
 @media (max-width: 640px) { .chart { height: 300px; } .chart.short { height: 270px; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
-  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Tucson Grid &amp; Battery Model</b></span></nav>
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Tucson Grid &amp; Battery Model</b></span><span class="cs-tools" data-theme-slot></span></nav>
+  <main id="main" tabindex="-1">
   <header class="cs-head">
     <p class="eyebrow"><span class="badge data-app">Energy study</span><span>Sep 2026</span></p>
     <h1>What does battery storage do to Tucson&rsquo;s grid peak?</h1>
@@ -174,8 +210,10 @@ details.tv table.data { font-size: 0.82rem; }
     <p class="note">One year of demand, not a forecast; the dispatch is an idealisation and the project economics use benchmark costs rather than quotes.</p>
   </section>
 
+  </main>
   <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
 </div>
 <script src="../../assets/vendor/echarts.min.js"></script>
 <script src="app.js"></script>
+<script src="../../assets/site.js" defer></script>
 </body></html>

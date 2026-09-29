@@ -6,166 +6,429 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ben Meyer — Projects</title>
 <meta name="description" content="Apps and dashboards designed and built by Ben Meyer using AI.">
+<meta name="theme-color" content="#f5f1e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231c1a17'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='29' text-anchor='middle' fill='%23f5f1e8'%3EBM%3C/text%3E%3Crect x='15' y='50' width='34' height='2' fill='%236f95e0'/%3E%3C/svg%3E">
+<script>!function(d){d.classList.add("js");try{var t=localStorage.getItem("bm-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}try{if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("reveal")}catch(e){}}(document.documentElement)</script>
+<link rel="stylesheet" href="assets/site.css">
 <style>
-  :root {
-    --bg: #f7f7f5;
-    --surface: #ffffff;
-    --text: #1a1a1a;
-    --muted: #6b6b6b;
-    --border: #e4e4e0;
-    --accent: #2563eb;
-    --chip-bg: #eef1f4;
-    --badge-web-bg: #e0ebff;    --badge-web-fg: #1d4ed8;
-    --badge-dash-bg: #dcf3e6;   --badge-dash-fg: #157347;
-    --badge-ios-bg: #ece4fb;    --badge-ios-fg: #6d28d9;
-    --badge-data-bg: #fdeacf;   --badge-data-fg: #a55a09;
-    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.05);
-    --shadow-hover: 0 2px 6px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.10);
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px); }
+  a { color: inherit; }
+
+  /* running head */
+  .topbar {
+    position: sticky; top: 0; z-index: 50; border-bottom: 1px solid transparent;
+    background: var(--bg); background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: saturate(1.3) blur(12px); backdrop-filter: saturate(1.3) blur(12px);
+    transition: border-color .3s;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #131315;
-      --surface: #1c1c1f;
-      --text: #ececec;
-      --muted: #9a9aa2;
-      --border: #2a2a2e;
-      --accent: #7aa2ff;
-      --chip-bg: #26262b;
-      --badge-web-bg: #1e2a4a;  --badge-web-fg: #9db9ff;
-      --badge-dash-bg: #16301f; --badge-dash-fg: #6fd39a;
-      --badge-ios-bg: #2a2140;  --badge-ios-fg: #c0a5ff;
-      --badge-data-bg: #3a2a14; --badge-data-fg: #f0b269;
-      --shadow: 0 1px 3px rgba(0,0,0,.4);
-      --shadow-hover: 0 4px 16px rgba(0,0,0,.5);
-    }
+  .topbar.is-stuck { border-bottom-color: var(--border); }
+  .topbar__in { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .wordmark { font-family: var(--serif); font-size: 1.2rem; letter-spacing: -.01em; text-decoration: none; white-space: nowrap; }
+  @media (pointer: coarse) { .wordmark { display: inline-flex; align-items: center; min-height: 44px; } }
+  .topnav { display: flex; gap: 26px; margin-left: auto; }
+  .topnav a { font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 10px 0; transition: color .2s; }
+  .topnav a:hover, .topnav a[aria-current] { color: var(--text); }
+  .topnav a[aria-current] { box-shadow: inset 0 -1.5px 0 var(--accent); }
+  .topbar__tools { display: flex; align-items: center; gap: 10px; }
+  html:not(.js) .topbar__tools, html:not(.js) .topnav, html:not(.js) .app { display: none; }
+  @media (max-width: 860px) { .topnav { display: none; } .topbar__tools { margin-left: auto; } }
+  @media (max-width: 520px) { .search-btn__label { display: none; } .search-btn { width: 40px; padding: 0; } }
+
+  /* masthead */
+  .dateline {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px 24px; min-height: 44px;
+    border-top: 2px solid var(--rule); border-bottom: 1px solid var(--border); margin-top: clamp(16px, 3vw, 32px);
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
+  .live {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 40px; font-size: .8rem; color: var(--muted);
+    text-decoration: none; white-space: nowrap; visibility: hidden;
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
-  header { padding: 72px 0 40px; }
-  h1 { font-size: 2.1rem; margin: 0 0 6px; letter-spacing: -0.02em; }
-  .tagline { color: var(--muted); font-size: 1.08rem; margin: 0 0 18px; }
-  .intro { color: var(--text); font-size: 1rem; max-width: 62ch; margin: 0 0 18px; }
-  .process { margin: 40px 0 8px; }
-  .process p { color: var(--text); font-size: 1rem; max-width: 62ch; margin: 0 0 14px; line-height: 1.65; }
-  .process p:last-child { margin-bottom: 0; }
-  .contact { display: flex; gap: 18px; flex-wrap: wrap; font-size: .95rem; }
-  .contact a { color: var(--accent); text-decoration: none; }
-  .contact a:hover { text-decoration: underline; }
-  .section-head { display: flex; align-items: baseline; gap: 10px; margin: 8px 0 20px; }
-  .section-head h2 { font-size: 1.15rem; margin: 0; }
-  .count { color: var(--muted); font-size: .9rem; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 22px;
-    padding-bottom: 72px;
+  .live.is-ready { visibility: visible; animation: fade .6s var(--ease) both; }
+  .live b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .live:hover b { color: var(--accent); }
+  .live .sep { opacity: .5; }
+  .pulse { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+  .pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--ok); animation: pulse 2.4s ease-out infinite; }
+  .live.is-stale .pulse { background: var(--muted); }
+  .live.is-stale .pulse::after { display: none; }
+  @media (max-width: 640px) {
+    .dateline #dateline-l, .live .sep.src { display: none; }
+    .live #live-desc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .live { max-width: 100%; font-size: .76rem; gap: 8px; }
   }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-    box-shadow: var(--shadow);
-    transition: transform .15s ease, box-shadow .15s ease;
+  @media (max-width: 380px) {
+    .live { flex-wrap: wrap; row-gap: 0; white-space: normal; padding: 5px 0; }
+    .live > .sep:not(.src) { display: none; }
+    .live > span:last-child { flex-basis: 100%; padding-left: 16px; }
   }
-  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
-  .thumb {
-    aspect-ratio: 16 / 9;
-    background: linear-gradient(135deg, #3b5bdb 0%, #6d28d9 100%);
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,.92);
-    font-size: 2rem; font-weight: 600; letter-spacing: -0.02em;
+  @keyframes pulse { 0% { transform: scale(.4); opacity: .9; } 70%, 100% { transform: scale(1.7); opacity: 0; } }
+  .name {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(3.5rem, 18.5vw, 14.5rem); line-height: .88;
+    letter-spacing: -.04em; margin: clamp(36px, 6vw, 72px) 0 clamp(32px, 5.4vw, 76px); margin-left: -.04em;
   }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-body { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .meta-row { display: flex; align-items: center; gap: 8px; }
-  .badge {
-    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em;
-    padding: 3px 9px; border-radius: 999px;
+  .name .w { display: inline-block; }
+  .hero__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px clamp(40px, 6vw, 96px); align-items: start; }
+  .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(1.3rem, 2.1vw, 1.72rem); line-height: 1.3; letter-spacing: -.01em; margin: 0 0 22px; max-width: 32ch; }
+  .intro { font-size: 1.05rem; line-height: 1.7; color: var(--text); max-width: 56ch; margin: 0 0 30px; }
+  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .btn-ink, .btn-line {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px;
+    border-radius: 999px; font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer;
+    border: 1px solid var(--rule); transition: background-color .2s, color .2s, border-color .2s;
   }
-  .badge.web  { background: var(--badge-web-bg);  color: var(--badge-web-fg); }
-  .badge.dashboard { background: var(--badge-dash-bg); color: var(--badge-dash-fg); }
-  .badge.ios  { background: var(--badge-ios-bg);  color: var(--badge-ios-fg); }
-  .badge.data-app { background: var(--badge-data-bg); color: var(--badge-data-fg); }
-  .date { color: var(--muted); font-size: .8rem; }
-  .card h3 { margin: 0; font-size: 1.12rem; letter-spacing: -0.01em; }
-  .card p { margin: 0; color: var(--muted); font-size: .93rem; flex: 1; }
-  .tech { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tech span {
-    background: var(--chip-bg); color: var(--muted);
-    font-size: .75rem; padding: 3px 9px; border-radius: 6px;
+  .btn-ink { background: var(--text); color: var(--bg); }
+  .btn-ink:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn-line { background: transparent; color: var(--text); }
+  .btn-line:hover { background: var(--text); color: var(--bg); }
+  .btn-line.sq { width: 44px; padding: 0; }
+  .btn-ink svg, .btn-line svg { width: 16px; height: 16px; flex: none; }
+  .btn-ink.mail { font-weight: 500; letter-spacing: .005em; }
+  @media (max-width: 400px) { .btn-ink.mail { padding: 0 16px; font-size: .86rem; } }
+  .hint { margin-left: 8px; font-size: .8rem; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; }
+  /* the hint only shows when it fits on the actions row (the header's Search button carries ⌘K too) */
+  @media (pointer: coarse), (max-width: 1100px) { .hint { display: none; } }
+
+  /* contents */
+  .contents { border-top: 1px solid var(--rule); padding-top: 12px; }
+  .contents ol { list-style: none; margin: 8px 0 0; padding: 0; }
+  .contents a { display: flex; align-items: baseline; gap: 12px; padding: 7px 0; text-decoration: none; }
+  .c-no { font-family: var(--serif); font-size: .9rem; color: var(--muted); min-width: 1.4em; font-variant-numeric: lining-nums tabular-nums; }
+  .c-title { font-family: var(--serif); font-size: 1.14rem; letter-spacing: -.01em; line-height: 1.3; transition: color .2s; }
+  .c-lead { flex: 1; min-width: 16px; border-bottom: 1px dotted var(--border); border-bottom-color: color-mix(in srgb, var(--muted) 55%, transparent); transform: translateY(-.28em); }
+  .c-type { font-size: .66rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .contents a:hover .c-title, .contents a:hover .c-no, .contents a:focus-visible .c-title { color: var(--accent); }
+  @media (max-width: 1180px) { .c-type, .c-lead { display: none; } }
+  @media (max-width: 960px) { .hero__grid { grid-template-columns: 1fr; } .contents { display: none; } }
+
+  /* sections */
+  .section { padding-top: clamp(64px, 9vw, 120px); }
+  .section-head {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 20px;
+    border-top: 2px solid var(--rule); padding-top: 14px; margin-bottom: clamp(32px, 4vw, 48px);
   }
-  .open { color: var(--accent); font-size: .9rem; font-weight: 500; }
-  .card.featured { grid-column: 1 / -1; flex-direction: row; }
-  .card.featured .thumb { flex: 0 0 56%; aspect-ratio: auto; min-height: 320px; }
-  .card.featured .card-body { padding: 26px 28px 22px; }
-  .card.featured h3 { font-size: 1.5rem; }
-  .card.featured p { font-size: 1rem; }
-  .featured-tag { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--accent); }
-  @media (max-width: 760px) {
-    .card.featured { flex-direction: column; }
-    .card.featured .thumb { flex: none; aspect-ratio: 16 / 9; min-height: 0; }
+  .section-no { font-family: var(--serif); font-size: 1rem; color: var(--accent); align-self: flex-start; padding-top: .35em; font-variant-numeric: lining-nums; }
+  .section-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.3rem, 5vw, 4rem); letter-spacing: -.03em; line-height: 1; margin: 0; }
+  .section-tools { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px 18px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px;
+    border: 1px solid var(--border); background: transparent; color: var(--text); font-size: .82rem; cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s;
   }
-  .empty {
-    border: 1px dashed var(--border); border-radius: 14px;
-    padding: 56px 24px; text-align: center; color: var(--muted);
-    grid-column: 1 / -1;
+  .chip:hover { border-color: var(--text); }
+  .chip .n { font-family: var(--serif); color: var(--muted); font-variant-numeric: lining-nums tabular-nums; }
+  .chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .chip[aria-pressed="true"] .n { color: inherit; opacity: .7; }
+  .count { margin: 0; min-width: 19em; text-align: right; }
+  @media (pointer: coarse) { .chip { height: 40px; } }
+  @media (forced-colors: active) { .chip[aria-pressed="true"] { background: Highlight; border-color: Highlight; color: HighlightText; forced-color-adjust: none; } }
+  @media (max-width: 720px) {
+    .section-tools { margin-left: 0; width: 100%; justify-content: space-between; }
+    .count { order: -1; width: 100%; text-align: left; }
   }
-  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .85rem; }
+
+  /* project tiles */
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px 56px; }
+  .tile {
+    position: relative; isolation: isolate; display: flex; flex-direction: column; margin: -20px; padding: 20px;
+    border-radius: 10px; text-decoration: none; color: var(--text);
+  }
+  .tile[hidden] { display: none; }
+  .tile::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; border: 1px solid var(--border);
+    background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 35%), var(--glow), transparent 62%), var(--surface);
+    opacity: 0; transition: opacity .4s var(--ease);
+  }
+  .tile:hover::before, .tile:focus-visible::before { opacity: 1; }
+  .tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+  .tile__meta { display: flex; align-items: baseline; gap: 14px; padding-bottom: 12px; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+  .t-no { font-family: var(--serif); font-size: 1.5rem; line-height: 1; letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; }
+  .t-type, .t-date, .t-feat { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .t-feat { color: var(--accent); border: 1px solid var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); padding: 4px 7px 3px; border-radius: 2px; line-height: 1; }
+  .t-date { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .plate {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px;
+    background: var(--surface-2); border: 1px solid var(--border);
+  }
+  .plate img {
+    display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    filter: brightness(var(--plate)); transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(1.002);
+    transition: transform .9s var(--ease), filter .4s;
+  }
+  .tile:hover .plate img, .tile:focus-visible .plate img { filter: none; transform: translate3d(var(--px, 0), var(--py, 0), 0) scale(1.045); }
+  .plate--type { display: grid; place-items: center; background:
+      repeating-linear-gradient(135deg, transparent 0 11px, var(--border) 11px 12px), var(--surface-2); }
+  .plate--type span { font-family: var(--serif); font-style: italic; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -.02em; padding: 0 24px; text-align: center; background: var(--surface-2); }
+  .tile__title { font-family: var(--serif); font-weight: 400; font-size: clamp(1.5rem, 2.3vw, 2rem); letter-spacing: -.02em; line-height: 1.1; margin: 24px 0 10px; text-wrap: balance; }
+  .tile__desc { margin: 0 0 14px; color: var(--muted); font-size: .98rem; line-height: 1.62; max-width: 60ch; }
+  /* separators sit on each item's left edge; the one that starts a line is clipped away,
+     so a wrapped list never ends a line (or starts one) with a dangling rule */
+  .tile__tech { margin: 0 0 22px -11px; display: flex; flex-wrap: wrap; gap: 4px 0; clip-path: inset(0 0 0 11px); }
+  .tile__tech span { font-size: .66rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); padding: 0 10px; border-left: 1px solid var(--border); line-height: 1.3; }
+  .tile__foot { margin-top: auto; min-height: 60px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .hl { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+  .hl__n { font-family: var(--serif); font-size: 1.55rem; line-height: 1; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: lining-nums; }
+  .hl__l { font-size: .8rem; line-height: 1.35; color: var(--muted); }
+  .cta { margin-left: auto; font-size: .88rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .cta .arr { display: inline-block; transition: transform .35s var(--ease); }
+  .tile:hover .cta .arr, .tile:focus-visible .cta .arr { transform: translateX(5px); }
+  .tile:hover .cta .arr--ext, .tile:focus-visible .cta .arr--ext { transform: translate(3px, -3px); }
+
+  /* featured + wide tiles: plate beside the text */
+  .tile--featured, .tile--wide { grid-column: 1 / -1; }
+  .tile--featured .tile__body, .tile--wide .tile__body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 44px; align-items: start; }
+  /* the text column ends where its copy ends: the CTA follows the tech line instead of being
+     pushed to the bottom of the (taller) plate column, which left a void above it */
+  .tile--featured .tile__text, .tile--wide .tile__text { display: flex; flex-direction: column; }
+  .tile--featured .tile__foot, .tile--wide .tile__foot { margin-top: 6px; }
+  .tile--featured .tile__foot { min-height: 0; }
+  .tile--wide .tile__foot { flex-wrap: wrap; row-gap: 10px; }
+  .tile--wide .hl { flex: 1 1 16rem; }
+  .tile--featured .tile__title { font-size: clamp(2rem, 3.6vw, 3rem); margin-top: 0; }
+  .tile--wide .tile__title { margin-top: 0; }
+  .tile--featured .tile__desc { font-size: 1.04rem; color: var(--text); }
+  .tile__text { display: flex; flex-direction: column; flex: 1; }
+  .tile__body { display: flex; flex-direction: column; flex: 1; }
+  .figs { margin: 22px 0 0; border-top: 1px solid var(--rule); }
+  .figs__label { margin: 10px 0 0; font-size: .66rem; }
+  .figs dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; }
+  .figs dl > div { display: flex; flex-direction: column; padding: 10px 18px 0 0; }
+  .figs dl > div + div { padding-left: 18px; border-left: 1px solid var(--border); }
+  .figs dd { order: -1; margin: 0; font-family: var(--serif); font-size: clamp(1.45rem, 2.2vw, 1.9rem); line-height: 1.1; letter-spacing: -.02em; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+  .figs dt { font-size: .76rem; line-height: 1.35; color: var(--muted); margin-top: 4px; }
+  .figs[hidden] { display: none; }
+  /* proportion meter under "29 of 59": live days scored in advance, as a share of all live days */
+  .meter {
+    display: block; position: relative; height: 4px; margin-top: 10px; max-width: 168px; overflow: hidden;
+    background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border);
+  }
+  .meter i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); transition: width 1.2s var(--ease) .25s; }
+  @media (prefers-reduced-motion: reduce) { .meter i { transition: none; } }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; gap: 56px; }
+    .tile--featured .tile__body, .tile--wide .tile__body { grid-template-columns: 1fr; gap: 0; }
+    .tile--featured .tile__title, .tile--wide .tile__title { margin-top: 24px; }
+  }
+  @media (max-width: 520px) {
+    .tile { margin: -12px; padding: 12px; }
+    .tile__foot { flex-wrap: wrap; }
+    .figs dl > div { padding-right: 8px; }
+    .figs dl > div + div { padding-left: 10px; }
+  }
+
+  /* how I work */
+  .process__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(40px, 6vw, 96px); }
+  .pull { margin: 0; position: sticky; top: 104px; align-self: start; }
+  .pull p {
+    margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(1.75rem, 3.1vw, 2.6rem);
+    line-height: 1.16; letter-spacing: -.02em; text-wrap: balance;
+  }
+  .pull p::before { content: "\201C"; display: block; font-style: normal; font-size: 2.6em; line-height: .7; height: .42em; color: var(--accent); }
+  .pull::after { content: ""; display: block; width: 56px; height: 2px; margin-top: 26px; background: var(--accent); }
+  .principles { list-style: none; margin: 0; padding: 0; }
+  .principles li { display: grid; grid-template-columns: 3rem minmax(0, 1fr); padding: 28px 0; border-top: 1px solid var(--border); }
+  .principles li:first-child { border-top: 0; padding-top: 4px; }
+  .p-no { font-family: var(--serif); font-size: 1.05rem; color: var(--accent); line-height: 1.9; font-variant-numeric: lining-nums tabular-nums; }
+  .principles p { margin: 0; font-size: 1.02rem; line-height: 1.72; max-width: 62ch; }
+  [data-tok-sentence][hidden], .p-lead:has(> [data-tok-sentence][hidden]:only-child) { display: none; }
+  .p-lead { display: block; margin-bottom: 10px; font-family: var(--serif); font-size: clamp(1.2rem, 1.7vw, 1.4rem); line-height: 1.38; letter-spacing: -.01em; }
+  @media (max-width: 860px) { .process__grid { grid-template-columns: 1fr; } .pull { position: static; } .principles li { grid-template-columns: 2.2rem minmax(0, 1fr); } }
+
+  /* contact */
+  .contact__grid { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px 40px; }
+  .contact__mail {
+    font-family: var(--serif); font-size: clamp(1.6rem, 5.4vw, 4.2rem); letter-spacing: -.03em; line-height: 1.05; text-decoration: none;
+    overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size .6s var(--ease), color .2s; padding-bottom: 4px;
+  }
+  .contact__mail:hover { color: var(--accent); background-size: 100% 1px; }
+  @media (pointer: coarse) { .contact__mail { display: inline-block; padding-top: 8px; padding-bottom: 8px; } }
+  .contact__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* footer */
+  .site-foot {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+    margin-top: clamp(80px, 10vw, 136px); padding-top: 18px; padding-bottom: 40px; border-top: 2px solid var(--rule);
+    font-size: .84rem; color: var(--muted);
+  }
+  .site-foot nav { display: flex; gap: 20px; }
+  .site-foot a { color: var(--muted); text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+  .site-foot a:hover { color: var(--text); }
+
+  /* no-JS rendition (generated by build.py) */
+  .nojs .name { margin-top: 40px; }
+  .nojs h2 { font-family: var(--serif); font-weight: 400; font-size: 2.2rem; letter-spacing: -.02em; border-top: 2px solid var(--rule); padding-top: 12px; margin: 72px 0 20px; }
+  .nojs ol { padding-left: 1.4rem; }
+  .nojs li { margin: 0 0 22px; max-width: 68ch; }
+  .nojs li a { font-family: var(--serif); font-size: 1.4rem; color: var(--accent); }
+  .nojs p { max-width: 68ch; }
+  .nojs .meta { display: block; margin: 2px 0 4px; }
+
+  /* entrance */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .name .w { animation: rise 1.1s var(--ease) both; }
+    html.js .name .w + .w { animation-delay: .09s; }
+    html.js .hero .tagline, html.js .hero .intro, html.js .hero__actions, html.js .contents { animation: fade .9s var(--ease) both; }
+    html.js .hero .tagline { animation-delay: .22s; }
+    html.js .hero .intro { animation-delay: .3s; }
+    html.js .hero__actions { animation-delay: .38s; }
+    html.js .contents { animation-delay: .46s; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(.22em); } }
+  @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1 id="site-name"></h1>
-      <p class="tagline" id="site-tagline"></p>
-      <p class="intro" id="site-intro" hidden></p>
-      <nav class="contact" id="site-contact"></nav>
-    </header>
-    <div class="section-head">
-      <h2>Projects</h2>
-      <span class="count" id="count"></span>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar" id="topbar">
+  <div class="wrap topbar__in">
+    <a class="wordmark" href="#main" id="wordmark">Ben Meyer</a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#projects">Projects</a><a href="#process">How I work</a><a href="#contact">Contact</a>
+    </nav>
+    <div class="topbar__tools">
+      <button class="search-btn" type="button" data-palette-open aria-label="Search projects" aria-keyshortcuts="Meta+K Control+K /">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span class="search-btn__label">Search</span><kbd class="kbd-mod">⌘K</kbd>
+      </button>
+      <div data-theme-slot></div>
     </div>
-    <main class="grid" id="grid"></main>
-    <section class="process" id="process" hidden>
-      <div class="section-head"><h2 id="process-heading"></h2></div>
-      <div id="process-body"></div>
-    </section>
-    <footer id="footer"></footer>
   </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div class="app">
+    <section class="hero wrap" aria-labelledby="site-name">
+      <div class="dateline">
+        <span class="label" id="dateline-l">Projects</span>
+        <a class="live" id="live" href="projects/equity-research/">
+          <span class="pulse" aria-hidden="true"></span>
+          <span class="src" id="live-desc">Research platform</span><span class="sep src" aria-hidden="true">·</span>
+          <span>Data through <b id="live-date">—</b></span><span class="sep" aria-hidden="true">·</span>
+          <span><b id="live-days">—</b> days stamped live</span>
+        </a>
+      </div>
+      <h1 class="name" id="site-name"></h1>
+      <div class="hero__grid">
+        <div>
+          <p class="tagline" id="site-tagline"></p>
+          <p class="intro" id="site-intro" hidden></p>
+          <div class="hero__actions" id="hero-actions"></div>
+        </div>
+        <nav class="contents" aria-labelledby="contents-h">
+          <h2 class="label" id="contents-h" style="margin:0">Contents</h2>
+          <ol id="contents"></ol>
+        </nav>
+      </div>
+    </section>
+
+    <section class="wrap section" id="projects" aria-labelledby="projects-h">
+      <div class="section-head" data-reveal>
+        <span class="section-no" aria-hidden="true">01</span>
+        <h2 id="projects-h">Projects</h2>
+        <div class="section-tools">
+          <div class="filters" id="filters" role="group" aria-label="Filter projects by type"></div>
+          <p class="count label" id="count" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="wrap section" id="process" aria-labelledby="process-h" hidden>
+      <div class="section-head" data-reveal>
+        <span class="section-no" aria-hidden="true">02</span>
+        <h2 id="process-h"></h2>
+      </div>
+      <div class="process__grid">
+        <figure class="pull" id="pull" aria-hidden="true" data-reveal hidden><p></p></figure>
+        <ol class="principles" id="principles" role="list"></ol>
+      </div>
+    </section>
+
+    <section class="wrap section" id="contact" aria-labelledby="contact-h" hidden>
+      <div class="section-head" data-reveal>
+        <span class="section-no" aria-hidden="true">03</span>
+        <h2 id="contact-h">Contact</h2>
+      </div>
+      <div class="contact__grid" data-reveal>
+        <a class="contact__mail" id="contact-mail" href="#"></a>
+        <div class="contact__actions" id="contact-actions"></div>
+      </div>
+    </section>
+  </div>
+  <noscript>
+<!--STATIC_START-->
+<div class="wrap nojs">
+<h1 class="name">Ben Meyer</h1>
+<p class="tagline">Research and software projects, designed and directed by me and built with AI coding agents, mostly Claude Code</p>
+<p class="intro">Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed an AI coding agent through the build: Claude Code for most, OpenAI’s Codex for Afterimage. Every page says what the thing does and the thinking behind it.</p>
+<p class="hero__actions"><a class="btn-ink" href="mailto:benmeyer753@gmail.com">benmeyer753@gmail.com</a><a class="btn-line" href="https://www.linkedin.com/in/bencmeyer3/">LinkedIn</a></p>
+<h2>Projects</h2><ol>
+<li><a href="projects/equity-research/">Quant Equity Research Platform</a><span class="meta label">Data app &middot; Sep 2026</span><p>A research platform built to test whether a stock&#x27;s technical state predicts its return tomorrow, with rules fixed before each experiment and a live daily record as the only evidence. This is its research browser, exported live, plus a SQL console in your browser.</p></li>
+<li><a href="projects/afterimage/">Afterimage</a><span class="meta label">Web app &middot; Sep 2026</span><p>My print-on-demand art store, in soft launch on Shopify: customers turn an idea into artwork in an AI studio and order it on a tee or a sticker pack. It runs within spending limits on AI and suppliers, and checks every print file before it goes out.</p></li>
+<li><a href="projects/fitlog/">FitLog</a><span class="meta label">iOS app &middot; Sep 2026</span><p>An iPhone strength-training app I designed around a coach that plans the week with you, with rules I wrote and tested on my own training. The coach suggests; the app enforces.</p></li>
+<li><a href="projects/tucson-grid-battery-model/">Tucson Grid &amp; Battery Model</a><span class="meta label">Data app &middot; Sep 2026</span><p>My study of what battery storage does to Tucson&#x27;s grid peak, from a year of public hourly demand data. Explore the year and size a battery yourself.</p></li>
+<li><a href="projects/company-research-agent/">Company Research Agent</a><span class="meta label">Data app &middot; Sep 2026</span><p>A due-diligence method I designed to stop research from anchoring on early numbers, packaged as a repeatable AI workflow. Run end to end on a real California startup, with the dossier, the evidence registry and the model published in full.</p></li>
+<li><a href="projects/soc-analysis/">SOC Volatility Dashboard</a><span class="meta label">Dashboard &middot; Dec 2025</span><p>My research into whether the physics of avalanches describes intraday volatility, built into a dashboard that scores stocks on it and tests the signals. The page runs the model and carries a real scoring run, with the validation results as they came out.</p></li>
+</ol>
+<h2>How I work</h2>
+<p>Every project here started as a question I actually wanted answered: whether battery storage pencils out for Tucson’s grid, whether the physics behind avalanches says anything useful about a stock, whether I could get a training plan that would hold me to it. I do the research first, and I write the rules down before there is any code to bend them.</p>
+<p>The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only 59 of the roughly 250 live days it needs — a number that isn’t earned yet shouldn’t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn’t a result.</p>
+<p>Then I use the thing I built and let that change it. FitLog first planned every training day from scratch; a fixed weekly program turned out to serve me better, so I had the daily planner cut rather than kept.</p>
+<p>AI coding agents wrote most of the code here — Claude Code for most projects, OpenAI’s Codex for Afterimage — and I’d rather say that plainly than let it be inferred. What’s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn’t say what I wanted. The direction and the judgment are mine; most of the typing isn’t.</p>
+</div>
+<!--STATIC_END-->
+  </noscript>
+</main>
+
+<footer class="wrap"><div class="site-foot">
+  <span id="footer">© Ben Meyer · Built with Claude Code</span>
+  <nav aria-label="Footer"><a href="#main">Back to top ↑</a></nav>
+</div></footer>
+
+<script src="assets/site.js" defer></script>
 <script>
 /*DATA_START*/
 const DATA = {
   "site": {
     "name": "Ben Meyer",
-    "tagline": "Research and software projects, designed and directed by me and built with Claude Code",
+    "tagline": "Research and software projects, designed and directed by me and built with AI coding agents, mostly Claude Code",
     "email": "benmeyer753@gmail.com",
     "github": "",
     "linkedin": "https://www.linkedin.com/in/bencmeyer3/",
-    "intro": "Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed Claude Code through the build; every page says what the thing does and the thinking behind it.",
+    "intro": "Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed an AI coding agent through the build: Claude Code for most, OpenAI\u2019s Codex for Afterimage. Every page says what the thing does and the thinking behind it.",
     "process": {
       "heading": "How I work",
       "paragraphs": [
         "Every project here started as a question I actually wanted answered: whether battery storage pencils out for Tucson\u2019s grid, whether the physics behind avalanches says anything useful about a stock, whether I could get a training plan that would hold me to it. I do the research first, and I write the rules down before there is any code to bend them.",
-        "The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only 50 of the roughly 100 live days it needs \u2014 a number that isn\u2019t earned yet shouldn\u2019t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn\u2019t a result.",
+        "The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only {{manifest:record.live_days|59|max=249}} of the roughly 250 live days it needs \u2014 a number that isn\u2019t earned yet shouldn\u2019t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn\u2019t a result.",
         "Then I use the thing I built and let that change it. FitLog first planned every training day from scratch; a fixed weekly program turned out to serve me better, so I had the daily planner cut rather than kept.",
-        "Claude Code wrote most of the code on this site \u2014 I\u2019d rather say that plainly than let it be inferred. What\u2019s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn\u2019t say what I wanted. The direction and the judgment are mine; most of the typing isn\u2019t."
+        "AI coding agents wrote most of the code here \u2014 Claude Code for most projects, OpenAI\u2019s Codex for Afterimage \u2014 and I\u2019d rather say that plainly than let it be inferred. What\u2019s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn\u2019t say what I wanted. The direction and the judgment are mine; most of the typing isn\u2019t."
       ]
     }
   },
   "projects": [
+    {
+      "slug": "afterimage",
+      "title": "Afterimage",
+      "type": "web",
+      "description": "My print-on-demand art store, in soft launch on Shopify: customers turn an idea into artwork in an AI studio and order it on a tee or a sticker pack. It runs within spending limits on AI and suppliers, and checks every print file before it goes out.",
+      "tech": [
+        "Shopify",
+        "Print on demand",
+        "AI image studio",
+        "OpenAI Codex"
+      ],
+      "date": "2026-09",
+      "pattern": "hosted",
+      "thumb": "projects/afterimage/thumb.png",
+      "cta": "View the case study \u2192",
+      "highlight": {
+        "value": "28",
+        "label": "house designs, each as a tee or a sticker pack"
+      }
+    },
     {
       "slug": "equity-research",
       "title": "Quant Equity Research Platform",
@@ -197,7 +460,11 @@ const DATA = {
       ],
       "date": "2026-09",
       "pattern": "case-study",
-      "thumb": "projects/fitlog/thumb.png"
+      "thumb": "projects/fitlog/thumb.png",
+      "highlight": {
+        "value": "107",
+        "label": "automated coaching scenarios"
+      }
     },
     {
       "slug": "tucson-grid-battery-model",
@@ -213,7 +480,11 @@ const DATA = {
       "date": "2026-09",
       "pattern": "self-contained",
       "thumb": "projects/tucson-grid-battery-model/thumb.png",
-      "cta": "Open the explorer \u2192"
+      "cta": "Open the explorer \u2192",
+      "highlight": {
+        "value": "3,448 MW",
+        "label": "annual peak"
+      }
     },
     {
       "slug": "company-research-agent",
@@ -229,7 +500,11 @@ const DATA = {
       "date": "2026-09",
       "pattern": "case-study",
       "thumb": "projects/company-research-agent/thumb.png",
-      "cta": "Read the worked example \u2192"
+      "cta": "Read the worked example \u2192",
+      "highlight": {
+        "value": "53",
+        "label": "numbers checked and tagged"
+      }
     },
     {
       "slug": "soc-analysis",
@@ -245,82 +520,309 @@ const DATA = {
       "date": "2025-12",
       "pattern": "case-study",
       "thumb": "projects/soc-analysis/thumb.png",
-      "cta": "View the study and live model \u2192"
+      "cta": "View the study and live model \u2192",
+      "highlight": {
+        "value": "7",
+        "label": "statistical signatures of a critical system"
+      }
     }
   ]
 };
 /*DATA_END*/
+window.SITE_DATA = DATA;
+(function () {
+  "use strict";
+  var d = document, site = DATA.site || {};
+  var TYPE = { web: "Web app", dashboard: "Dashboard", ios: "iOS app", "data-app": "Data app" };
+  var CHIP = { web: "Web", dashboard: "Dashboard", ios: "iOS app", "data-app": "Data app" };
+  var LIVE = { slug: "equity-research", manifest: "projects/equity-research/data/manifest.json" };
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return d.getElementById(id); };
+  var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]; }); };
+  var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+  var ico = function (p) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>"; };
+  var I_COPY = ico('<rect x="9" y="9" width="11" height="11" rx="1.5"/><path d="M5 15V5.5A1.5 1.5 0 0 1 6.5 4H15"/>');
+  var I_OUT = ico('<path d="M7 17 17 7M8 7h9v9"/>');
+  var I_MAIL = ico('<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="m3.5 6.5 8.5 7 8.5-7"/>');
+  var NEWTAB = '<span class="sr-only"> (opens in a new tab)</span>';
+  function fmtMonth(s) { if (!s) return ""; var p = String(s).split("-"); return p[1] ? MON[+p[1] - 1] + " " + p[0] : p[0]; }
+  function fmtDay(s) { var p = String(s).split("-"); return MON[+p[1] - 1] + " " + (+p[2]) + ", " + p[0]; }
+  // an http(s) link to another origin opens in a new tab, marked ↗ and announced as such
+  function isExt(u) { return /^https?:\/\//i.test(u || "") && String(u).indexOf(location.origin + "/") !== 0; }
 
-const TYPE_LABEL = { web: "Web app", dashboard: "Dashboard", ios: "iOS app", "data-app": "Data app" };
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-
-function fmtDate(d) {
-  if (!d) return "";
-  const [y, m] = d.split("-");
-  const names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return m ? names[parseInt(m,10)-1] + " " + y : y;
-}
-
-function initials(title) {
-  return title.split(/\s+/).slice(0,2).map(w => w[0] || "").join("").toUpperCase();
-}
-
-function render() {
-  const site = DATA.site || {};
-  document.getElementById("site-name").textContent = site.name || "";
-  document.getElementById("site-tagline").textContent = site.tagline || "";
-  const intro = document.getElementById("site-intro");
-  intro.textContent = site.intro || "";
-  intro.hidden = !site.intro;
-  document.title = (site.name ? site.name + " — " : "") + "Projects";
-
-  const links = [];
-  if (site.email)    links.push('<a href="mailto:' + esc(site.email) + '">Email</a>');
-  if (site.github)   links.push('<a href="' + esc(site.github) + '" target="_blank" rel="noopener">GitHub</a>');
-  if (site.linkedin) links.push('<a href="' + esc(site.linkedin) + '" target="_blank" rel="noopener">LinkedIn</a>');
-  document.getElementById("site-contact").innerHTML = links.join("");
-
-  const projects = DATA.projects || [];
-  document.getElementById("count").textContent = projects.length ? projects.length : "";
-
-  const grid = document.getElementById("grid");
-  if (!projects.length) {
-    grid.innerHTML = '<div class="empty">Projects coming soon.</div>';
-  } else {
-    grid.innerHTML = projects.map(p => {
-      const link = p.link || ("projects/" + p.slug + "/");
-      const thumb = p.thumb
-        ? '<div class="thumb"><img src="' + esc(p.thumb) + '" alt="' + esc(p.title) + ' preview" loading="lazy"></div>'
-        : '<div class="thumb">' + esc(initials(p.title)) + '</div>';
-      const badgeType = TYPE_LABEL[p.type] ? p.type : "web";
-      const cta = p.cta || (p.pattern === "case-study" || p.type === "ios"
-        ? "View case study →" : "Open live app →");
-      return '<a class="card' + (p.featured ? ' featured' : '') + '" href="' + esc(link) + '">'
-        + thumb
-        + '<div class="card-body">'
-        + '<div class="meta-row"><span class="badge ' + badgeType + '">' + TYPE_LABEL[badgeType] + '</span>'
-        + '<span class="date">' + esc(fmtDate(p.date)) + '</span>'
-        + (p.featured ? '<span class="featured-tag">Featured</span>' : '') + '</div>'
-        + '<h3>' + esc(p.title) + '</h3>'
-        + '<p>' + esc(p.description) + '</p>'
-        + (p.tech && p.tech.length ? '<div class="tech">' + p.tech.map(t => "<span>" + esc(t) + "</span>").join("") + '</div>' : "")
-        + '<span class="open">' + cta + '</span>'
-        + '</div></a>';
-    }).join("");
+  /* ---- {{manifest:dotted.path|fallback}} tokens in the copy ----
+     Copy in projects.json may carry a live figure from the research platform's manifest. A token
+     renders its fallback at once (build.py's no-JS rendition quotes the manifest as of the last build); when the
+     manifest fetch below resolves, each token's span is swapped for the live value. If the fetch
+     fails, or the path is missing, the fallback stays. Rendered text is always the paragraph with
+     every token replaced by one value, so the copy stays verbatim. */
+  var TOKEN = "\\{\\{manifest:([\\w.]+)\\|([^{}]*)\\}\\}";
+  // after the fallback a token may carry |max=N: the largest live value its sentence can honestly carry
+  // ("only 59 of the roughly 250 live days it needs"). Such a sentence is wrapped whole, and above N it is
+  // withdrawn (never left showing a stale fallback that disagrees with the live figures elsewhere on the
+  // page) and the console says so. build.py and the nightly publish warn from 90% of N, so the sentence
+  // gets rewritten first.
+  function tokOpts(rest) {
+    var parts = String(rest).split("|"), o = { fb: parts[0], max: null };
+    parts.slice(1).forEach(function (x) { var kv = x.split("="); if (kv[0].trim() === "max" && kv[1] != null && isFinite(+kv[1])) o.max = +kv[1]; });
+    return o;
   }
-  const proc = site.process || {};
-  const paras = proc.paragraphs || [];
+  function tokText(s) { return String(s == null ? "" : s).replace(new RegExp(TOKEN, "g"), function (_, p, f) { return tokOpts(f).fb; }); }
+  function tokSpans(s) {
+    var rx = new RegExp(TOKEN, "g"), out = "", last = 0, m;
+    while ((m = rx.exec(s))) {
+      var o = tokOpts(m[2]);
+      out += esc(s.slice(last, m.index)) + '<span data-token="' + esc(m[1]) + '"' + (o.max != null ? ' data-max="' + o.max + '"' : "") + ">" + esc(o.fb) + "</span>";
+      last = rx.lastIndex;
+    }
+    return out + esc(s.slice(last));
+  }
+  function capped(s) { var rx = new RegExp(TOKEN, "g"), m; while ((m = rx.exec(s))) if (tokOpts(m[2]).max != null) return true; return false; }
+  function tokHtml(s) {
+    s = String(s == null ? "" : s);
+    if (!capped(s)) return tokSpans(s);
+    // each sentence that quotes a capped figure is wrapped, so applyTokens can withdraw it whole
+    var cuts = [0].concat(sentenceBreaks(s), [s.length]), out = "";
+    for (var i = 0; i < cuts.length - 1; i++) {
+      var part = s.slice(cuts[i], cuts[i + 1]);
+      out += capped(part) ? '<span data-tok-sentence="">' + tokSpans(part) + "</span>" : tokSpans(part);
+    }
+    return out;
+  }
+  function tokRanges(s) { var rx = new RegExp(TOKEN, "g"), r = [], m; while ((m = rx.exec(s))) r.push([m.index, rx.lastIndex]); return r; }
+  function pick(o, path) { return path.split(".").reduce(function (v, k) { return v != null && typeof v === "object" ? v[k] : undefined; }, o); }
+  function applyTokens(m) {
+    [].forEach.call(d.querySelectorAll("[data-token]"), function (el) {
+      var v = pick(m, el.getAttribute("data-token")), max = el.getAttribute("data-max");
+      if (typeof v === "number" && isFinite(v) && max !== null && v > +max) {
+        var sent = el.closest("[data-tok-sentence]"), pull = el.closest("#pull");
+        if (sent) sent.hidden = true;
+        if (pull) pull.hidden = true;
+        if (window.console) console.warn("Copy token " + el.getAttribute("data-token") + " = " + v + " is past max=" + max + "; its sentence is withdrawn. Rewrite it in projects.json.");
+      } else if (typeof v === "number" && isFinite(v)) el.textContent = v.toLocaleString("en-US");
+      else if (typeof v === "string" && v) el.textContent = v;
+    });
+  }
+  // offsets where a new sentence starts: [.!?], optional closing quote, whitespace, then a capital.
+  // A break is never taken inside a token.
+  function sentenceBreaks(t) {
+    var rs = tokRanges(t), out = [], rx = /[.!?][”’"')\]]*\s+(?=[“‘"'(\[]?[A-Z])/g, m;
+    while ((m = rx.exec(t))) {
+      var at = m.index;
+      if (!rs.some(function (r) { return at >= r[0] && at < r[1]; })) out.push(at + m[0].length);
+    }
+    return out;
+  }
+
+  // featured first, then the rest in manifest order
+  var all = (DATA.projects || []).filter(function (p) { return p && p.slug && p.title; });
+  var list = all.filter(function (p) { return p.featured; }).concat(all.filter(function (p) { return !p.featured; }));
+  list.forEach(function (p, i) { p._no = pad(i + 1); p._href = p.link || ("projects/" + p.slug + "/"); p._ext = isExt(p._href); p._type = TYPE[p.type] ? p.type : "web"; });
+
+  /* ---- masthead ---- */
+  var name = site.name || "";
+  $("site-name").innerHTML = name.split(/\s+/).filter(Boolean).map(function (w) { return '<span class="w">' + esc(w) + "</span>"; }).join(" ");
+  $("wordmark").textContent = name;
+  $("site-tagline").innerHTML = tokHtml(site.tagline);
+  if (site.intro) { $("site-intro").innerHTML = tokHtml(site.intro); $("site-intro").hidden = false; }
+  d.title = (name ? name + " — " : "") + "Projects";
+  var years = list.map(function (p) { return +String(p.date || "").slice(0, 4); }).filter(Boolean);
+  if (years.length) {
+    var y0 = Math.min.apply(null, years), y1 = Math.max.apply(null, years);
+    $("dateline-l").textContent = "Projects, " + (y0 === y1 ? y0 : y0 + "–" + y1);
+  }
+  var isMac = /mac|iphone|ipad/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "");
+  var kbd = isMac ? "<kbd>⌘</kbd><kbd>K</kbd>" : "<kbd>Ctrl</kbd><kbd>K</kbd>";
+  if (!isMac) [].forEach.call(d.querySelectorAll(".kbd-mod"), function (k) { k.textContent = "Ctrl K"; });
+
+  var acts = [];
+  if (site.email) {
+    // the address itself is on the button, so it can be read (and copied) without scrolling to Contact
+    acts.push('<a class="btn-ink mail" href="mailto:' + esc(site.email) + '">' + I_MAIL + esc(site.email) + "</a>");
+    acts.push('<button class="btn-line sq" type="button" data-copy="' + esc(site.email) + '" data-copy-msg="Email address copied" aria-label="Copy email address" title="Copy email address">' + I_COPY + "</button>");
+  }
+  if (site.linkedin) acts.push('<a class="btn-line" href="' + esc(site.linkedin) + '" target="_blank" rel="noopener">LinkedIn ' + I_OUT + NEWTAB + "</a>");
+  if (site.github) acts.push('<a class="btn-line" href="' + esc(site.github) + '" target="_blank" rel="noopener">GitHub ' + I_OUT + NEWTAB + "</a>");
+  acts.push('<span class="hint">' + kbd + "&nbsp;to search</span>");
+  $("hero-actions").innerHTML = acts.join("");
+
+  $("contents").innerHTML = list.map(function (p) {
+    return '<li><a href="' + esc(p._href) + '"' + (p._ext ? ' target="_blank" rel="noopener"' : "") + '><span class="c-no">' + p._no + '</span><span class="c-title">' + esc(tokText(p.title))
+      + (p._ext ? '<span class="ext" aria-hidden="true">↗</span>' + NEWTAB : "")
+      + '</span><span class="c-lead" aria-hidden="true"></span><span class="c-type">' + TYPE[p._type] + "</span></a></li>";
+  }).join("");
+
+  /* ---- tiles ---- */
+  function cta(p) {
+    var t = tokText(p.cta || ((p.pattern === "case-study" || p.type === "ios") ? "View the case study →" : "Open live app →"));
+    var m = t.match(/^(.*?)\s*(→|↗)\s*$/);
+    var arr = ' <span class="arr' + (p._ext ? " arr--ext" : "") + '" aria-hidden="true">' + (p._ext ? "↗" : "→") + "</span>";
+    return m ? esc(m[1]) + arr : esc(t) + (p._ext ? arr : "");
+  }
+  function tile(p) {
+    var id = esc(p.slug);
+    var plate = p.thumb
+      ? '<div class="plate"><img src="' + esc(p.thumb) + '" alt="" width="1200" height="675" decoding="async"' + (p.featured ? ' fetchpriority="high"' : ' loading="lazy"') + "></div>"
+      : '<div class="plate plate--type" aria-hidden="true"><span>' + esc(tokText(p.title)) + "</span></div>";
+    var hl = p.highlight && p.highlight.value
+      ? '<span class="hl"><span class="hl__n">' + tokHtml(p.highlight.value) + '</span><span class="hl__l">' + tokHtml(p.highlight.label || "") + "</span></span>" : "";
+    var figs = p.slug === LIVE.slug
+      ? '<div class="figs" id="figs"><p class="figs__label label">From the latest export</p><dl>'
+        + '<div><dt>full research database</dt><dd id="fig-db">—</dd></div>'
+        + '<div><dt>symbols in the demo</dt><dd id="fig-sym">—</dd></div>'
+        + '<div><dt>live days scored before the outcome existed'
+        + '<span class="meter" id="fig-meter" aria-hidden="true"><i></i></span></dt><dd id="fig-adv">—</dd></div></dl></div>' : "";
+    return '<a class="tile' + (p.featured ? " tile--featured" : "") + '" id="p-' + id + '" href="' + esc(p._href) + '"'
+      + (p._ext ? ' target="_blank" rel="noopener"' : "") + ' data-type="' + p._type
+      + '" aria-labelledby="t-' + id + (p._ext ? " x-" + id : "") + '" aria-describedby="d-' + id + '" data-reveal>'
+      + '<div class="tile__meta"><span class="t-no">' + p._no + '</span><span class="t-type">' + TYPE[p._type] + "</span>"
+      + (p.featured ? '<span class="t-feat">Featured</span>' : "") + '<span class="t-date">' + esc(fmtMonth(p.date)) + "</span></div>"
+      + '<div class="tile__body"><div class="tile__media">' + plate + figs + '</div><div class="tile__text">'
+      + '<h3 class="tile__title" id="t-' + id + '">' + esc(tokText(p.title)) + "</h3>"
+      + '<p class="tile__desc" id="d-' + id + '">' + tokHtml(p.description) + "</p>"
+      + (p.tech && p.tech.length ? '<p class="tile__tech">' + p.tech.map(function (t) { return "<span>" + esc(tokText(t)) + "</span>"; }).join("") + "</p>" : "")
+      + '<div class="tile__foot">' + hl + '<span class="cta">' + cta(p) + "</span></div>"
+      + (p._ext ? '<span class="sr-only" id="x-' + id + '">(opens in a new tab)</span>' : "")
+      + "</div></div></a>";
+  }
+  var grid = $("grid");
+  grid.innerHTML = list.length ? list.map(tile).join("") : '<p class="label">Projects coming soon.</p>';
+  var tiles = [].slice.call(grid.querySelectorAll(".tile"));
+
+  /* ---- filters ---- */
+  var counts = {}, current = "all";
+  list.forEach(function (p) { counts[p._type] = (counts[p._type] || 0) + 1; });
+  var types = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || CHIP[a].localeCompare(CHIP[b]); });
+  function chip(t, label, n) {
+    return '<button class="chip" type="button" data-f="' + t + '" aria-pressed="' + (t === current) + '">' + esc(label) + ' <span class="n">' + n + "</span></button>";
+  }
+  if (types.length > 1) $("filters").innerHTML = chip("all", "All", list.length) + types.map(function (t) { return chip(t, CHIP[t], counts[t]); }).join("");
+  function layout() {
+    var shown = tiles.filter(function (t) { return !t.hidden; });
+    var rest = shown.filter(function (t) { return !t.classList.contains("tile--featured"); });
+    tiles.forEach(function (t) { t.classList.remove("tile--wide"); });
+    if (rest.length % 2 === 1) rest[rest.length - 1].classList.add("tile--wide");
+    $("count").textContent = current === "all" ? list.length + (list.length === 1 ? " project" : " projects")
+      : "Showing " + shown.length + " of " + list.length + " · " + CHIP[current];
+  }
+  function apply(t) {
+    current = t;
+    tiles.forEach(function (el) { el.hidden = !(t === "all" || el.getAttribute("data-type") === t); el.classList.add("is-in"); });
+    [].forEach.call(d.querySelectorAll(".chip"), function (c) { c.setAttribute("aria-pressed", String(c.getAttribute("data-f") === t)); });
+    layout();
+  }
+  $("filters").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip"); if (!c) return;
+    var t = c.getAttribute("data-f"); if (t === current) return;
+    if (d.startViewTransition && !reduce) {
+      tiles.forEach(function (el, i) { el.style.viewTransitionName = "tile-" + i; });
+      var vt = d.startViewTransition(function () { apply(t); });
+      vt.finished.finally(function () { tiles.forEach(function (el) { el.style.viewTransitionName = ""; }); });
+    } else apply(t);
+  });
+  layout();
+
+  /* ---- pointer spotlight + plate parallax (fine pointers, motion allowed) ---- */
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches && !reduce) {
+    tiles.forEach(function (t) {
+      var raf = 0, ev = null;
+      t.addEventListener("pointermove", function (e) {
+        ev = e; if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = 0; var r = t.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+          t.style.setProperty("--mx", (x * 100).toFixed(1) + "%"); t.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+          t.style.setProperty("--px", ((0.5 - x) * 12).toFixed(1) + "px"); t.style.setProperty("--py", ((0.5 - y) * 8).toFixed(1) + "px");
+        });
+      });
+      t.addEventListener("pointerleave", function () { t.style.setProperty("--px", "0px"); t.style.setProperty("--py", "0px"); });
+    });
+  }
+
+  /* ---- how I work ---- */
+  var proc = site.process || {}, paras = (proc.paragraphs || []).filter(Boolean);
   if (paras.length) {
-    document.getElementById("process-heading").textContent = proc.heading || "How I work";
-    document.getElementById("process-body").innerHTML =
-      paras.map(t => "<p>" + esc(t) + "</p>").join("");
-    document.getElementById("process").hidden = false;
+    $("process-h").textContent = proc.heading || "How I work";
+    $("principles").innerHTML = paras.map(function (t, i) {
+      // the first sentence becomes the lead-in. The split is at a real sentence end (never at a colon,
+      // so the body never starts lowercase, and never inside a token); the text itself is unchanged.
+      t = String(t);
+      var cut = sentenceBreaks(t).filter(function (b) { return b >= 12; })[0];
+      var body = cut ? '<span class="p-lead">' + tokHtml(t.slice(0, cut)) + "</span>" + tokHtml(t.slice(cut)) : tokHtml(t);
+      return '<li data-reveal><span class="p-no" aria-hidden="true">' + pad(i + 1) + "</span><p>" + body + "</p></li>";
+    }).join("");
+    // pull quote: an optional verbatim sentence from the paragraphs, else the last sentence of the last one
+    var joined = paras.join(" "), q = proc.pullquote && joined.indexOf(proc.pullquote) >= 0 ? String(proc.pullquote) : "";
+    if (!q) { var lastP = String(paras[paras.length - 1]), bs = sentenceBreaks(lastP); q = lastP.slice(bs.length ? bs[bs.length - 1] : 0).trim(); }
+    if (q && tokText(q).length <= 200) { $("pull").firstChild.innerHTML = tokHtml(q); $("pull").hidden = false; }
+    $("process").hidden = false;
   }
 
-  document.getElementById("footer").textContent =
-    "© " + new Date().getFullYear() + " " + (site.name || "") + " · Built with Claude";
-}
-render();
+  /* ---- contact ---- */
+  if (site.email || site.linkedin) {
+    var mail = $("contact-mail"), ca = [];
+    if (site.email) { mail.href = "mailto:" + site.email; mail.textContent = site.email; } else mail.remove();
+    if (site.email) ca.push('<button class="btn-line" type="button" data-copy="' + esc(site.email) + '" data-copy-msg="Email address copied">' + I_COPY + "Copy email</button>");
+    if (site.linkedin) ca.push('<a class="btn-line" href="' + esc(site.linkedin) + '" target="_blank" rel="noopener">LinkedIn ' + I_OUT + NEWTAB + "</a>");
+    if (site.github) ca.push('<a class="btn-line" href="' + esc(site.github) + '" target="_blank" rel="noopener">GitHub ' + I_OUT + NEWTAB + "</a>");
+    $("contact-actions").innerHTML = ca.join("");
+    $("contact").hidden = false;
+  }
+  $("footer").textContent = "© " + name + " · Built with Claude Code";
+
+  /* ---- sticky running head gets its rule once the page scrolls ---- */
+  var bar = $("topbar");
+  var onScroll = function () { bar.classList.toggle("is-stuck", window.scrollY > 8); };
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
+  /* ---- running head marks the section in view ---- */
+  var navA = [].slice.call(d.querySelectorAll(".topnav a"));
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        navA.forEach(function (a) {
+          if (a.getAttribute("href") !== "#" + e.target.id) return;
+          if (e.isIntersecting) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+        });
+      });
+    }, { rootMargin: "-40% 0px -55% 0px" });
+    ["projects", "process", "contact"].forEach(function (id) { var el = $(id); if (el && !el.hidden) spy.observe(el); });
+  }
+
+  /* ---- live signal from the research platform (hidden if the fetch fails) ---- */
+  var liveEl = $("live"), figs = $("figs");
+  // the figures strip goes if the manifest never arrives; if the reader could already see it (on screen or
+  // scrolled past), its space is kept so nothing below jumps
+  function hideFigs() {
+    if (!figs) return;
+    if (figs.getBoundingClientRect().top < window.innerHeight) figs.style.visibility = "hidden"; else figs.hidden = true;
+  }
+  function fail() { liveEl.remove(); hideFigs(); }
+  if (!window.fetch) fail();
+  else fetch(LIVE.manifest, { cache: "no-cache" }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (m) {
+    // tokens in the copy take the live values even if the dateline below cannot use this manifest
+    if (m && typeof m === "object") { window.SITE_MANIFEST = m; applyTokens(m); }
+    if (!list.some(function (p) { return p.slug === LIVE.slug; })) throw 0;
+    var cal = m.calendar || {}, rec = m.record || {};
+    if (!/^\d{4}-\d\d-\d\d$/.test(cal.last || "") || typeof rec.live_days !== "number") throw 0;
+    $("live-date").textContent = fmtDay(cal.last);
+    $("live-days").textContent = rec.live_days.toLocaleString("en-US");
+    var age = (Date.now() - Date.parse(m.exported_at || cal.last)) / 864e5;
+    if (!(age <= 4)) liveEl.classList.add("is-stale");
+    liveEl.title = "Latest export " + String(m.exported_at || "").replace("T", " ");
+    liveEl.classList.add("is-ready");
+    if (figs) {
+      var ok = typeof m.db_size_gb === "number" && typeof m.symbols_in_demo === "number" && typeof rec.committed_in_advance_days === "number";
+      if (!ok) { hideFigs(); return; }
+      $("fig-db").textContent = m.db_size_gb.toFixed(1) + " GB";
+      $("fig-sym").textContent = m.symbols_in_demo.toLocaleString("en-US");
+      $("fig-adv").textContent = rec.committed_in_advance_days + " of " + rec.live_days;
+      // the meter draws the same figure as a filled share; it duplicates the text beside it, so it stays aria-hidden
+      var meter = $("fig-meter"), share = rec.live_days > 0 ? Math.max(0, Math.min(1, rec.committed_in_advance_days / rec.live_days)) : 0;
+      requestAnimationFrame(function () { requestAnimationFrame(function () { meter.firstChild.style.width = (share * 100).toFixed(1) + "%"; }); });
+    }
+  }).catch(fail);
+})();
 </script>
 </body>
 </html>

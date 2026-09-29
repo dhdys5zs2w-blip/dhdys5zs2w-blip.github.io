@@ -5,6 +5,10 @@
 <meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SOC Volatility Dashboard — Ben Meyer</title>
 <meta name="description" content="Ben Meyer's research into whether self-organized criticality — the physics of avalanches — describes intraday market volatility, built into a dashboard that scores and backtests it. The forest-fire model behind it runs live on the page.">
+<meta name="theme-color" content="#f5f1e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231c1a17'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='29' text-anchor='middle' fill='%23f5f1e8'%3EBM%3C/text%3E%3Crect x='15' y='50' width='34' height='2' fill='%236f95e0'/%3E%3C/svg%3E">
+<script>!function(d){d.classList.add("js");try{var t=localStorage.getItem("bm-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}try{if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("reveal")}catch(e){}}(document.documentElement)</script>
+<link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../assets/case-study.css">
 <style>
 /* page-specific rules only */
@@ -15,8 +19,7 @@
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 .legend i.ln { width: 18px; height: 3px; border-radius: 2px; vertical-align: 3px; }
-.legend .grp { color: var(--muted); opacity: 0.8; margin-right: -6px; }
-.legend .ax { opacity: 0.75; }
+.legend .grp { color: var(--muted); margin-right: -6px; }
 .legend .stat-status { margin-left: auto; }
 .legend .stat-status b { color: var(--text); font-weight: 600; }
 .ctrl { display: grid; gap: 12px; }
@@ -24,6 +27,8 @@
 .ctrl label b { color: var(--text); font-weight: 600; font-family: var(--mono); font-size: 0.9em; }
 .ctrl input[type=range] { display: block; width: 100%; accent-color: var(--accent); margin: 6px 0 0; }
 .ctrl select { font: inherit; font-size: 0.9rem; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); margin-left: 6px; }
+/* iOS zooms the page into any control set under 16px */
+@media (pointer: coarse) { .ctrl select { font-size: 16px; } }
 .row2 { display: flex; flex-wrap: wrap; gap: 10px 20px; }
 .btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
 .btnrow button { font: inherit; cursor: pointer; padding: 7px 13px; font-size: 0.9rem; }
@@ -61,16 +66,19 @@
    tokenised because the regime fills invert with the theme */
 .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 0.8rem; color: var(--pill-ink); }
 :root { --pill-ink: #1a1a1a; }
-@media (prefers-color-scheme: dark) { :root { --pill-ink: #ececec; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --pill-ink: #ececec; } }
+:root[data-theme="dark"] { --pill-ink: #ececec; }
 .verdict { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
 .verdict.pass { background: var(--accent-soft); color: var(--accent); }
 .verdict.fail { background: var(--warn-bg); color: var(--warn-ink); border: 1px solid var(--warn-line); }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
-  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>SOC Volatility Dashboard</b></span></nav>
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>SOC Volatility Dashboard</b></span><span class="cs-tools" data-theme-slot></span></nav>
 
+  <main id="main" tabindex="-1">
   <header class="cs-head">
     <p class="eyebrow"><span class="badge dashboard">Research dashboard</span><span>Dec 2025 – Sep 2026</span></p>
     <h1>Can the physics of avalanches describe when a stock is about to get volatile?</h1>
@@ -93,7 +101,7 @@
 
   <section>
     <h2>The physics, live</h2>
-    <p>Trees grow at random; lightning strikes at random; fire spreads to neighbouring trees. Let it run and the fire sizes settle onto a straight line on the log–log chart below — the power law that marks a critical state. This is the dashboard&rsquo;s own model, running in your browser.</p>
+    <p style="max-width:72ch">Trees grow at random; lightning strikes at random; fire spreads to neighbouring trees. Let it run and the fire sizes settle onto a straight line on the log–log chart below — the power law that marks a critical state. This is the dashboard&rsquo;s own model, running in your browser.</p>
 
     <div class="card sim-card">
       <div class="sim">
@@ -243,8 +251,10 @@
     <p class="note">An exploratory research tool, not a trading system. The live app needs a market-data feed, so what runs on this page is the forest-fire model and one fixed historical window scored offline; the option-pricing backtest, which covers 29 trading days, stays in the app.</p>
   </section>
 
+  </main>
   <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
 </div>
 <script src="sim.js" defer></script>
 <script src="example.js" defer></script>
+<script src="../../assets/site.js" defer></script>
 </body></html>

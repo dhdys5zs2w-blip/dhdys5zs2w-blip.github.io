@@ -206,8 +206,15 @@
                      accent: get('--accent', '#2563eb'), surface: get('--surface-2', '#f0f1ee') };
       return themeCache;
     }
+    // Redraw in the new colours when the effective theme changes: the site's theme toggle
+    // (assets/site.js) dispatches 'themechange'; without site.js, follow an OS change unless a
+    // theme is forced through html[data-theme]. The grid itself uses fixed colours.
+    var redraw = function () { themeCache = null; drawPlot(); };
+    window.addEventListener('themechange', redraw);
     if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { themeCache = null; drawPlot(); });
+      var mqDark = window.matchMedia('(prefers-color-scheme: dark)');
+      var onOS = function () { if (!window.Site && !document.documentElement.hasAttribute('data-theme')) redraw(); };
+      if (mqDark.addEventListener) mqDark.addEventListener('change', onOS); else if (mqDark.addListener) mqDark.addListener(onOS);
     }
 
     function tickLabel(e) { return e >= 3 ? (Math.pow(10, e - 3)) + 'k' : String(Math.pow(10, e)); }

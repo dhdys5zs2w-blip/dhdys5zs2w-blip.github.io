@@ -25,10 +25,23 @@
   var signed = function (n, unit) { return (n < 0 ? '−' : '+') + fmt0(Math.abs(n)) + unit; };
 
   // ---------------------------------------------------------------- theme
+  // The site's theme toggle (assets/site.js) can force light or dark through html[data-theme];
+  // with no attribute the page follows the OS. isDark() answers for the EFFECTIVE theme, and the
+  // charts are re-rendered when it changes (see onThemeChange in wire()).
   var darkMQ = window.matchMedia('(prefers-color-scheme: dark)');
+  function isDark() {
+    var t = document.documentElement.getAttribute('data-theme');
+    return t === 'dark' || t === 'light' ? t === 'dark' : darkMQ.matches;
+  }
+  function onThemeChange(fn) {
+    window.addEventListener('themechange', function () { fn(); });   // the toggle, the palette, another tab
+    // site.js also turns an OS change into 'themechange' while no theme is forced; without it, listen here
+    var os = function () { if (!window.Site && !document.documentElement.hasAttribute('data-theme')) fn(); };
+    if (darkMQ.addEventListener) darkMQ.addEventListener('change', os); else if (darkMQ.addListener) darkMQ.addListener(os);
+  }
   function theme() {
     var cs = getComputedStyle(document.documentElement);
-    var dark = darkMQ.matches;
+    var dark = isDark();
     var v = function (name, fb) { var x = cs.getPropertyValue(name).trim(); return x || fb; };
     return {
       dark: dark,
@@ -225,7 +238,7 @@
     var tbl = $(id); if (!tbl) return;
     while (tbl.firstChild) tbl.removeChild(tbl.firstChild);
     var thead = document.createElement('thead'), tr = document.createElement('tr');
-    headers.forEach(function (h) { var th = document.createElement('th'); th.textContent = h; tr.appendChild(th); });
+    headers.forEach(function (h, i) { var th = document.createElement('th'); th.textContent = h; if (i > 0) th.className = 'num'; tr.appendChild(th); });
     thead.appendChild(tr); tbl.appendChild(thead);
     var tbody = document.createElement('tbody');
     rows.forEach(function (r) {
@@ -264,6 +277,12 @@
   // ---------------------------------------------------------------- chart a: the whole year
   function renderYear() {
     var t = theme(), data = new Array(D.n);
+    // a redraw (theme change) keeps the reader's zoom instead of snapping back to the whole year
+    var z = { start: 0, end: 100 };
+    try {
+      var old = charts.year.getOption(), dz = old && old.dataZoom && old.dataZoom[0];
+      if (dz && isFinite(dz.start) && isFinite(dz.end)) z = { start: dz.start, end: dz.end };
+    } catch (e) { /* first render: nothing to keep */ }
     for (var i = 0; i < D.n; i++) data[i] = [D.ms[i], D.mw[i]];
     charts.year.setOption({
       useUTC: true, animation: false, textStyle: { fontFamily: FONT },
@@ -278,8 +297,8 @@
       },
       yAxis: axisY(t, { min: 0, name: 'MW', nameTextStyle: { color: t.muted, align: 'right' } }),
       dataZoom: [
-        { type: 'inside', filterMode: 'none' },
-        { type: 'slider', height: 26, bottom: 14, filterMode: 'none', borderColor: t.border, backgroundColor: 'transparent',
+        { type: 'inside', filterMode: 'none', start: z.start, end: z.end },
+        { type: 'slider', height: 26, bottom: 14, filterMode: 'none', start: z.start, end: z.end, borderColor: t.border, backgroundColor: 'transparent',
           fillerColor: t.dark ? 'rgba(57,135,229,.16)' : 'rgba(42,120,214,.12)',
           dataBackground: { lineStyle: { color: t.ghost }, areaStyle: { color: t.grid, opacity: 1 } },
           selectedDataBackground: { lineStyle: { color: t.blue }, areaStyle: { color: t.blue, opacity: .18 } },
@@ -346,7 +365,7 @@
     charts.ldc.setOption({
       animation: false, textStyle: { fontFamily: FONT },
       legend: legend(t, ['As metered', 'After battery']),
-      grid: { left: 54, right: 18, top: 34, bottom: 70 },
+      grid: { left: 54, right: 18, top: 34, bottom: 84 },
       tooltip: tooltip(t, {
         trigger: 'axis',
         formatter: function (ps) {
@@ -358,12 +377,12 @@
       xAxis: {
         type: 'value', min: 1, max: D.n, axisLine: { lineStyle: { color: t.border } }, axisTick: { show: false }, splitLine: { show: false },
         axisLabel: { color: t.muted, fontSize: 11, formatter: function (v) { return fmt0(v); } },
-        name: 'hours of the year, ranked highest to lowest', nameLocation: 'middle', nameGap: 26, nameTextStyle: { color: t.muted, fontSize: 11 }
+        name: 'hours of the year, ranked highest to lowest', nameLocation: 'middle', nameGap: 24, nameTextStyle: { color: t.muted, fontSize: 11 }
       },
       yAxis: axisY(t, { scale: true, name: 'MW', nameTextStyle: { color: t.muted, align: 'right' } }),
       dataZoom: [
         { type: 'inside', filterMode: 'filter' },
-        { type: 'slider', height: 20, bottom: 40, filterMode: 'filter', borderColor: t.border, backgroundColor: 'transparent', showDataShadow: false,
+        { type: 'slider', height: 20, bottom: 8, filterMode: 'filter', borderColor: t.border, backgroundColor: 'transparent', showDataShadow: false,
           fillerColor: t.dark ? 'rgba(57,135,229,.16)' : 'rgba(42,120,214,.12)', handleStyle: { color: t.surface, borderColor: t.muted },
           moveHandleStyle: { color: t.ghost }, textStyle: { color: t.muted, fontSize: 11 }, labelFormatter: function (v) { return fmt0(v); } }
       ],
@@ -547,7 +566,7 @@
     charts.top.on('click', function (p) { if (p.componentType === 'series' && p.dataIndex != null) { state.day = D.top[p.dataIndex]; renderDay(); } });
     var rt = null;
     window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(resizeAll, 120); });
-    if (darkMQ.addEventListener) darkMQ.addEventListener('change', renderAll); else if (darkMQ.addListener) darkMQ.addListener(renderAll);
+    onThemeChange(renderAll);
   }
 
   function fail(msg) {

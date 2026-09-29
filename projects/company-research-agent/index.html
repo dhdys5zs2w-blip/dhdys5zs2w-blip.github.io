@@ -5,6 +5,10 @@
 <meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Company Research Agent — Ben Meyer</title>
 <meta name="description" content="A due-diligence method Ben Meyer designed to keep private-company research from anchoring on early numbers, packaged as a repeatable Claude Code workflow over public filings and patents.">
+<meta name="theme-color" content="#f5f1e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231c1a17'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='29' text-anchor='middle' fill='%23f5f1e8'%3EBM%3C/text%3E%3Crect x='15' y='50' width='34' height='2' fill='%236f95e0'/%3E%3C/svg%3E">
+<script>!function(d){d.classList.add("js");try{var t=localStorage.getItem("bm-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}try{if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("reveal")}catch(e){}}(document.documentElement)</script>
+<link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../assets/case-study.css">
 <style>
 /* page-specific rules only */
@@ -29,12 +33,17 @@
 .tier.inferred { background:#d0e0e3; color:#0c343d; }
 .tier.analog   { background:#fff2cc; color:#7f6000; }
 .tier.guess    { background:#f4cccc; color:#990000; }
+/* dark tiers: under the OS preference unless the reader forced light, and under a forced dark theme */
 @media (prefers-color-scheme: dark) {
-  .tier.observed { background:#1f3520; color:#b7e1a1; }
-  .tier.inferred { background:#16323a; color:#a8d8e4; }
-  .tier.analog   { background:#3a3016; color:#f0c36d; }
-  .tier.guess    { background:#3d1f1f; color:#f3a9a9; }
+  :root:not([data-theme="light"]) .tier.observed { background:#1f3520; color:#b7e1a1; }
+  :root:not([data-theme="light"]) .tier.inferred { background:#16323a; color:#a8d8e4; }
+  :root:not([data-theme="light"]) .tier.analog   { background:#3a3016; color:#f0c36d; }
+  :root:not([data-theme="light"]) .tier.guess    { background:#3d1f1f; color:#f3a9a9; }
 }
+:root[data-theme="dark"] .tier.observed { background:#1f3520; color:#b7e1a1; }
+:root[data-theme="dark"] .tier.inferred { background:#16323a; color:#a8d8e4; }
+:root[data-theme="dark"] .tier.analog   { background:#3a3016; color:#f0c36d; }
+:root[data-theme="dark"] .tier.guess    { background:#3d1f1f; color:#f3a9a9; }
 .caption { font-size:0.9rem; color:var(--muted); line-height:1.55; }
 .screen-card { padding:20px 22px; }
 .screen-card .call { font-size:1.02rem; margin:0 0 14px; }
@@ -49,9 +58,10 @@
 .tornado .bar i.zero { background:var(--border); }
 .tornado .amt { font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--muted); text-align:right; font-size:0.8rem; }
 .tornado .hd { font-size:0.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+@media (max-width: 420px) { .tornado { grid-template-columns:minmax(92px,1.3fr) 66px minmax(40px,2fr) 46px; gap:5px 8px; min-width:0; } }
 .finds { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:14px; margin:14px 0 4px; }
 .finds .card { padding:15px 17px; }
-.finds h3 { margin:0 0 6px; font-size:0.96rem; }
+.finds h4 { margin:0 0 6px; font-family:var(--serif); font-weight:400; font-size:0.96rem; letter-spacing:-0.01em; line-height:1.3; color:var(--text); text-wrap:balance; }
 .finds p { margin:0; font-size:0.89rem; color:var(--muted); line-height:1.5; }
 .finds b { color:var(--text); font-weight:600; }
 
@@ -64,9 +74,11 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="wrap">
-  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Company Research Agent</b></span></nav>
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Company Research Agent</b></span><span class="cs-tools" data-theme-slot></span></nav>
 
+  <main id="main" tabindex="-1">
   <header class="cs-head">
     <p class="eyebrow"><span class="badge data-app">Research method</span><span>Sep 2026</span></p>
     <h1>A due-diligence method that refuses to anchor</h1>
@@ -147,7 +159,7 @@
     <p class="caption" style="max-width:74ch;margin:0 0 12px">This is the part that does the work. No number reaches the write-up without a row saying where it came from and how much weight it will take &mdash; <span class="tier observed">observed</span> in a primary document, <span class="tier inferred">inferred</span> with the reasoning shown, <span class="tier analog">analog</span> from a named comparable, or a plain <span class="tier guess">guess</span>. Guesses are allowed. Guesses dressed up as something firmer are the one thing that ruins the document. A second column grades independence &mdash; <b>C</b> the company is the source, <b>R</b> corroborated by something not independent of it, <b>V</b> a source with no stake that would have said so if the claim were false. Nine of the fifty-three rows:</p>
     <div class="tablewrap">
       <table class="data">
-        <thead><tr><th>Number</th><th>What it is</th><th>Where it came from</th><th>Derivation</th><th>Independence</th></tr></thead>
+        <thead><tr><th class="num">Number</th><th>What it is</th><th>Where it came from</th><th>Derivation</th><th>Independence</th></tr></thead>
         <tbody>
           <tr><td class="num">$279,000</td><td>List price of the 380 sq ft studio</td><td>The company&rsquo;s own price list</td><td><span class="tier observed">observed</span></td><td><span class="tier guess">C</span></td></tr>
           <tr><td class="num">$734 / sq ft</td><td>What that price works out to per foot</td><td>Arithmetic on the row above</td><td><span class="tier inferred">inferred</span></td><td><span class="tier guess">C</span></td></tr>
@@ -217,10 +229,10 @@
 
     <h3>Four things the checks turned up</h3>
     <div class="finds">
-      <div class="card"><h3>A number that was not on the page</h3><p>A counter reading <b>12 units commissioned</b> sat in the site&rsquo;s source code. Opening the page in a browser, it measures zero pixels tall &mdash; left in the markup, invisible to visitors. It nearly became evidence of an order book. It is a leftover.</p></div>
-      <div class="card"><h3>A licence that is not on the register</h3><p>The company states it is a licensed general contractor in California. The state register lists <b>no licence under its name</b>, none under its founder&rsquo;s, and no pending application. It may sit under another entity &mdash; so the workup records this as <i>not found</i>, which is a different claim from <i>not there</i>.</p></div>
-      <div class="card"><h3>A price rise wearing a flat price</h3><p>The three headline prices have not moved since 2024. The floor areas behind them have: <b>395&rarr;380, 595&rarr;570, 750&rarr;720 sq ft</b>. Same price, less house, which is a price increase per square foot presented as steady pricing.</p></div>
-      <div class="card"><h3>A first attempt nobody wrote down</h3><p>The founder ran this before. <b>Formdwell</b>, 2017, backed by Autodesk and Village Global, pitched a &ldquo;mobile construction factory&rdquo; &mdash; the same sentence. Its site is still up as a stub. No sale, no closure notice, no recorded ending. Bios list prior companies; outcomes are the part they leave out.</p></div>
+      <div class="card"><h4>A number that was not on the page</h4><p>A counter reading <b>12 units commissioned</b> sat in the site&rsquo;s source code. Opening the page in a browser, it measures zero pixels tall &mdash; left in the markup, invisible to visitors. It nearly became evidence of an order book. It is a leftover.</p></div>
+      <div class="card"><h4>A licence that is not on the register</h4><p>The company states it is a licensed general contractor in California. The state register lists <b>no licence under its name</b>, none under its founder&rsquo;s, and no pending application. It may sit under another entity &mdash; so the workup records this as <i>not found</i>, which is a different claim from <i>not there</i>.</p></div>
+      <div class="card"><h4>A price rise wearing a flat price</h4><p>The three headline prices have not moved since 2024. The floor areas behind them have: <b>395&rarr;380, 595&rarr;570, 750&rarr;720 sq ft</b>. Same price, less house, which is a price increase per square foot presented as steady pricing.</p></div>
+      <div class="card"><h4>A first attempt nobody wrote down</h4><p>The founder ran this before. <b>Formdwell</b>, 2017, backed by Autodesk and Village Global, pitched a &ldquo;mobile construction factory&rdquo; &mdash; the same sentence. Its site is still up as a stub. No sale, no closure notice, no recorded ending. Bios list prior companies; outcomes are the part they leave out.</p></div>
     </div>
 
     <p class="caption" style="max-width:74ch;margin:22px 0 0">The four documents behind all of this are at the top of the page.</p>
@@ -236,6 +248,8 @@
     <p class="note">It works from public records only, so a private company&rsquo;s footprint is often thin and a real workup contains honest guesses and unknowns; that is the point. The repository and the two earlier workups stay private &mdash; the one below is published in full so the method can be judged on its output rather than on its description.</p>
   </section>
 
+  </main>
   <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Claude Code</span><a href="../../">All projects</a></footer>
 </div>
+<script src="../../assets/site.js" defer></script>
 </body></html>

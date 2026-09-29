@@ -2,8 +2,12 @@
 """Generate the 16:9 thumbnails the gallery cards show (projects/<slug>/thumb.png, 1200x675).
 
 Web projects are screenshotted with headless Chrome from a local static server started here (pages
-fetch their data with relative URLs, which file:// would block). iOS projects get a composite of their
-simulator screenshots on the gallery's gradient, because they do not run in a browser.
+fetch their data with relative URLs, which file:// would block), in the light theme. iOS projects get a
+composite of their simulator screenshots on the site's paper tone, because they do not run in a browser.
+
+Page crops are pixel offsets into a screenshot of the page at `window` size, so they drift when a page's
+layout changes: after restyling a page, re-measure (the element's getBoundingClientRect at that window
+width) and re-run, then open each thumb.png and check it at card size.
 
     python3 tools/make_thumbs.py            # every project in THUMBS
     python3 tools/make_thumbs.py fitlog     # one slug
@@ -21,7 +25,7 @@ import tempfile
 import threading
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
@@ -30,18 +34,25 @@ W, H = 1200, 675
 
 # slug -> how to make its thumbnail
 #   page:   URL path under the site root, shot at `window` (w, h); `crop` = (left, top) of a 16:9 box
-#           whose width is `crop_w` in the screenshot, then scaled to W x H
+#           whose width is `crop_w` in the screenshot, then scaled to W x H (the box must fit the window)
 #   phones: simulator screenshots composited on the gradient
+#   image:  a local screenshot (path under the site root); `crop` and `crop_w` as for page, no browser
+#   colors: optional; quantize the saved PNG to this many colours (keeps flat, photo-free shots small)
 THUMBS: dict[str, dict] = {
+    "afterimage": {"image": "projects/afterimage/screenshots/home.jpg", "crop": (0, 0), "crop_w": 1440,
+                   "colors": 256},
     "equity-research": {"page": "projects/equity-research/symbol/NVDA.html", "window": (1400, 1000),
                         "crop": (0, 120), "crop_w": 1400, "wait": 9000},
-    "tucson-grid-battery-model": {"page": "projects/tucson-grid-battery-model/", "window": (1400, 1900),
-                                  "crop": (0, 985), "crop_w": 1400, "wait": 9000},
-    "company-research-agent": {"page": "projects/company-research-agent/", "window": (1400, 900),
-                               "crop": (0, 0), "crop_w": 1400, "wait": 4000},
-    "soc-analysis": {"page": "projects/soc-analysis/", "window": (1400, 2000),
-                     "crop": (0, 1110), "crop_w": 1400, "wait": 8000},
-    "fitlog": {"phones": ["projects/fitlog/screenshots/coach.png", "projects/fitlog/screenshots/workout.png",
+    # the "Every hour of 2025" chart card, with the next card's heading below it
+    "tucson-grid-battery-model": {"page": "projects/tucson-grid-battery-model/", "window": (1400, 2100),
+                                  "crop": (150, 1370), "crop_w": 1100, "wait": 9000},
+    # "Which number to attack first": the sensitivity ranking, each assumption tagged with its evidence tier
+    "company-research-agent": {"page": "projects/company-research-agent/", "window": (1400, 4800),
+                               "crop": (150, 4113), "crop_w": 1100, "wait": 4000},
+    # the model on a real stock: the figure strip and the fragility score over AVGO's price
+    "soc-analysis": {"page": "projects/soc-analysis/", "window": (1400, 4000),
+                     "crop": (122, 3280), "crop_w": 1156, "wait": 8000},
+    "fitlog": {"phones": ["projects/fitlog/screenshots/coach.png", "projects/fitlog/screenshots/logging.png",
                           "projects/fitlog/screenshots/progress.png"]},
 }
 
@@ -70,23 +81,31 @@ def shoot(spec: dict, out: Path) -> None:
                         f"--window-size={w},{h}", f"--virtual-time-budget={spec.get('wait', 5000)}",
                         f"--screenshot={shot}", url], check=True, capture_output=True, timeout=120)
         img = Image.open(shot).convert("RGB")
+    crop_save(img, spec, out)
+
+
+def crop_save(img: Image.Image, spec: dict, out: Path) -> None:
+    """Crop the 16:9 box `crop`/`crop_w` describes and save it scaled to W x H."""
     left, top = spec["crop"]
     cw = spec["crop_w"]
     ch = round(cw * H / W)
     box = (left, top, min(left + cw, img.width), min(top + ch, img.height))
     img = img.crop(box).resize((W, H), Image.LANCZOS)
+    if spec.get("colors"):
+        img = img.quantize(spec["colors"], method=Image.Quantize.MEDIANCUT, dither=Image.Dither.FLOYDSTEINBERG)
     img.save(out, optimize=True)
 
 
 def gradient() -> Image.Image:
-    """The gallery's placeholder gradient (#3b5bdb -> #6d28d9), diagonal."""
-    a, b = (0x3B, 0x5B, 0xDB), (0x6D, 0x28, 0xD9)
+    """The site's paper tone, a quiet vertical fall from --surface-2 (#efe9dd) to a slightly deeper paper."""
+    a, b = (0xEF, 0xE9, 0xDD), (0xE2, 0xDA, 0xC9)
     img = Image.new("RGB", (W, H))
     px = img.load()
     for y in range(H):
+        t = y / (H - 1)
+        c = tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
         for x in range(W):
-            t = (x / W + y / H) / 2
-            px[x, y] = tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
+            px[x, y] = c
     return img
 
 
@@ -103,9 +122,10 @@ def composite(paths: list[str], out: Path) -> None:
         r = round(s.width * 0.11)
         mask = Image.new("L", s.size, 0)
         ImageDraw.Draw(mask).rounded_rectangle((0, 0, s.width - 1, s.height - 1), radius=r, fill=255)
-        shadow = Image.new("RGBA", (s.width + 40, s.height + 40), (0, 0, 0, 0))
-        ImageDraw.Draw(shadow).rounded_rectangle((20, 24, s.width + 20, s.height + 24), radius=r, fill=(0, 0, 0, 90))
-        img.paste(shadow, (x - 20, y - 20), shadow)
+        shadow = Image.new("RGBA", (s.width + 80, s.height + 80), (0, 0, 0, 0))
+        ImageDraw.Draw(shadow).rounded_rectangle((40, 50, s.width + 40, s.height + 50), radius=r, fill=(40, 30, 10, 80))
+        shadow = shadow.filter(ImageFilter.GaussianBlur(16))
+        img.paste(shadow, (x - 40, y - 40), shadow)
         img.paste(s, (x, y), mask)
         x += s.width + gap
     img.save(out, optimize=True)
@@ -120,6 +140,8 @@ def main() -> None:
             out = ROOT / "projects" / slug / "thumb.png"
             if "phones" in spec:
                 composite(spec["phones"], out)
+            elif "image" in spec:
+                crop_save(Image.open(ROOT / spec["image"]).convert("RGB"), spec, out)
             else:
                 if httpd is None:
                     httpd = serve()

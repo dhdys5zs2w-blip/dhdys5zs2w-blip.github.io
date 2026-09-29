@@ -1,22 +1,42 @@
 {
   "site": {
     "name": "Ben Meyer",
-    "tagline": "Research and software projects, designed and directed by me and built with Claude Code",
+    "tagline": "Research and software projects, designed and directed by me and built with AI coding agents, mostly Claude Code",
     "email": "benmeyer753@gmail.com",
     "github": "",
     "linkedin": "https://www.linkedin.com/in/bencmeyer3/",
-    "intro": "Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed Claude Code through the build; every page says what the thing does and the thinking behind it.",
+    "intro": "Each project started as a question or a need of mine. I did the research, set the design and the rules, and directed an AI coding agent through the build: Claude Code for most, OpenAI’s Codex for Afterimage. Every page says what the thing does and the thinking behind it.",
     "process": {
       "heading": "How I work",
       "paragraphs": [
         "Every project here started as a question I actually wanted answered: whether battery storage pencils out for Tucson’s grid, whether the physics behind avalanches says anything useful about a stock, whether I could get a training plan that would hold me to it. I do the research first, and I write the rules down before there is any code to bend them.",
-        "The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only 50 of the roughly 100 live days it needs — a number that isn’t earned yet shouldn’t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn’t a result.",
+        "The part I care most about is deciding what would count as evidence before I see the results, and saying out loud what would prove me wrong. On the research platform every experiment is registered before it runs and the model is frozen, and the site reports that it has only {{manifest:record.live_days|59|max=249}} of the roughly 250 live days it needs — a number that isn’t earned yet shouldn’t be shown as if it were. On the volatility work I checked the signal against the volatility that actually followed, then against real option quotes with trading costs, because a chart that looks good in hindsight isn’t a result.",
         "Then I use the thing I built and let that change it. FitLog first planned every training day from scratch; a fixed weekly program turned out to serve me better, so I had the daily planner cut rather than kept.",
-        "Claude Code wrote most of the code on this site — I’d rather say that plainly than let it be inferred. What’s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn’t say what I wanted. The direction and the judgment are mine; most of the typing isn’t."
+        "AI coding agents wrote most of the code here — Claude Code for most projects, OpenAI’s Codex for Afterimage — and I’d rather say that plainly than let it be inferred. What’s mine is the question, the research behind it, the rules and the specification, the decisions the build kept raising, and the review of every result, including the ones that didn’t say what I wanted. The direction and the judgment are mine; most of the typing isn’t."
       ]
     }
   },
   "projects": [
+    {
+      "slug": "afterimage",
+      "title": "Afterimage",
+      "type": "web",
+      "description": "My print-on-demand art store, in soft launch on Shopify: customers turn an idea into artwork in an AI studio and order it on a tee or a sticker pack. It runs within spending limits on AI and suppliers, and checks every print file before it goes out.",
+      "tech": [
+        "Shopify",
+        "Print on demand",
+        "AI image studio",
+        "OpenAI Codex"
+      ],
+      "date": "2026-09",
+      "pattern": "hosted",
+      "thumb": "projects/afterimage/thumb.png",
+      "cta": "View the case study →",
+      "highlight": {
+        "value": "28",
+        "label": "house designs, each as a tee or a sticker pack"
+      }
+    },
     {
       "slug": "equity-research",
       "title": "Quant Equity Research Platform",
@@ -48,7 +68,11 @@
       ],
       "date": "2026-09",
       "pattern": "case-study",
-      "thumb": "projects/fitlog/thumb.png"
+      "thumb": "projects/fitlog/thumb.png",
+      "highlight": {
+        "value": "107",
+        "label": "automated coaching scenarios"
+      }
     },
     {
       "slug": "tucson-grid-battery-model",
@@ -64,7 +88,11 @@
       "date": "2026-09",
       "pattern": "self-contained",
       "thumb": "projects/tucson-grid-battery-model/thumb.png",
-      "cta": "Open the explorer →"
+      "cta": "Open the explorer →",
+      "highlight": {
+        "value": "3,448 MW",
+        "label": "annual peak"
+      }
     },
     {
       "slug": "company-research-agent",
@@ -80,7 +108,11 @@
       "date": "2026-09",
       "pattern": "case-study",
       "thumb": "projects/company-research-agent/thumb.png",
-      "cta": "Read the worked example →"
+      "cta": "Read the worked example →",
+      "highlight": {
+        "value": "53",
+        "label": "numbers checked and tagged"
+      }
     },
     {
       "slug": "soc-analysis",
@@ -96,7 +128,11 @@
       "date": "2025-12",
       "pattern": "case-study",
       "thumb": "projects/soc-analysis/thumb.png",
-      "cta": "View the study and live model →"
+      "cta": "View the study and live model →",
+      "highlight": {
+        "value": "7",
+        "label": "statistical signatures of a critical system"
+      }
     }
   ]
 }

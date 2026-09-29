@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterimage — Ben Meyer</title>
+<meta name="description" content="Afterimage is a print-on-demand art store Ben Meyer runs, in soft launch on Shopify: customers turn an idea into their own artwork in an AI studio and order it on a tee or a sticker pack. Built with OpenAI's Codex.">
+<meta name="theme-color" content="#f5f1e8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%231c1a17'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='29' text-anchor='middle' fill='%23f5f1e8'%3EBM%3C/text%3E%3Crect x='15' y='50' width='34' height='2' fill='%236f95e0'/%3E%3C/svg%3E">
+<script>!function(d){d.classList.add("js");try{var t=localStorage.getItem("bm-theme");if(t==="light"||t==="dark")d.setAttribute("data-theme",t)}catch(e){}try{if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("reveal")}catch(e){}}(document.documentElement)</script>
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/case-study.css">
+<style>
+/* page-specific rules only */
+.app-id { display: flex; align-items: center; gap: 14px; margin: 0 0 10px; }
+.app-id img { width: 48px; height: 48px; flex: none; }
+.app-id h1 { margin: 0; }
+/* on a phone the icon sits above the title, so the title keeps the full width */
+@media (max-width: 560px) { .app-id { flex-direction: column; align-items: flex-start; gap: 12px; } }
+.prose ul.tight li { margin-bottom: 8px; }
+.prose ul.tight li b { font-weight: 600; }
+.shots.desk { grid-template-columns: 1fr 1fr; gap: 20px; }
+.shots.desk .wide { grid-column: 1 / -1; }
+.shots.phones.pair { grid-template-columns: repeat(2, minmax(0, 250px)); gap: 20px; justify-content: center; }
+@media (max-width: 640px) {
+  .shots.desk { grid-template-columns: 1fr; }
+  .shots.phones.pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <nav class="cs-top"><a href="../../">&larr; Ben Meyer</a><span class="crumb">Projects / <b>Afterimage</b></span><span class="cs-tools" data-theme-slot></span></nav>
+
+  <main id="main" tabindex="-1">
+  <header class="cs-head">
+    <p class="eyebrow"><span class="badge">Web app</span><span>Sep 2026</span></p>
+    <div class="app-id">
+      <img src="mark.svg" alt="Afterimage mark" width="48" height="48">
+      <h1>Afterimage &mdash; make your own artwork, then put it on a tee or a sticker pack</h1>
+    </div>
+    <p class="lede">A print-on-demand art store I run. Customers describe an idea, shape it into artwork in an AI studio, and order it on a tee or a sticker pack; a collection of house designs sits alongside. It is in soft launch on Shopify, and its first paid order, a test purchase of my own, has been printed and delivered. OpenAI&rsquo;s Codex coding agent wrote most of the code under my direction.</p>
+    <div class="chips"><span>E-commerce</span><span>Shopify</span><span>AI image studio</span><span>Print on demand</span><span>Built with Codex</span></div>
+  </header>
+
+  <section class="facts">
+    <div class="fact"><span class="n">28</span><span class="l">house designs, each as a tee or a sticker pack</span></div>
+    <div class="fact"><span class="n">5</span><span class="l">tee sizes, S to 2XL, on a black garment-dyed tee</span></div>
+    <div class="fact"><span class="n">3</span><span class="l">sticker-pack sizes: 4, 8 or 25 matching stickers</span></div>
+    <div class="fact"><span class="n">127</span><span class="l">automated tests, run offline with no real orders or charges</span></div>
+  </section>
+
+  <section class="prose">
+    <h2>The idea</h2>
+    <p>I didn&rsquo;t want another anonymous print-on-demand catalog. I wanted a store with its own taste, where what sets it apart is that you can make the art yourself: a desert campsite, an imaginary animal, a scene from a trip. So the Studio leads and the ready-made collection supports it. The limit is taste, not subject, so music, nature, travel and the surreal all fit. The store is also open about how the art is made: it is labelled AI-assisted, product images are marked as illustrations, and the Studio and About pages explain the AI part plainly. The art itself is sold on how it looks.</p>
+  </section>
+
+  <section class="prose">
+    <h2>What it does</h2>
+    <ul class="tight">
+      <li><b>Turns an idea into a brief you can edit.</b> Describe a subject, a place or a feeling; the Studio drafts a visual brief you can review and rewrite before any artwork is made.</li>
+      <li><b>Makes the artwork and keeps it.</b> Finished pieces are saved to your account, open at full size for inspection, and can go on a product now or later. Revising an idea never overwrites what you already made.</li>
+      <li><b>Sells real things.</b> A black garment-dyed tee in five sizes, or packs of 4, 8 or 25 matching 3-inch kiss-cut stickers, printed on demand by Printful. The house designs come the same two ways, with search and filters in the shop and an art library for a closer look.</li>
+      <li><b>Keeps the spending in bounds.</b> A small service I run sits between the store and its suppliers. It holds AI generation to a fixed monthly budget and per-customer allowances, confirms that an order&rsquo;s artwork belongs to the customer who made it, and rechecks the supplier&rsquo;s cost before any order is sent.</li>
+      <li><b>Checks the print file before it goes out.</b> After the first sample sticker looked pixelated, I tightened the file checks: new artwork is made at 2048 &times; 2048, and an order goes to print only if the file is the untouched original and covers the product&rsquo;s print area without being enlarged.</li>
+    </ul>
+  </section>
+
+  <section class="shots desk">
+    <figure class="wide"><img src="screenshots/home.jpg" alt="Afterimage homepage: the headline &lsquo;Make it your own.&rsquo; beside an illustrated journey from a written idea, to artwork to review, to a black tee" width="1440" height="900" loading="lazy"><figcaption>Home &mdash; the Studio leads: an idea, the art to review, and the product it becomes.</figcaption></figure>
+    <figure><img src="screenshots/studio-idea.jpg" alt="Afterimage Studio at step one: an idea typed into the prompt box, starter-idea buttons, and sample artwork on the canvas" width="1440" height="1000" loading="lazy"><figcaption>Studio, step one &mdash; describe the idea, or start from a suggestion.</figcaption></figure>
+    <figure><img src="screenshots/studio-product.jpg" alt="Afterimage Studio at step three: the sample artwork on a black tee, with tee and sticker-pack choices and size buttons" width="1440" height="1000" loading="lazy"><figcaption>Studio, step three &mdash; the approved art on a tee or a sticker pack.</figcaption></figure>
+  </section>
+
+  <section class="shots phones pair">
+    <figure><img src="screenshots/shop-mobile.jpg" alt="Afterimage shop on a phone: 28 designs, a tee or sticker-pack switch, search, style and sort controls, and the first tees" width="780" height="1688" loading="lazy"><figcaption>Shop on a phone &mdash; 28 designs, as tees or sticker packs.</figcaption></figure>
+    <figure><img src="screenshots/studio-mobile.jpg" alt="Afterimage Studio on a phone: the sample artwork on a black tee, with the tee chosen and ready to order" width="780" height="1688" loading="lazy"><figcaption>Studio on a phone &mdash; the chosen art on a tee, ready to order.</figcaption></figure>
+  </section>
+  <p class="note">Screens from the store&rsquo;s design preview, which uses existing house art as its sample; it generates no images and places no orders.</p>
+
+  <section class="prose">
+    <h2>What it shows</h2>
+    <ul class="tight">
+      <li>Knowing what the product is: I picked &ldquo;make your own&rdquo; as the one thing that sets the store apart and had the homepage and navigation reworked to lead with it, with the catalog in a supporting role.</li>
+      <li>Taking a store to a live soft launch: real suppliers and real payments, behind limits the service enforces on AI and supplier spending.</li>
+      <li>Honesty over polish: artwork labelled as AI-assisted, product images labelled as illustrations, and no claim about print quality until a physical sample backs it.</li>
+      <li>Directing a coding agent through a week of live releases, with offline checks before each one and no paid test run without my approval.</li>
+    </ul>
+    <p class="note">In soft launch on Shopify; the higher-resolution print files have not yet been checked in a physical sample.</p>
+  </section>
+
+  </main>
+  <footer class="cs-foot"><span>&copy; Ben Meyer &middot; Built with Codex</span><a href="../../">All projects</a></footer>
+</div>
+<script src="../../assets/site.js" defer></script>
+</body></html>
