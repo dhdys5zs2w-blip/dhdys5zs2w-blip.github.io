@@ -28,6 +28,8 @@
     return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\//, "")) + (hash ? "#" + hash : "");
   };
   const symbolHref = (sym) => window.QE_ROOT + "symbol/" + encodeURIComponent(sym) + ".html";
+  // a page that runs a query per request has no static copy to link to
+  if (snapshot) document.querySelectorAll("[data-needs-server]").forEach((el) => el.remove());
 
   async function qeFetch(url) {
     announce(1);

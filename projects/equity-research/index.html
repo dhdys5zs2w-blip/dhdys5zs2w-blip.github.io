@@ -45,6 +45,7 @@ try {
         <ul class="hood-list"><li><a href="sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li><li><a href="about/"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
           <li><a href="lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
           <li><a href="model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li data-needs-server><a href="/returns"><strong>Return explorer</strong><span>Slice the stock-days by model rank, earnings, sector or indicators, and see the returns that followed.</span></a></li>
           <li><a href="research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
           <li><a href="health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
         </ul>
@@ -59,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-28 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-29 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 
@@ -99,9 +100,9 @@ try {
           data it had never seen, and how it has done live since July&nbsp;1 &mdash; with the
           give-or-take left on every number.</p>
       </div>
-      <figure class="st-field" id="st-field" data-rise style="--d: 3">
-        <svg id="universe-field" class="st-field-svg" role="img"
-             aria-label="The stocks the model ranks, one dot each, with its current picks lit"></svg>
+      <figure class="st-field" id="st-field" data-rise style="--d: 3"><div id="universe-field" class="st-field-rows" role="img"
+             aria-label="The stocks the model ranks, one dot each in a row per sector, with its current picks lit"></div>
+        <p class="st-field-tip" id="field-tip" aria-hidden="true" hidden></p>
         <figcaption id="field-caption">The stocks it ranks, one dot each; its current picks are lit.</figcaption>
       </figure>
     </div>
@@ -645,9 +646,9 @@ try {
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-28. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-29. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-09-28T23:20-04:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
+<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-09-29T16:54-04:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
 <script src="static/fx.js"></script>
 <script src="static/story.js"></script>
 </body>

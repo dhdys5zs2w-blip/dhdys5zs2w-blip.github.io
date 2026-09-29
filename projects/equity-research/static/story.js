@@ -632,35 +632,105 @@
     drawPicks(m);
   }
 
-  // The hero: every stock in today's list as one dot, in sector order (largest
-  // sector first) with alternate sectors shaded so the groups show, its current
-  // picks lit. A lit dot opens that stock.
+  // The hero: every stock in today's list as one dot, a labelled row per
+  // sector, the model's current picks lit and first in their row, so the
+  // picture answers one question at a glance — of everything it ranks, what
+  // does it hold, and where. Rows run from the sector with the most picks
+  // down. Pointing at a dot names the stock in a card (on a touch screen the
+  // first tap names it, a second opens it): the field this replaced was a
+  // grid of unlabelled sectors whose dots opened pages they never named.
   function field(m, names) {
-    const svg = $("universe-field");
-    if (!svg) return;
-    // once the hero stacks (story.css, 860px) the field spans the column: a wide,
-    // short strip there, rather than a square that fills a phone's screen
-    const stacked = window.matchMedia && window.matchMedia("(max-width: 860px)").matches;
-    const cols = stacked ? 40 : 25, cell = 16;
-    const rows = Math.ceil(names.length / cols);
-    let band = -1, prev = null;
-    svg.setAttribute("viewBox", "0 0 " + cols * cell + " " + rows * cell);
-    svg.innerHTML = names.map((n, i) => {
-      if (n.sector !== prev) { band++; prev = n.sector; }
-      const x = (i % cols) * cell + cell / 2, y = Math.floor(i / cols) * cell + cell / 2;
-      const cls = [n.in_book ? "lit" : "", band % 2 ? "alt" : ""].filter(Boolean).join(" ");
-      return '<circle cx="' + x + '" cy="' + y + '" r="' + (n.in_book ? 5.6 : 4.4) + '"' +
-        (cls ? ' class="' + cls + '"' : "") + (n.in_book ? ' data-sym="' + qe.esc(n.symbol) + '"' : "") +
-        ' style="--i:' + i + '">' + "<title>" + qe.esc(n.symbol) + (n.name ? " — " + qe.esc(n.name) : "") +
-        " · " + qe.esc(sectorName(n.sector)) + (n.in_book ? " · one of the model's picks" : "") + "</title></circle>";
-    }).join("");
-    svg.addEventListener("click", (ev) => {
-      const c = ev.target.closest && ev.target.closest("circle[data-sym]");
-      if (c) location.href = qe.symbolHref(c.dataset.sym);
+    const box = $("universe-field"), tip = $("field-tip");
+    if (!box) return;
+    const nBook = names.filter((n) => n.in_book).length;
+    const nRanked = names.filter((n) => n.rank != null).length;
+    const byRank = (a, b) => (a.rank == null) - (b.rank == null) || a.rank - b.rank || a.symbol.localeCompare(b.symbol);
+    const groups = [];
+    names.forEach((n) => {
+      let g = groups.find((x) => x.sector === n.sector);
+      if (!g) groups.push(g = { sector: n.sector, names: [], held: 0 });
+      g.names.push(n);
+      if (n.in_book) g.held++;
     });
-    requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add("in")));
-    put("field-caption", names.length + " stocks in today's list, one dot each, grouped by sector (alternate " +
-      "sectors shaded). The " + (m.n_book || 0) + " the model holds now are lit.");
+    groups.forEach((g) => g.names.sort((a, b) => b.in_book - a.in_book || byRank(a, b)));
+    // the names with no sector label go last whatever they hold: they are not a sector
+    groups.sort((a, b) => (a.sector === "UNKNOWN") - (b.sector === "UNKNOWN") ||
+      b.held - a.held || b.names.length - a.names.length);
+    const order = [];
+    box.innerHTML = '<p class="sf-key"><span><i class="lit"></i>one of its ' + nBook + " picks</span>" +
+      '<span><i></i>not held</span><span class="sf-how">' + (touch ? "tap" : "point at") +
+      " a dot to name it</span></p>" + groups.map((g) =>
+      '<div class="sf-row"><p class="sf-label"><b>' + qe.esc(sectorName(g.sector)) + "</b><span>" +
+        (g.held ? g.held : "none") + " of " + g.names.length + " picked</span></p>" +
+        '<div class="sf-dots">' + g.names.map((n) => {
+          order.push(n);
+          const k = order.length - 1;
+          return '<a class="sf-dot' + (n.in_book ? " lit" : "") + '" href="' + qe.symbolHref(n.symbol) +
+            '" tabindex="-1" data-k="' + k + '" style="--i:' + k + '"></a>';
+        }).join("") + "</div></div>").join("");
+    requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add("in")));
+
+    // the card: placed above the dot, or below it near the field's top edge,
+    // and kept inside the figure; it never takes the pointer itself
+    const fig = box.parentElement;
+    let hot = null, armed = null, pointer = "mouse";
+    const name = (n) => {
+      tip.innerHTML = '<b class="mono">' + qe.esc(n.symbol) + "</b>" + (n.name ? " — " + qe.esc(n.name) : "") +
+        "<span>" + qe.esc(sectorName(n.sector)) + " · " +
+        (n.rank != null ? "ranked #" + n.rank + " of " + nRanked : "not ranked") + "</span>" +
+        "<span>" + (n.in_book ? "<strong>One of the model's " + nBook + " picks</strong>" : "Not one of its picks") + "</span>" +
+        '<span class="sf-go">' + (pointer === "mouse" ? "Click" : "Tap again") + " to open its page</span>";
+    };
+    const show = (a) => {
+      if (!tip || a === hot) return;
+      if (hot) { hot.classList.remove("hot"); hot.closest(".sf-row").classList.remove("on"); }
+      hot = a;
+      a.classList.add("hot");
+      a.closest(".sf-row").classList.add("on");
+      name(order[+a.dataset.k]);
+      tip.hidden = false;
+      const f = fig.getBoundingClientRect(), r = a.getBoundingClientRect();
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      const x = Math.max(0, Math.min(f.width - w, r.left + r.width / 2 - f.left - w / 2));
+      const above = r.top - f.top - h - 8;
+      tip.style.left = x + "px";
+      tip.style.top = (above >= 0 ? above : r.bottom - f.top + 8) + "px";
+    };
+    const hide = () => {
+      if (hot) { hot.classList.remove("hot"); hot.closest(".sf-row").classList.remove("on"); }
+      hot = armed = null;
+      if (tip) tip.hidden = true;
+    };
+    box.addEventListener("pointerdown", (ev) => { pointer = ev.pointerType || "mouse"; });
+    box.addEventListener("pointerover", (ev) => {
+      if (ev.pointerType !== "mouse") return;
+      pointer = "mouse";
+      const a = ev.target.closest(".sf-dot");
+      if (a) show(a);
+    });
+    box.addEventListener("pointerleave", (ev) => { if (ev.pointerType === "mouse") hide(); });
+    // a tap has no hover to name the stock first, so the first tap on a dot
+    // names it and only a second tap on the same dot follows the link
+    box.addEventListener("click", (ev) => {
+      const a = ev.target.closest(".sf-dot");
+      if (!a || pointer === "mouse" || armed === a) return;
+      ev.preventDefault();
+      show(a);
+      armed = a;
+    });
+    document.addEventListener("pointerdown", (ev) => { if (!box.contains(ev.target)) hide(); });
+
+    const top = groups[0];
+    const none = groups.filter((g) => !g.held && g.sector !== "UNKNOWN").map((g) => sectorName(g.sector));
+    const or = (xs) => (xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " or " + xs[xs.length - 1]);
+    let say = "Every stock the model ranks, " + names.length + " in all, one dot each.";
+    if (top && top.held) {
+      say += " Of the " + nBook + " it holds now, " + top.held + (top.held === 1 ? " is" : " are") + " in " +
+        sectorName(top.sector) + (none.length > 3 ? " and " + none.length + " sectors have none"
+          : none.length ? " and none in " + or(none) : "") + ".";
+    }
+    box.setAttribute("aria-label", say);
+    put("field-caption", say);
     put("step-universe", String(names.length));
   }
 

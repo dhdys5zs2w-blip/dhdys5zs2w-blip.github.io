@@ -45,6 +45,7 @@ try {
         <ul class="hood-list"><li><a href="../sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li><li><a href="../about/"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
           <li><a href="../lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
           <li><a href="../model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li data-needs-server><a href="/returns"><strong>Return explorer</strong><span>Slice the stock-days by model rank, earnings, sector or indicators, and see the returns that followed.</span></a></li>
           <li><a href="../research/" aria-current="page"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
           <li><a href="../health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
         </ul>
@@ -59,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-28 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-29 from the live 27.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -74,7 +75,7 @@ try {
 <nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-closed">Closed directions</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
 <header class="page-intro rs-intro">
   <div class="intro-text">
-    <p class="eyebrow">Forking-paths ledger &middot; 18 registrations &middot; 9 blocks with results</p>
+    <p class="eyebrow">Forking-paths ledger &middot; 19 registrations &middot; 9 blocks with results</p>
     <h1>Research ledger</h1>
     <p class="lede">Every block was registered &mdash; hypothesis, statistic and decision rule
     fixed in a committed document &mdash; before it ran. What was committed to comes first; what
@@ -108,7 +109,7 @@ try {
         </div>
       </div>
       <dl class="rs-ledger-nums">
-        <div><dt>registrations</dt><dd class="mono" data-count="18">18</dd></div>
+        <div><dt>registrations</dt><dd class="mono" data-count="19">19</dd></div>
         <div><dt>blocks</dt><dd class="mono" data-count="9">9</dd></div>
         <div><dt>statistics</dt><dd class="mono" data-count="187">187</dd></div>
         <div><dt>closed</dt><dd class="mono" data-count="8">8</dd></div>
@@ -705,7 +706,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
   <header class="panel-head">
     <div>
       <h2>Pre-registrations</h2>
-      <p class="panel-sub">18 blocks, oldest first: the document, the items
+      <p class="panel-sub">19 blocks, oldest first: the document, the items
       committed to, and the commit that fixed them before anything ran. Where a registration's
       blocks wrote statistics to this ledger, they are linked.</p>
     </div>
@@ -957,6 +958,19 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         </div>
         <p class="rs-reg-note">S1: the shadow lane&#39;s promotion process, fixed before the shadow model exists</p>
         <ol class="compact small rs-items"><li>S1</li></ol>
+        <span class="rs-itemcount small">1 item committed to</span>
+        
+      </li>
+    <li class="rs-reg">
+        
+        <div class="rs-reg-head">
+          <span class="rs-node" aria-hidden="true"></span>
+          <time class="mono">2026-09-29 16:29</time>
+          <span class="mono strong rs-reg-doc">docs/pre-registered-Q3A.md</span>
+          <span class="rs-commit mono" title="the commit that fixed the document">7b8eba200f</span>
+        </div>
+        <p class="rs-reg-note">Q3 amended onto the traded leg, complete panel, realised-risk controls; recorded before the backfill restart</p>
+        <ol class="compact small rs-items"><li>Q3A</li></ol>
         <span class="rs-itemcount small">1 item committed to</span>
         
       </li>
@@ -3608,9 +3622,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-09-28. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-09-29. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-28T23:20-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-29T16:54-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/research.js"></script>
 </body>

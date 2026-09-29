@@ -412,6 +412,23 @@ def write_json(path: Path, obj: Any) -> int:
     return len(text.encode())
 
 
+BUSY_ATTEMPTS = 60   # x BUSY_WAIT_S: up to two minutes per request before the export gives up
+BUSY_WAIT_S = 2.0
+
+
+def connect_read_only() -> duckdb.DuckDBPyConnection:
+    """A read-only handle, waiting out another process's write lock (see fetch() in main)."""
+    for attempt in range(BUSY_ATTEMPTS):
+        try:
+            return duckdb.connect(str(DB_PATH), read_only=True)
+        except duckdb.IOException as exc:
+            if "lock" not in str(exc).lower() or attempt == BUSY_ATTEMPTS - 1:
+                raise
+            print(f"  database locked by another process, retrying ({attempt + 1})")
+            time.sleep(BUSY_WAIT_S)
+    raise AssertionError("unreachable")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
@@ -425,7 +442,7 @@ def main() -> None:
     t0 = time.time()
 
     # ---- phase A: bulk reads on one connection, main thread only ----------------------------
-    con = duckdb.connect(str(DB_PATH), read_only=True)
+    con = connect_read_only()
     model = con.execute(
         "SELECT model_id, kind, horizon, universe, fit_end, map_id FROM frozen_models "
         "WHERE active ORDER BY created_at LIMIT 1").fetchone()
@@ -525,13 +542,25 @@ def main() -> None:
            "exported": exported, "exported_at": exported_at.isoformat(timespec="minutes"),
            "db_gb": f"{DB_PATH.stat().st_size / 1e9:.1f}"}
 
+    def fetch(path: str, **kw: Any) -> Any:
+        # The app answers 503 "database_busy" while another process holds the write lock. The
+        # options backfill takes it for milliseconds per batch (and resumes at 23:20, inside the
+        # nightly publish), so a busy answer is waited out, not treated as a failed export.
+        for attempt in range(BUSY_ATTEMPTS):
+            r = client.get(path, **kw)
+            if r.status_code != 503 or attempt == BUSY_ATTEMPTS - 1:
+                return r
+            print(f"  {path}: database busy, retrying ({attempt + 1})")
+            time.sleep(BUSY_WAIT_S)
+        return r
+
     def get_json(path: str) -> dict[str, Any]:
-        r = client.get(path)
+        r = fetch(path)
         assert r.status_code == 200, f"{path}: {r.status_code}"
         return r.json()
 
     def get_html(path: str) -> str:
-        r = client.get(path, follow_redirects=True)
+        r = fetch(path, follow_redirects=True)
         assert r.status_code == 200, f"{path}: {r.status_code}"
         return r.text
 
@@ -598,7 +627,7 @@ def main() -> None:
     write_json(api / "market_map.json", get_json("/api/market_map"))
     # The companion panel's payload is optional: when the platform cannot serve it the page
     # already says "did not load", which is the honest static rendering too.
-    r = client.get(f"/api/model/{model_id}/companion")
+    r = fetch(f"/api/model/{model_id}/companion")
     if r.status_code == 200:
         write_json(api / "model" / model_id / "companion.json", r.json())
     else:
@@ -638,7 +667,7 @@ def main() -> None:
     if not args.skip_parquet:
         pq = out / "data" / "parquet"
         pq.mkdir(parents=True, exist_ok=True)
-        con = duckdb.connect(str(DB_PATH), read_only=True)
+        con = connect_read_only()
         tables: list[dict[str, Any]] = []
 
         def copy(name: str, sql: str, note: str) -> None:
