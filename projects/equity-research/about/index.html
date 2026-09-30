@@ -6,7 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>qe — about this project</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
-<script>
+<script>/* as the crawled pages (the platform's base.html): `nav-js` folds the menus away only while
+   fx.js can open them again, and is taken back at `load` if it never marked the nav wired */
+document.documentElement.classList.add("nav-js");
+addEventListener("load", function () {
+  var de = document.documentElement;
+  if (de.getAttribute("data-nav") !== "ready") de.classList.remove("nav-js");
+});
 try {
   var q = new URLSearchParams(location.search).get("theme");
   var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
@@ -16,27 +22,45 @@ try {
 <link rel="stylesheet" href="../static/demo.css">
 </head>
 <body>
+<a class="skip-link" href="#content">Skip to main content</a>
+<!-- The site's own nav, copied from the crawled pages (the export adds SQL console and About to
+     the hood menu). The Return explorer entry goes when the export left the explorer out. -->
 <header class="topnav">
-  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">research browser</span></a>
-  <nav aria-label="Pages">
-    <a href="../index.html">Overview</a>
-    <a href="../screener/">Screener</a>
-    <a href="../model/">Model</a>
-    <a href="../research/">Research</a>
-    <a href="../health/">Health</a>
-    <a href="../sql/">SQL</a>
-    <a href="../about/" class="active">About</a>
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">a stock-ranking model</span></a>
+  <button id="nav-menu-btn" class="nav-menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span>Menu</button>
+  <nav id="site-nav" class="sitenav" aria-label="Site">
+    <a href="../index.html">The story</a>
+    <a href="../screener/">Explore stocks</a>
+    <div class="hood">
+      <button id="hood-btn" class="hood-btn active" type="button" aria-expanded="false" aria-controls="hood-menu">Under the hood<span class="chev" aria-hidden="true"></span></button>
+      <div id="hood-menu" class="hood-menu">
+        <p class="hood-head">Under the hood</p>
+        <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
+        <ul class="hood-list">
+          <li><a href="../sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li>
+          <li><a href="../about/" aria-current="page"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
+          <li><a href="../lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+          <li><a href="../model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li data-x-only><a href="../returns/"><strong>Return explorer</strong><span>Example questions about what stocks did next, after a model pick, an earnings report or a sharp fall, answered when this copy was exported.</span></a></li>
+          <li><a href="../research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
+          <li><a href="../health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
+        </ul>
+      </div>
+    </div>
   </nav>
   <div class="navright">
     <div class="navsearch">
-      <input id="nav-search" type="search" placeholder="search symbol&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Search symbol">
+      <input id="nav-search" type="search" placeholder="Find a stock&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Find a stock by ticker or company name">
       <div id="nav-search-results" class="search-results" hidden></div>
     </div>
+    <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
 </header>
 <div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span id="banner-text">A static snapshot of a personal quant research platform. Every chart and table is the real tool's own output.</span><a href="../sql/">Open the SQL console &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
+<div id="content" class="skip-target" tabindex="-1"></div>
 <main class="about">
   <header class="page-intro">
     <div class="intro-text">
@@ -92,10 +116,10 @@ try {
       <p class="panel-sub">Exported, not rewritten.</p></div></div>
     <div class="two-col">
       <div>
-        <p>Every page here is the platform&rsquo;s own research browser, crawled from the live system so the charts and tables are its real output: the overview, a screener over the current 500-stock universe, ten years of history and patterns for each of 539 symbols, the model&rsquo;s paper record and the tests on it, the research ledger of registered experiments, and a data-health page. The <a href="../sql/">SQL console</a> runs a real database engine in your browser over slices of the same tables, so you can ask your own questions.</p>
+        <p>Every page here is the platform&rsquo;s own research browser, crawled from the live system so the charts and tables are its real output. The <a href="../index.html">front page</a> tells the story for a newcomer, and <a href="../screener/">Explore stocks</a> holds a screener over the current 500-stock universe and ten years of history and patterns for each of <span data-m="symbols">539</span> symbols. The working pages sit under &ldquo;Under the hood&rdquo;: the research notebook, the model&rsquo;s paper record and the tests on it, the research ledger of registered experiments, and a data-health page.<span data-x-only> The <a href="../returns/">Return explorer</a> is there too, in part: <span data-m="x_examples">its six</span> example questions and the view with no conditions carry the platform&rsquo;s own answers, computed at export, and any other question needs the live database.</span> The <a href="../sql/">SQL console</a> runs a real database engine in your browser over slices of the same tables, so you can ask your own questions.</p>
       </div>
       <div>
-        <p>Not here: the data pipeline and the nightly job, history before 2016 on the symbol pages, most of the 25 indicators, and every symbol outside the current universe. Nothing on this site writes anything, and the live platform runs only on a single Mac.</p>
+        <p>Not here: the data pipeline and the nightly job, history before 2016 on the symbol pages, most of the 25 indicators, and pages for stocks outside the current universe, apart from those in the model&rsquo;s live record since July 2026<span data-x-only> (the Return explorer still lists their stock-days, as plain tickers without links)</span>. Nothing on this site writes anything, and the live platform runs only on a single Mac.</p>
         <p class="note">Numbers on this page are read from the export manifest, so they match the snapshot you are looking at.</p>
       </div>
     </div>
@@ -103,9 +127,12 @@ try {
 </main>
 <footer><span>Snapshot of the qe research browser. The real app is a read-only service on a single Mac; it never writes, and neither does this copy. <a href="../sql/">SQL console</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../";</script>
+<!-- QE_SNAPSHOT: this page is part of the copy too, so app.js and fx.js leave out whatever needs
+     the live server (this hand-written page has no export time of its own) -->
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {};</script>
 <script src="../static/demo-shim.js"></script>
 <script src="../static/app.js"></script>
+<script src="../static/fx.js"></script>
 <script>
 (function () {
   const compact = (n) => {
@@ -122,6 +149,12 @@ try {
     set("prices", compact(f.prices_daily));
     set("prices_span", "rows, " + (f.prices_first || "").slice(0, 4) + " → " + (f.prices_last || "").slice(0, 4) + ", " + Number(f.prices_symbols || 0).toLocaleString() + " symbols");
     set("indicators", compact(f.indicator_values));
+    set("symbols", Number(m.symbols_in_demo || 0).toLocaleString());
+    // an export that left the explorer out writes no return_explorer; its lines go with it
+    const x = m.return_explorer, words = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+    const w = (n) => words[n] || String(n);
+    if (!x) document.querySelectorAll("[data-x-only]").forEach((el) => el.remove());
+    else set("x_examples", (x.refused ? w(x.examples - x.refused) + " of its " : "its ") + w(x.examples));
     set("members_ever", Number(f.members_ever || 0).toLocaleString());
     set("delisted", "of which " + Number(f.members_delisted || 0).toLocaleString() + " later delisted — kept, not dropped");
     set("live_days", String(m.record.live_days));

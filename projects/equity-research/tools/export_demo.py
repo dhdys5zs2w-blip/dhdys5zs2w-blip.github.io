@@ -11,30 +11,47 @@ are trimmed to the model's out-of-sample window.
         --out "$PORTFOLIO/projects/equity-research"
 
 What it writes under --out (hand-written files in the folder are left alone):
-    index.html, screener/, model/, research/, health/   crawled pages, URLs rewritten
-    symbol/<SYM>.html                                    one page per symbol in the demo slice
+    index.html, screener/, model/, research/, health/,  crawled pages, URLs rewritten
+    lab/, returns/
+    symbol/<SYM>.html                                    one page per symbol in the demo slice (a full
+                                                         run removes pages and bundles of symbols that left it)
     static/                                              the app's CSS/JS/vendor files, patched
     data/calendar.json, data/search.json, data/manifest.json
     data/api/...                                         model and research payloads, verbatim
+    data/api/returns/...                                 the return explorer's example questions, answered
     data/symbols/<SYM>.json                              per-symbol bundles decoded by static/demo-shim.js
     data/parquet/*.parquet, data/parquet/tables.json     slices for the in-browser SQL console
 
-Options: --limit N (smoke run on N symbols), --reference DIR (also dump the un-encoded payloads so
-tools/verify_shim.mjs can check the JavaScript decoder), --skip-parquet.
+Options: --limit N (smoke run on N symbols; the explorer's questions are still answered in full),
+--reference DIR (also dump the un-encoded payloads and the explorer's keys so
+tools/verify_shim.mjs can check the JavaScript decoder), --skip-parquet, --skip-pages,
+--skip-explorer (for scratch and decoder-smoke runs, and the explorer adds about 75 s: with pages
+it leaves the explorer out of the copy entirely, server-only as on any snapshot; with
+--skip-pages it leaves whatever explorer --out already has untouched).
+
+The explorer is checked and answered before anything is written to --out. If the platform's
+page, scripts or endpoint no longer match what the copy patches, the run logs
+"EXPLORER DISABLED: <reason>" and carries on as if --skip-explorer had been given (the manifest
+records return_explorer_disabled), so a copy edit on one page does not stop the nightly refresh.
 """
 
 from __future__ import annotations
 
 import argparse
+import atexit
+import hashlib
+import html as htmllib
 import json
 import math
 import re
 import shutil
 import sys
+import tempfile
 import time
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qsl
 
 import duckdb
 import polars as pl
@@ -302,7 +319,28 @@ FOOTER = (
 )
 
 
+EXPLORER_NAV = re.compile(
+    r'<li data-needs-server>(<a href="/returns"[^>]*><strong>[^<]*</strong><span>)[^<]*(</span>)')
+# The platform's blurb invites any slice; this copy answers only the page's own examples. The
+# menu is read on every page, so the line has to make sense without the explorer in view.
+EXPLORER_BLURB = ("Example questions about what stocks did next, after a model pick, an earnings report "
+                  "or a sharp fall, answered when this copy was exported.")
+
+
+def explorer_nav(html: str) -> str:
+    """The nav marks pages that need the live server with data-needs-server and app.js drops them
+    from a snapshot. The return explorer ships with its example questions answered (see
+    export_explorer), so its entry stays; any other server-only page keeps the marker. Every
+    crawled page carries the nav, so a miss means the markup changed and the entry would vanish
+    while the palette still offers the page."""
+    html, n = EXPLORER_NAV.subn(lambda m: f"<li>{m.group(1)}{EXPLORER_BLURB}{m.group(2)}", html)
+    assert n == 1, "nav: the return explorer's server-only entry not found"
+    return html
+
+
 def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
+    if ctx["explorer"]:
+        html = explorer_nav(html)
     html = html.replace('"/static/', f'"{prefix}static/')
     html = re.sub(r'href="/symbol/([A-Za-z0-9.\-+]+)(#[^"]*)?"',
                   lambda m: f'href="{prefix}symbol/{m.group(1)}.html{m.group(2) or ""}"', html)
@@ -310,7 +348,7 @@ def rewrite_html(html: str, prefix: str, ctx: dict[str, Any]) -> str:
                   lambda m: f'href="{prefix}model/{m.group(1) or ""}"', html)
     html = re.sub(r'href="/model(#[^"]*)?"',
                   lambda m: f'href="{prefix}model/{m.group(1) or ""}"', html)
-    for p in ("screener", "research", "health", "lab"):
+    for p in ("screener", "research", "health", "lab", "returns"):
         html = re.sub(rf'href="/{p}(#[^"]*)?"',
                       lambda m, p=p: f'href="{prefix}{p}/{m.group(1) or ""}"', html)
     html = html.replace('href="/"', f'href="{prefix}index.html"')
@@ -355,35 +393,54 @@ DEMO_HREF = (
     "    // portfolio demo: app paths -> the static copy's folders\n"
     "    const [p, hash] = path.split(\"#\");\n"
     "    const map = { \"/\": \"index.html\", \"/screener\": \"screener/\", \"/model\": \"model/\",\n"
-    "                  \"/research\": \"research/\", \"/health\": \"health/\", \"/lab\": \"lab/\" };\n"
+    "                  \"/research\": \"research/\", \"/health\": \"health/\", \"/lab\": \"lab/\",\n"
+    "                  \"/returns\": \"returns/\" };\n"
     "    return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\\//, \"\")) + (hash ? \"#\" + hash : \"\");\n"
     "  };"
 )
 APP_SYMBOL_HREF = 'const symbolHref = (sym) => "/symbol/" + encodeURIComponent(sym);'
 DEMO_SYMBOL_HREF = 'const symbolHref = (sym) => window.QE_ROOT + "symbol/" + encodeURIComponent(sym) + ".html";'
 
+# fx.js leaves the explorer out of the command palette in a snapshot (and so out of "g e", which
+# is built from the palette's entries), the same rule as the nav's data-needs-server. The export
+# answers the explorer's examples, so the entry goes back in, unconditionally.
+FX_EXPLORER = re.compile(r'\.\.\.\(qe\.snapshot \? \[\] : \[(\{ label: "Return explorer",[^\n]*?\})\]\),')
+# returns.js, patched where the copy differs from the live page. Each target must occur exactly
+# once, so a platform change fails the export instead of shipping a half-patched page.
+RETURNS_PATCHES = (
+    # On a 422 the page re-reads the answer with a raw fetch() to show the server's reason. The
+    # static copy has no server to ask, so the shim supplies the reason instead.
+    ('(await fetch("/api/returns?" + q)).json()', 'window.QE_DEMO.returnsError("/api/returns?" + q)'),
+    # "yet" promises the question will run once something finishes; in this copy it never will
+    ("\"This question can't run yet — see below.\"", "\"This question can't run in this copy — see below.\""),
+    # the timing measures a static download here, not the platform working out the answer
+    ('" stock-days · " + secs + " s"', '" stock-days · " + (window.QE_API_BASE ? secs + " s" : "stored answer")'),
+    # A refusal clears the figures but left the median's sign colour (a lone red or green dash)
+    # and the step-1 count of the previous answer. Rare on the live page, one edit away here.
+    ('$("x-median").textContent = "—";', '$("x-median").textContent = "—";\n    $("x-median").classList.remove("pos", "neg");'),
+    ('$("x-words").textContent = "No figures: this question did not run.";',
+     '$("x-words").textContent = "No figures: this question did not run.";\n    $("x-start-n").textContent = "";'),
+)
 
-def patch_static(src: Path, dst: Path) -> None:
+
+def explorer_scripts(src: Path) -> dict[str, str]:
+    """fx.js and returns.js as the copy's explorer needs them, patched in memory. Only an export
+    that ships the explorer uses them; without it both are copied as the platform wrote them."""
+    fx, n = FX_EXPLORER.subn(r"\1,", (src / "fx.js").read_text())
+    assert n == 1, "fx.js: the explorer's snapshot-only palette entry not found"
+    rjs = (src / "returns.js").read_text()
+    for old, new in RETURNS_PATCHES:
+        assert rjs.count(old) == 1, f"returns.js: patch target not found once: {old[:60]}"
+        rjs = rjs.replace(old, new)
+    return {"fx.js": fx, "returns.js": rjs}
+
+
+def patch_static(src: Path, dst: Path, explorer_js: dict[str, str]) -> None:
     """Copy the app's static tree (every script, every page stylesheet, the vendored files) and
-    patch the two places that assume the app's own origin: app.js's transport and link seams,
-    and qe.css's font URLs. Hand-written demo files in dst are left alone."""
-    if dst.exists():
-        for p in dst.iterdir():
-            if p.name in HAND_WRITTEN_STATIC:
-                continue
-            if p.is_dir():
-                shutil.rmtree(p)
-            else:
-                p.unlink()
-    dst.mkdir(parents=True, exist_ok=True)
-    for p in sorted(src.iterdir()):
-        if p.name.startswith(".") or p.name in ("app.js", "qe.css"):
-            continue
-        if p.is_dir():
-            shutil.copytree(p, dst / p.name)
-        elif p.suffix in (".js", ".css"):
-            shutil.copy2(p, dst / p.name)
-
+    patch the places that assume the app's own origin: app.js's transport and link seams,
+    qe.css's font URLs, and the explorer's scripts when it is exported (explorer_scripts).
+    Every patch is made and checked before dst is touched, so a platform change cannot leave
+    static/ half-copied. Hand-written demo files in dst are left alone."""
     app = (src / "app.js").read_text()
     # the transport only: qeFetch keeps announcing to the fetch bar, fetchJson reads the files
     body_re = re.compile(r"async function fetchJson\(url\) \{.*?\n  \}\n", re.S)
@@ -395,12 +452,267 @@ def patch_static(src: Path, dst: Path) -> None:
     for old, new in ((APP_HREF, DEMO_HREF), (APP_SYMBOL_HREF, DEMO_SYMBOL_HREF)):
         assert app.count(old) == 1, f"link seam not found in app.js: {old}"
         app = app.replace(old, new)
-    (dst / "app.js").write_text(app)
-
     css = (src / "qe.css").read_text()
     assert css.count('url("/static/vendor/fonts/') == 4
     css = css.replace('url("/static/vendor/fonts/', 'url("vendor/fonts/')
-    (dst / "qe.css").write_text(css)
+    patched = {"app.js": app, "qe.css": css, **explorer_js}
+
+    if dst.exists():
+        for p in dst.iterdir():
+            if p.name in HAND_WRITTEN_STATIC:
+                continue
+            if p.is_dir():
+                shutil.rmtree(p)
+            else:
+                p.unlink()
+    dst.mkdir(parents=True, exist_ok=True)
+    for p in sorted(src.iterdir()):
+        if p.name.startswith(".") or p.name in patched:
+            continue
+        if p.is_dir():
+            shutil.copytree(p, dst / p.name)
+        elif p.suffix in (".js", ".css"):
+            shutil.copy2(p, dst / p.name)
+    for name, text in patched.items():
+        (dst / name).write_text(text)
+
+
+# --------------------------------------------------------------------------- the return explorer
+# /api/returns runs a query per question, so the static copy cannot answer an arbitrary one. It
+# answers the questions the page itself offers — its opening question, every literal question
+# returns.js can load (the "Start over" view) and the example buttons in the crawled page —
+# through the live endpoint, with every bar's drill-down. Anything else gets the page's own 422
+# path with a message saying it needs the live database.
+
+# Every query parameter /api/returns takes. The keys below are built from these alone, so a new
+# parameter would let the copy serve a stored answer for a question that differs in it; the
+# export checks the route still takes exactly these (check_explorer_route), and the shim refuses
+# a request carrying any other.
+RETURNS_PARAMS = frozenset({"from", "to", "hold", "lag", "ret", "c", "bar"})
+_DECIMAL = re.compile(r"-?[0-9]+(\.[0-9]+)?")
+
+
+def _plain(v: str) -> str:
+    """A plain decimal in its shortest spelling (050 -> 50, -0.10 -> -0.1, 5.0 -> 5, -0 -> 0);
+    anything else as it is. The page re-serialises every number it sends (token(parse(c)) in
+    returns.js) and the endpoint echoes Python's spelling, so a change in either side's number
+    formatting must not split one question into two keys. demo-shim.js has the same rule."""
+    if not _DECIMAL.fullmatch(v):
+        return v
+    whole, _, frac = v.lstrip("-").partition(".")
+    s = (whole.lstrip("0") or "0") + ("." + frac.rstrip("0") if frac.rstrip("0") else "")
+    return "-" + s if v.startswith("-") and s != "0" else s
+
+
+def _key(one: dict[str, str], conds: list[str]) -> str:
+    def esc(v: str) -> str:
+        return v.replace("%", "%25").replace("&", "%26").replace("=", "%3D")
+
+    def token(c: str) -> str:
+        return ":".join(",".join(_plain(x) for x in f.split(",")) for f in c.split(":"))
+
+    parts = [f"hold={esc(_plain(one.get('hold') or '1'))}", f"lag={esc(_plain(one.get('lag') or '1'))}",
+             f"ret={esc(one.get('ret') or 'sector_excess')}"]
+    parts += [f"{k}={esc(one[k])}" for k in ("from", "to") if k in one]
+    parts += [f"c={esc(token(c))}" for c in conds if c.strip()]
+    return "&".join(parts)
+
+
+def explorer_key(qs: str) -> str:
+    """One question's key. demo-shim.js computes the same string from the page's request, so the
+    two must change together (tools/verify_shim.mjs checks they agree). The endpoint's defaults
+    are filled in, repeated scalars keep their first value, the c tokens keep their order and
+    are decoded, numbers are spelled plainly (_plain), and only `&`, `=` and `%` are escaped so
+    the key stays readable."""
+    one: dict[str, str] = {}
+    conds: list[str] = []
+    for k, v in parse_qsl(qs, keep_blank_values=True):
+        if k == "c":
+            conds.append(v)
+        elif k not in one:
+            one[k] = v
+    return _key(one, conds)
+
+
+def check_explorer_route() -> None:
+    from qe.web import api
+
+    found = [frozenset(p.alias for p in r.dependant.query_params)
+             for r in api.router.routes if getattr(r, "path", None) == "/api/returns"]
+    assert found == [RETURNS_PARAMS], (
+        f"/api/returns takes {sorted(found[0]) if found else 'nothing'}, the copy's keys know "
+        f"{sorted(RETURNS_PARAMS)}: a new parameter must join explorer_key and returnsKey")
+
+
+def explorer_questions(page: str, script: str) -> dict[str, Any]:
+    """The questions the page offers: its opening question, its example buttons and the view
+    "Start over" loads. Read from the platform's own page and script, so a new example is
+    exported the night it ships. The copy promises all three kinds on the page and in its
+    refusal message, so a missing one disables the explorer rather than shipping a promise it
+    breaks."""
+    opening = re.findall(r'const DEFAULT_QUERY = "([^"]*)";', script)
+    assert len(opening) == 1, "returns.js: DEFAULT_QUERY not found"
+    examples = [htmllib.unescape(q) for q in re.findall(r'<button[^>]*\sdata-q="([^"]*)"', page)]
+    assert examples, "returns page: no example questions (button[data-q]) found"
+    # "Start over" reloads a literal question; a refactor to a constant would silently drop it
+    start_over = [q for q in re.findall(r'readQuery\("([^"]*)"\)', script) if "c=" not in q]
+    assert len(start_over) == 1, "returns.js: the Start over question (readQuery literal) not found"
+    return {"opening": opening[0], "examples": examples, "start_over": start_over[0],
+            "all": list(dict.fromkeys(opening + examples + start_over))}
+
+
+NUMBER_WORDS = ("no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                "eleven", "twelve")
+
+
+def _words(n: int) -> str:
+    return NUMBER_WORDS[n] if n < len(NUMBER_WORDS) else str(n)
+
+
+def explorer_note(html: str, offered: dict[str, Any], stats: dict[str, Any], exported: str) -> str:
+    """Make the returns page say what this copy can answer. One plain line goes at the top of the
+    question builder, above the question rather than beside the examples, which the page hides
+    once a question has conditions — as its opening question does. The platform's own lines that
+    promise live answers (results update as you go; figures computed by the endpoint) are
+    replaced, since here they hold only for the stored questions. The counts come from what the
+    endpoint actually answered (export_explorer), so an example it refuses is not claimed."""
+    keys = [explorer_key(q) for q in offered["examples"]]
+    n = len(keys)
+    opening = explorer_key(offered["opening"])
+    opens = ("the first of its" if keys[0] == opening else "one of its" if opening in keys
+             else "a question of its own, besides its")
+    offered_keys = {opening, explorer_key(offered["start_over"]), *keys}
+    answered = len(offered_keys) - len(offered_keys & set(stats["refused_keys"]))
+    reset = re.search(r'id="x-reset">([^<]+)<', html)
+    reset = reset.group(1).strip() if reset else "Start over"
+    if stats["refused"]:
+        answers = (f'It holds the platform&rsquo;s own answers, computed on {exported} when the copy was '
+                   f'exported, for {_words(answered)} of the page&rsquo;s {_words(n)} example questions and the '
+                   f'view with no conditions; the platform itself refuses {_words(stats["refused"])} of the '
+                   f'examples, and the page shows its reason.')
+    else:
+        answers = (f'It holds the platform&rsquo;s own answers, computed on {exported} when the copy was '
+                   f'exported, for the page&rsquo;s {_words(n)} example questions and the view with no '
+                   f'conditions.')
+    note = (f'<p class="note demo-x-note"><strong>Static copy.</strong> {answers} The page opens on '
+            f'{opens} examples, and &ldquo;{reset}&rdquo; brings them all back. Any other question (a changed '
+            'condition, holding period, start day, comparison or years) needs the live database.</p>')
+    anchor = '<p class="x-question" id="x-question"'
+    assert html.count(anchor) == 1, "returns page: the question line not found"
+    html = html.replace(anchor, note + anchor, 1)
+    # only "Results update as you go" is untrue of the copy; the note says which questions answer
+    html, k = re.subn(r"Results update as you go, and the address bar holds the whole question,\s+"
+                      r"so a link reopens it exactly\.",
+                      "The address bar holds the whole question, so a link reopens it exactly.", html)
+    assert k == 1, "returns page: the 'Results update as you go' line not found"
+    html, k = re.subn(r'(<noscript><p class="note">The question builder needs JavaScript)[^<]*'
+                      r'<span class="mono">/api/returns</span>[^<]*(</p></noscript>)', r"\1.\2", html)
+    assert k == 1, "returns page: the noscript line not found"
+    return html
+
+
+def export_explorer(fetch: Any, offered: dict[str, Any], xdir: Path,
+                    exported: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Answer the page's own questions through /api/returns, exactly as the live page asks them,
+    with every non-empty bar's drill-down at every zoom level, into xdir (a fresh folder). A
+    question's answer is one file and its drill-downs one file per zoom level, which the shim
+    loads only when a bar at that level is clicked. Files are named by a hash of the key, so a
+    question that does not change keeps its file from night to night. Returns the stats for the
+    manifest and the checks for verify_shim.mjs."""
+    t0 = time.time()
+    questions, n_examples = offered["all"], len(offered["examples"])
+    index: dict[str, str] = {}
+    errors: dict[str, str] = {}
+    checks: list[dict[str, str]] = []
+    n_bytes = n_files = n_bars = 0
+    for q in questions:
+        key = explorer_key(q)
+        if key in index or key in errors:
+            continue
+        r = fetch("/api/returns?" + q)
+        if r.status_code == 422:
+            # the live page shows the endpoint's reason in place of the figures; so does the copy
+            errors[key] = r.json()["error"]
+            print(f"  explorer {q}: 422 {errors[key]}")
+            continue
+        assert r.status_code == 200, f"/api/returns?{q}: {r.status_code}"
+        answer = r.json()
+        qid = hashlib.sha1(key.encode()).hexdigest()[:12]
+        # The page re-serialises each condition before it asks (token(parse(c)) in returns.js), so
+        # an example written in any other spelling would be asked under a key nothing stores and
+        # refused on the page. The endpoint echoes its canonical tokens; an example that differs
+        # from them fails here rather than on a reader's click.
+        echo = answer["query"]
+        asked = dict(reversed(parse_qsl(q, keep_blank_values=True)))   # first value wins, as in the key
+        canon = _key({"hold": str(echo["hold"]), "lag": str(echo["lag"]), "ret": echo["ret"],
+                      **{k: asked[k] for k in ("from", "to") if k in asked}}, echo["c"])
+        assert key == canon, f"explorer question {q!r} is not in the endpoint's canonical form {canon!r}"
+        index[key] = qid
+        checks.append({"q": q, "id": qid})
+        n_bytes += write_json(xdir / f"{qid}.json", answer)
+        n_files += 1
+        bars_here = 0
+        for lv in ([] if answer.get("empty") else answer["hist"]["levels"]):
+            zoom = lv["key"]
+            assert re.fullmatch(r"[0-9a-z]{1,4}", zoom), f"unexpected zoom key {zoom!r}"
+            bars: dict[str, Any] = {}
+            for i, count in enumerate(lv["slice"]):
+                if not count:
+                    continue   # the page lists only bars that hold something
+                br = fetch(f"/api/returns?{q}&bar={zoom}:{i}")
+                assert br.status_code == 200, f"/api/returns?{q}&bar={zoom}:{i}: {br.status_code}"
+                bars[str(i)] = br.json()
+            n_bytes += write_json(xdir / f"{qid}.bars-{zoom}.json", bars)
+            n_files += 1
+            bars_here += len(bars)
+        n_bars += bars_here
+        print(f"  explorer {q}: {answer['slice']['n_rows'] if not answer.get('empty') else 0:,} stock-days, "
+              f"{bars_here} bars, {time.time() - t0:.0f}s")
+    for q in (offered["opening"], offered["start_over"]):
+        # the page's note and the refusal message promise these two by name
+        assert explorer_key(q) in index, f"explorer: {q!r} was not answered"
+    refused_keys = sorted({explorer_key(q) for q in offered["examples"]} & set(errors))
+    refused = sum(explorer_key(q) in errors for q in offered["examples"])
+    n_bytes += write_json(xdir / "index.json", {"exported": exported, "examples": n_examples,
+                                                "refused": refused, "questions": index, "errors": errors})
+    n_files += 1
+    stats = {"questions": len(set(index.values())) + len(errors), "examples": n_examples,
+             "refused": refused, "refused_keys": refused_keys, "bars": n_bars,
+             "files": n_files, "bytes": n_bytes, "seconds": round(time.time() - t0, 1)}
+    print(f"explorer: {stats['questions']} questions, {n_bars} bars, {n_files} files, "
+          f"{n_bytes / 1e6:.2f} MB in {stats['seconds']:.0f}s")
+    return stats, {"checks": checks, "errors": list(errors)}
+
+
+def prepare_explorer(fetch: Any, get_html: Any, src: Path, exported: str) -> dict[str, Any]:
+    """Everything the copy's explorer needs, checked and answered before the export writes a
+    single file to --out: the endpoint's parameters, the fx.js and returns.js patches, the nav
+    entry, the questions the page offers, their answers and the page's note. A platform change
+    that breaks any of it then costs the night's explorer, not the night's export (main falls
+    back to the copy without it), and never leaves --out half-written. The answers wait in a
+    temporary folder that install_explorer moves into place."""
+    check_explorer_route()
+    scripts = explorer_scripts(src)
+    raw = get_html("/returns")
+    explorer_nav(raw)   # every crawled page carries the same nav; checked here on one of them
+    offered = explorer_questions(raw, (src / "returns.js").read_text())
+    explorer_note(raw, offered, {"refused": 0, "refused_keys": []}, exported)   # its anchors, before the slow part
+    tmp = Path(tempfile.mkdtemp(prefix="qe-explorer-"))
+    atexit.register(shutil.rmtree, tmp, True)   # gone even if the export dies before the move
+    stats, ref_keys = export_explorer(fetch, offered, tmp, exported)
+    page = explorer_note(raw, offered, stats, exported)
+    stats.pop("refused_keys")
+    return {"page": page, "scripts": scripts, "answers": tmp, "stats": stats, "ref_keys": ref_keys}
+
+
+def install_explorer(explorer: dict[str, Any], out: Path, ref: Path | None) -> None:
+    xdir = out / "data" / "api" / "returns"
+    shutil.rmtree(xdir, ignore_errors=True)   # an example the platform dropped must not linger
+    xdir.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(explorer["answers"]), xdir)
+    if ref is not None:
+        # for verify_shim.mjs: the shim must reach the same answer from each question as written
+        write_json(ref / "explorer" / "keys.json", explorer["ref_keys"])
 
 
 # --------------------------------------------------------------------------- main
@@ -436,6 +748,7 @@ def main() -> None:
     ap.add_argument("--reference", default="")
     ap.add_argument("--skip-parquet", action="store_true")
     ap.add_argument("--skip-pages", action="store_true")
+    ap.add_argument("--skip-explorer", action="store_true")
     args = ap.parse_args()
     out = Path(args.out).resolve()
     ref = Path(args.reference).resolve() if args.reference else None
@@ -540,7 +853,7 @@ def main() -> None:
     exported = exported_at.strftime("%Y-%m-%d")
     ctx = {"universe": UNIVERSE, "universe_n": len(members), "start": DEMO_START.year,
            "exported": exported, "exported_at": exported_at.isoformat(timespec="minutes"),
-           "db_gb": f"{DB_PATH.stat().st_size / 1e9:.1f}"}
+           "db_gb": f"{DB_PATH.stat().st_size / 1e9:.1f}", "explorer": False}
 
     def fetch(path: str, **kw: Any) -> Any:
         # The app answers 503 "database_busy" while another process holds the write lock. The
@@ -563,6 +876,22 @@ def main() -> None:
         r = fetch(path, follow_redirects=True)
         assert r.status_code == 200, f"{path}: {r.status_code}"
         return r.text
+
+    # The explorer first, before anything is written: its page, scripts and endpoint are the
+    # parts of the platform most likely to change under the copy's patches, and a failure there
+    # should drop the explorer for the night, not the whole refresh.
+    static_src = QE_ROOT / "src" / "qe" / "web" / "static"
+    explorer: dict[str, Any] | None = None
+    explorer_disabled = False
+    if not args.skip_explorer:
+        try:
+            explorer = prepare_explorer(fetch, get_html, static_src, exported)
+        except Exception as exc:  # noqa: BLE001 — any explorer failure has the same way out
+            explorer_disabled = True
+            print(f"\n{'!' * 78}\nEXPLORER DISABLED: {type(exc).__name__}: {exc}\n"
+                  "The copy is exported without the return explorer, server-only as on any snapshot.\n"
+                  f"{'!' * 78}\n", flush=True)
+    ctx["explorer"] = explorer is not None
 
     total_bundle_bytes = 0
     for i, sym in enumerate(symbols):
@@ -604,6 +933,19 @@ def main() -> None:
         if (i + 1) % 50 == 0:
             print(f"  {i + 1}/{len(symbols)} symbols, {total_bundle_bytes / 1e6:.1f} MB of bundles, {time.time() - t0:.0f}s")
     print(f"bundles written: {total_bundle_bytes / 1e6:.1f} MB for {len(symbols)} symbols")
+    if not args.limit:
+        # A symbol that leaves the slice (a universe change, a stock the model no longer holds)
+        # would keep a stale page reachable by URL, dated its last export, while the rest of the
+        # copy treats it as having none. A smoke run's short list must not prune the real tree.
+        keep = set(symbols)
+        stale = [p for p in (out / "data" / "symbols").glob("*.json") if p.stem not in keep]
+        if not args.skip_pages:
+            stale += [p for p in (out / "symbol").glob("*.html") if p.stem not in keep]
+        for p in stale:
+            p.unlink()
+        if stale:
+            print(f"pruned {len(stale)} files of symbols no longer in the demo: "
+                  f"{', '.join(sorted({p.stem for p in stale}))}")
 
     if ref is not None:
         for sym, b in references.items():
@@ -637,11 +979,25 @@ def main() -> None:
     if not args.skip_pages:
         (out / "index.html").write_text(rewrite_html(get_html("/"), "", ctx))
         # "/" is the story (index.html); the working overview now lives at /lab
-        for page, path in (("screener", "/screener"), ("model", f"/model/{model_id}"),
-                           ("research", "/research"), ("health", "/health"), ("lab", "/lab")):
+        pages = [("screener", "/screener"), ("model", f"/model/{model_id}"), ("research", "/research"),
+                 ("health", "/health"), ("lab", "/lab")]
+        if explorer is None:
+            # without its answers the explorer stays server-only, as on any other snapshot: the nav
+            # keeps data-needs-server, the palette drops it, and no page or file of it is left behind
+            shutil.rmtree(out / "returns", ignore_errors=True)
+            shutil.rmtree(out / "data" / "api" / "returns", ignore_errors=True)
+        for page, path in pages:
             (out / page).mkdir(parents=True, exist_ok=True)
             (out / page / "index.html").write_text(rewrite_html(get_html(path), "../", ctx))
-        patch_static(QE_ROOT / "src" / "qe" / "web" / "static", out / "static")
+        if explorer is not None:
+            (out / "returns").mkdir(parents=True, exist_ok=True)
+            (out / "returns" / "index.html").write_text(rewrite_html(explorer["page"], "../", ctx))
+        patch_static(static_src, out / "static", explorer["scripts"] if explorer else {})
+    # With --skip-pages the pages already in --out are left as they are, and without the explorer
+    # so is whatever explorer they point at (see the manifest below).
+    if explorer is not None:
+        install_explorer(explorer, out, ref)
+    explorer_stats = None if explorer is None else explorer["stats"]
     client.close()
     print(f"phase B done in {time.time() - t0:.0f}s")
 
@@ -661,6 +1017,15 @@ def main() -> None:
                     "prices_symbols": price_span[2]},
         "shipped_indicators": list(SHIPPED_INDICATORS),
     }
+    if explorer_stats is None and args.skip_pages and (out / "data" / "api" / "returns" / "index.json").exists():
+        # the untouched pages still serve the previous run's explorer; its record stays with it
+        old = out / "data" / "manifest.json"
+        explorer_stats = json.loads(old.read_text()).get("return_explorer") if old.exists() else None
+    if explorer_stats is not None:
+        manifest["return_explorer"] = explorer_stats
+    elif explorer_disabled and not args.skip_pages:
+        # the reason is in the log; the manifest is public, and an exception can carry local paths
+        manifest["return_explorer_disabled"] = True
     write_json(out / "data" / "manifest.json", manifest)
 
     # ---- phase C: parquet slices for the SQL console (fresh connection, after the crawl) --------

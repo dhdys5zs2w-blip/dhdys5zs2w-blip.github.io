@@ -3,8 +3,9 @@
  * computed in Python. Usage:
  *   node tools/verify_shim.mjs <demo-dir> <reference-dir>
  * where <reference-dir> was written by export_demo.py --reference. Prices are compared with a
- * relative tolerance (they travel as integer cents); everything else must match exactly. */
-import { readFileSync, readdirSync } from "node:fs";
+ * relative tolerance (they travel as integer cents); everything else must match exactly. When the
+ * export also answered the return explorer's questions, it checks the shim finds each answer. */
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const [demoDir, refDir] = process.argv.slice(2);
@@ -82,5 +83,68 @@ for (const f of files) {
 }
 const s = await shim.search("AA");
 if (!Array.isArray(s)) fail("search", "no array");
-console.log(failures ? `${failures} failure(s) across ${files.length} symbols` : `OK: ${files.length} symbols decode identically`);
+
+/* The return explorer: each exported question, as written in the page and in the order and
+ * encoding returns.js's query() uses (hold and lag first, the default return dropped, each field
+ * URI-encoded), must reach the answer the exporter stored for it, and one it did not store must
+ * take the page's 422 path. pageForm is a hand copy, not query() itself: it does not re-serialise
+ * the tokens (the exporter asserts each example is already in the endpoint's canonical form) or
+ * drop a from/to equal to the page's defaults. driftForm spells every number differently (05,
+ * -0.10), which both key builders must fold back, so a change in how returns.js prints a number
+ * cannot strand an example. Only a click in the real page proves the rest: after an export, open
+ * returns/ over http, click every example and "Start over", and each must end "stored answer". */
+let explorerNote = "";
+const manifestPath = join(demoDir, "data/manifest.json");
+if (existsSync(manifestPath) && JSON.parse(readFileSync(manifestPath, "utf8")).return_explorer_disabled)
+  fail("explorer", "the export disabled the return explorer (its log says why)");
+if (existsSync(join(refDir, "explorer", "keys.json"))) {
+  const keys = JSON.parse(readFileSync(join(refDir, "explorer", "keys.json"), "utf8"));
+  const index = JSON.parse(readFileSync(join(demoDir, "data/api/returns/index.json"), "utf8"));
+  const pageForm = (q) => {
+    const p = new URLSearchParams(q);
+    const parts = ["hold=" + (p.get("hold") || "1"), "lag=" + (p.get("lag") || "1")];
+    if (p.get("ret") && p.get("ret") !== "sector_excess") parts.push("ret=" + p.get("ret"));
+    for (const k of ["from", "to"]) if (p.has(k)) parts.push(k + "=" + p.get(k));
+    for (const c of p.getAll("c"))
+      parts.push("c=" + c.split(":").map((x) => x.split(",").map(encodeURIComponent).join(",")).join(":"));
+    return parts.join("&");
+  };
+  const pad = (x) => (!/^-?[0-9]+(\.[0-9]+)?$/.test(x) ? x : x.includes(".") ? x + "0" : x.replace(/^(-?)/, "$10"));
+  const driftForm = (q) => {
+    const p = new URLSearchParams(q), out = new URLSearchParams();
+    for (const [k, v] of p) out.append(k, k === "c" ? v.split(":").map((f) => f.split(",").map(pad).join(",")).join(":")
+                                         : k === "hold" || k === "lag" ? pad(v) : v);
+    return out.toString();
+  };
+  let bars = 0;
+  for (const { q, id } of keys.checks) {
+    for (const form of [q, pageForm(q), driftForm(q)]) {
+      const where = "explorer " + form;
+      if (index.questions[shim.returnsKey(form)] !== id) { fail(where, "key " + shim.returnsKey(form) + " not indexed as " + id); continue; }
+      const rep = await shim.fetch("/api/returns?" + form);
+      if (!rep || !rep.query) { fail(where, "no answer"); continue; }
+      if (rep.empty) continue;
+      for (const lv of rep.hist.levels) {
+        const i = lv.slice.findIndex((n) => n > 0);
+        const got = await shim.fetch("/api/returns?" + form + "&bar=" + lv.key + ":" + i);
+        if (!got || got.n !== lv.slice[i]) fail(where + " bar " + lv.key + ":" + i, `n ${got && got.n} vs ${lv.slice[i]}`);
+        else bars += 1;
+      }
+    }
+  }
+  const other = "hold=5&lag=3&c=dow:2";
+  // a parameter the key does not know could change the answer, so it is refused, not ignored
+  const unknown = keys.checks[0].q + "&winsor=1";
+  for (const q of [other, unknown]) {
+    try { await shim.fetch("/api/returns?" + q); fail("explorer " + q, "answered a question it does not hold"); }
+    catch (e) { if (!/HTTP 422/.test(e.message)) fail("explorer " + q, "wrong error: " + e.message); }
+  }
+  const msg = (await shim.returnsError("/api/returns?" + other)).error;
+  if (!/live database/.test(msg)) fail("explorer " + other, "message does not say it needs the live database: " + msg);
+  for (const k of keys.errors) {
+    if ((await shim.returnsError("/api/returns?" + k)).error !== index.errors[k]) fail("explorer " + k, "not the endpoint's own reason");
+  }
+  explorerNote = `, ${keys.checks.length} explorer questions reach their answers (${bars} bar lookups)`;
+}
+console.log(failures ? `${failures} failure(s) across ${files.length} symbols` : `OK: ${files.length} symbols decode identically${explorerNote}`);
 process.exit(failures ? 1 : 0);

@@ -55,6 +55,9 @@ footer .mono { opacity: 0.8; }
 .sql-progress { height: 4px; background: var(--line-2); border-radius: 2px; overflow: hidden; margin: 0.5rem 0; }
 .sql-progress > div { height: 100%; width: 0; background: var(--accent); transition: width 0.2s; }
 
+/* ---- Return explorer: the line saying which questions this copy can answer ---- */
+.demo-x-note { margin: 0 0 0.8rem; border-left-color: var(--accent); }
+
 /* ---- About page ---- */
 .about { max-width: 66rem; }
 .about .lede { font-size: 1.05rem; color: var(--ink-2); max-width: 70ch; }
@@ -66,8 +69,9 @@ footer .mono { opacity: 0.8; }
 .about .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: 1rem 2rem; }
 .about ol li, .about ul li { margin-bottom: 0.35rem; }
 
-/* the demo adds two links to the top nav; let it wrap on phones instead of overflowing */
+/* the SQL console's hand-written flat nav wraps on phones instead of overflowing; the site's own
+ * nav (.sitenav, on every other page) folds into its menu, a column that must scroll, not wrap */
 @media (max-width: 760px) {
-  .topnav nav { flex-wrap: wrap; }
+  .topnav nav:not(.sitenav) { flex-wrap: wrap; }
   .demo-banner > span:not(.demo-tag) { flex-basis: 100%; }
 }

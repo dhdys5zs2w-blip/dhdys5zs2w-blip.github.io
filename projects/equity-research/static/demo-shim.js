@@ -206,6 +206,124 @@
     return hits.slice(0, 20);
   }
 
+  /* ---- the return explorer ----------------------------------------------------------------
+   * /api/returns runs a query per question, so this copy holds only the questions the page
+   * itself offers (its opening question, the view with no conditions and the example buttons),
+   * answered at export by the real endpoint, with every bar's stock-days. Any other question is
+   * refused with a 422, which sends the page down its own error path to returnsError below. */
+  let returnsIndex = null;
+  const returnsBars = new Map();
+  const NUMBER_WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                        "eleven", "twelve"];
+
+  /* Every query parameter /api/returns takes (RETURNS_PARAMS in the exporter, which checks the
+   * route still takes exactly these). The key is built from them alone, so a request carrying
+   * any other is a question this copy cannot know it holds, and is refused. */
+  const RETURNS_PARAMS = new Set(["from", "to", "hold", "lag", "ret", "c", "bar"]);
+
+  /* _plain in the exporter: a plain decimal in its shortest spelling, anything else as it is */
+  function plain(v) {
+    if (!/^-?[0-9]+(\.[0-9]+)?$/.test(v)) return v;
+    const [whole, frac = ""] = v.replace(/^-/, "").split(".");
+    const f = frac.replace(/0+$/, "");
+    const s = (whole.replace(/^0+/, "") || "0") + (f ? "." + f : "");
+    return v[0] === "-" && s !== "0" ? "-" + s : s;
+  }
+
+  /* mirrors explorer_key in tools/export_demo.py, and the two must change together: the
+   * endpoint's defaults filled in, a repeated scalar's first value, the c tokens in order and
+   * decoded, numbers spelled plainly, and only & = % escaped. null for a request it cannot key. */
+  function returnsKey(qs) {
+    const p = new URLSearchParams(qs);
+    for (const k of p.keys()) if (!RETURNS_PARAMS.has(k)) return null;
+    const esc = (v) => v.replace(/%/g, "%25").replace(/&/g, "%26").replace(/=/g, "%3D");
+    const token = (c) => c.split(":").map((f) => f.split(",").map(plain).join(",")).join(":");
+    const parts = ["hold=" + esc(plain(p.get("hold") || "1")), "lag=" + esc(plain(p.get("lag") || "1")),
+                   "ret=" + esc(p.get("ret") || "sector_excess")];
+    for (const k of ["from", "to"]) if (p.has(k)) parts.push(k + "=" + esc(p.get(k)));
+    for (const c of p.getAll("c")) if (c.trim()) parts.push("c=" + esc(token(c)));
+    return parts.join("&");
+  }
+
+  const queryOf = (url) => (url.indexOf("?") >= 0 ? url.slice(url.indexOf("?") + 1) : "");
+
+  function getReturnsIndex() {
+    if (!returnsIndex) returnsIndex = getJSON("data/api/returns/index.json").catch((e) => { returnsIndex = null; throw e; });
+    return returnsIndex;
+  }
+
+  async function returnsAnswer(url) {
+    const qs = queryOf(url);
+    const key = returnsKey(qs);
+    const id = key == null ? null : (await getReturnsIndex()).questions[key];
+    if (!id) throw new Error("HTTP 422 for " + url);
+    const bar = new URLSearchParams(qs).get("bar");
+    if (bar == null) return getJSON("data/api/returns/" + id + ".json");
+    // one file per zoom level holds every bar's stock-days, fetched on the first click at that level
+    const m = bar.match(/^([0-9a-z]{1,4}):([0-9]{1,3})$/);
+    if (!m) throw new Error("HTTP 422 for " + url);
+    const file = id + ".bars-" + m[1];
+    if (!returnsBars.has(file))
+      returnsBars.set(file, getJSON("data/api/returns/" + file + ".json").catch((e) => { returnsBars.delete(file); throw e; }));
+    const rows = (await returnsBars.get(file))[String(Number(m[2]))];
+    if (!rows) throw new Error("HTTP 404 for " + url);
+    return rows;
+  }
+
+  /* what the page shows in place of the figures when a question has no stored answer */
+  async function returnsError(url) {
+    if (root.QE_API_BASE) return (await root.fetch(root.QE_API_BASE + url)).json();
+    let idx = null;
+    try { idx = await getReturnsIndex(); } catch (e) { /* the words below do not need it */ }
+    const key = returnsKey(queryOf(url));
+    // a question the live endpoint itself refused keeps the endpoint's reason
+    if (key != null && idx && idx.errors && idx.errors[key]) return { error: idx.errors[key] };
+    const w = (k) => NUMBER_WORDS[k] || String(k);
+    const n = idx ? idx.examples : null, refused = (idx && idx.refused) || 0;
+    const examples = n == null ? "the example questions"
+      : (refused ? w(n - refused) + " of the " : "the ") + w(n) + " example question" + (n === 1 ? "" : "s");
+    const on = idx && idx.exported ? " on " + idx.exported : " when this copy was exported";
+    // the page prefixes "This question can't run: ", and hides the examples while any condition is
+    // on screen, so the message ends with the way back to an answered question
+    return { error: "this static copy holds answers only for " + examples + " and the view with no" +
+      " conditions, as the platform answered them" + on + ". Any other question — a changed condition," +
+      " holding period, start day, comparison or date range — needs the live database. Change it back, or" +
+      " use “Start over” to bring the examples back." };
+  }
+
+  /* The explorer's tables list stock-days from the universe's whole history, and most of those
+   * symbols have no page in this copy, which carries the current universe and the model's picks
+   * (search.json lists exactly those); a link to one would be a 404, so it becomes plain text
+   * that says why. */
+  function unlinkMissingSymbols() {
+    const tables = ["x-table", "x-drawer-table"].map((id) => document.getElementById(id)).filter(Boolean);
+    if (!tables.length) return;
+    let have = null;
+    const pass = async () => {
+      if (!have) {
+        if (!searchIndex) searchIndex = await getJSON("data/search.json");
+        have = new Set(searchIndex.map((s) => s.symbol));
+      }
+      for (const t of tables) t.querySelectorAll('tbody a[href*="symbol/"]').forEach((a) => {
+        const sym = a.textContent.trim();
+        if (have.has(sym)) return;
+        const span = document.createElement("span");
+        span.className = a.className;
+        span.textContent = sym;
+        span.title = "No page for " + sym + " in this copy of the site, which has pages only for the current" +
+          " universe and the stocks in the model's live record since July 2026.";
+        a.replaceWith(span);
+      });
+    };
+    // replacing a link is itself a change, but the second pass finds nothing left to replace
+    const watch = new MutationObserver(() => { pass().catch(() => {}); });
+    tables.forEach((t) => watch.observe(t, { childList: true, subtree: true }));
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", unlinkMissingSymbols);
+    else unlinkMissingSymbols();
+  }
+
   async function demoFetch(url) {
     // Set window.QE_API_BASE (e.g. "https://qe.example.com") before app.js loads and every page
     // talks to a hosted instance of the real API instead of the static files.
@@ -233,8 +351,10 @@
     if (url === "/api/story") return getJSON("data/api/story.json");
     // the overview's market map: one universe is exported, so a ?universe= query reads the same file
     if (url === "/api/market_map" || url.startsWith("/api/market_map?")) return getJSON("data/api/market_map.json");
+    if (url === "/api/returns" || url.startsWith("/api/returns?")) return returnsAnswer(url);
     throw new Error("demo: no static mapping for " + url);
   }
 
-  root.QE_DEMO = { fetch: demoFetch, bundle: getBundle, decodeBundle, decodeDates, inflate, sma, search };
+  root.QE_DEMO = { fetch: demoFetch, bundle: getBundle, decodeBundle, decodeDates, inflate, sma, search,
+                   returnsKey, returnsError };
 })(typeof window !== "undefined" ? window : globalThis);
