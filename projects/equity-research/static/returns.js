@@ -818,14 +818,14 @@
       draw(rep);
       const secs = ((performance.now() - started) / 1000).toFixed(1);
       $("x-status").textContent = rep.empty ? "Nothing matches this question."
-        : "Updated · " + int(rep.slice.n_rows) + " stock-days · " + secs + " s";
+        : "Updated · " + int(rep.slice.n_rows) + " stock-days · " + (window.QE_API_BASE ? secs + " s" : "stored answer");
     } catch (err) {
       if (my !== seq) return;
       last = null;  // a failed question runs again on the next change, even an unchanged one
       let msg = err && err.message ? err.message : "request failed";
       if (/HTTP 422/.test(msg)) {
         // the server says what is wrong; show its words
-        try { msg = (await (await fetch("/api/returns?" + q)).json()).error || msg; } catch (e) { /* keep msg */ }
+        try { msg = (await window.QE_DEMO.returnsError("/api/returns?" + q)).error || msg; } catch (e) { /* keep msg */ }
         if (my !== seq) return;
         failed(msg, true);
       } else {
@@ -844,8 +844,9 @@
     lastQ = null;
     clearResults();
     $("x-words").textContent = "No figures: this question did not run.";
+    $("x-start-n").textContent = "";
     $("x-evidence").innerHTML = "";
-    $("x-status").textContent = isSlice ? "This question can't run yet — see below." : "The figures did not load.";
+    $("x-status").textContent = isSlice ? "This question can't run in this copy — see below." : "The figures did not load.";
     $("x-flags").innerHTML = '<p class="' + (isSlice ? "caveat" : "load-failed") + '">' +
       (isSlice ? "<strong>This question can't run:</strong> " : "") + esc(msg) + "</p>";
     state.conds.forEach((_, i) => paintCount(i));
@@ -939,6 +940,7 @@
     $("x-axis").textContent = "";
     $("x-tails").textContent = "";
     $("x-median").textContent = "—";
+    $("x-median").classList.remove("pos", "neg");
     $("x-median-rest").textContent = "—";
     $("x-card-meta").textContent = "";
     $("x-tiles").innerHTML = "";

@@ -185,7 +185,7 @@
     { label: "Explore stocks", hint: "g s", also: "screener universe symbols", href: qe.href("/screener") },
     { label: "Research notebook", hint: "g l", also: "lab overview pulse", href: qe.href("/lab") },
     { label: "Model dashboard", hint: "g m", also: "record book", href: qe.href("/model") },
-    ...(qe.snapshot ? [] : [{ label: "Return explorer", hint: "g e", also: "slice distribution earnings histogram returns", href: qe.href("/returns") }]),
+    { label: "Return explorer", hint: "g e", also: "slice distribution earnings histogram returns", href: qe.href("/returns") },
     { label: "Research log", hint: "g r", also: "ledger research tests", href: qe.href("/research") },
     { label: "Data health", hint: "g h", also: "freshness runs", href: qe.href("/health") },
     { label: "Market map", hint: "notebook", href: qe.href("/lab#s-map") },

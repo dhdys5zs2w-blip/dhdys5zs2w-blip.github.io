@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qe — return explorer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232c5aa0'/%3E%3Cpath d='M7 22h3v-9H7zm5 0h3V8h-3zm5 0h3v-6h-3zm5 0h3V12h-3z' fill='%23fff'/%3E%3C/svg%3E">
+<script>/* apply a remembered theme before first paint; 'auto' leaves it to the OS.
+   ?theme=light|dark previews one theme without remembering it. `nav-js` lets
+   the stylesheet fold the menus away only when script can open them again;
+   it is set here, before first paint, so the bar never jumps, and taken back
+   at `load` if fx.js never marked the nav wired (an error in app.js or fx.js),
+   so a broken script fails open with every link showing. */
+document.documentElement.classList.add("nav-js");
+addEventListener("load", function () {
+  var de = document.documentElement;
+  if (de.getAttribute("data-nav") !== "ready") de.classList.remove("nav-js");
+});
+try {
+  var q = new URLSearchParams(location.search).get("theme");
+  var t = (q === "light" || q === "dark") ? q : localStorage.getItem("qe-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch (e) {}</script>
+<link rel="stylesheet" href="../static/qe.css"><link rel="stylesheet" href="../static/demo.css">
+<link rel="stylesheet" href="../static/css/returns.css">
+</head>
+<body><a class="skip-link" href="#content">Skip to main content</a>
+
+
+
+
+
+<header class="topnav">
+  <a class="brand" href="../index.html"><span class="wordmark">qe</span><span class="tagline">a stock-ranking model</span></a>
+  <button id="nav-menu-btn" class="nav-menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span>Menu</button>
+  <nav id="site-nav" class="sitenav" aria-label="Site">
+    <a href="../index.html">The story</a>
+    <a href="../screener/">Explore stocks</a>
+    <div class="hood">
+      <button id="hood-btn" class="hood-btn active" type="button" aria-expanded="false" aria-controls="hood-menu">Under the hood<span class="chev" aria-hidden="true"></span></button>
+      <div id="hood-menu" class="hood-menu">
+        <p class="hood-head">Under the hood</p>
+        <p class="hood-intro">The working research behind the story, in the project's own terms and with every caveat.</p>
+        <ul class="hood-list"><li><a href="../sql/"><strong>SQL console</strong><span>Query the exported tables in your browser.</span></a></li><li><a href="../about/"><strong>About this demo</strong><span>How this static copy of the site was made.</span></a></li>
+          <li><a href="../lab/"><strong>Research notebook</strong><span>The working overview: the nightly record, the market map, what changed and the honest numbers.</span></a></li>
+          <li><a href="../model/"><strong>Model dashboard</strong><span>Every chart of the frozen model&#39;s record, day by day, with its caveats.</span></a></li>
+          <li><a href="../returns/" aria-current="page"><strong>Return explorer</strong><span>Example questions about what stocks did next, after a model pick, an earnings report or a sharp fall, answered when this copy was exported.</span></a></li>
+          <li><a href="../research/"><strong>Research log</strong><span>The research ledger: every test the project ran, the rule it was judged by, and the verdict.</span></a></li>
+          <li><a href="../health/"><strong>Data health</strong><span>How fresh the data is, and how the nightly runs went.</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="navright">
+    <div class="navsearch">
+      <input id="nav-search" type="search" placeholder="Find a stock&hellip;  /" autocomplete="off" spellcheck="false" aria-label="Find a stock by ticker or company name">
+      <div id="nav-search-results" class="search-results" hidden></div>
+    </div>
+    <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
+    <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
+  </div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-09-29 from the live 27.9 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+<div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
+<div id="busy-banner" class="busy-banner" hidden></div>
+<aside class="underhood" aria-label="Where you are">
+  <div class="uh-inner">
+    <svg class="uh-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    <p><strong>You're under the hood:</strong> this is one of the project's working pages, in its
+      own terms and with every caveat. <a href="../index.html" class="uh-link">New here? Start with the story&nbsp;&rarr;</a></p>
+  </div>
+</aside>
+<div id="content" class="skip-target" tabindex="-1"></div>
+<main>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#x-slice">Your question</a><a href="#x-dist">Distribution</a><a href="#x-time">Over time</a><a href="#x-rows">The stock-days</a></nav>
+
+<header class="page-intro">
+  <div class="intro-text">
+    <p class="eyebrow">Universe &middot; <span class="mono">liquid500</span> &middot; returns stored
+      <span class="mono">2005-01-03</span> to <span class="mono">2026-09-28</span></p>
+    <h1>Return explorer <span class="badge badge-changed">changed 2026-09-29</span></h1>
+    <p class="lede">Ask a question of ten years of stock prices. Pick which stocks, on which days
+    &mdash; by the model's ranking, earnings reports, sector, price patterns or the calendar &mdash;
+    and see what their returns looked like next, set against every other stock on the same days.</p><p class="caveat"><strong>Looking is not testing.</strong> Every question you try is another
+    draw, and among enough of them one will look good by chance &mdash; the page counts your looks
+    and says how large a chance result would be. Something found here is a hypothesis to
+    pre-register before it is run, <strong>not evidence</strong>.</p>
+  </div>
+  <aside class="intro-aside">
+    <ol class="x-howto" aria-label="How to use this page">
+      <li><strong>Pick the stock-days</strong> <span>add conditions, or start from an example</span></li>
+      <li><strong>Choose what to measure</strong> <span>how long, starting when, compared with what</span></li>
+      <li><strong>Read the distribution</strong> <span>and the look counter beside it</span></li>
+    </ol>
+  </aside>
+</header>
+
+<section class="panel x-builder" id="x-slice">
+  <header class="panel-head">
+    <div>
+      <h2>Your question</h2>
+      <p class="panel-sub">The address bar holds the whole question, so a link reopens it exactly.</p>
+    </div>
+    <div class="panel-tags x-tools">
+      <button type="button" class="x-tool" id="x-copy">Copy link</button>
+      <button type="button" class="x-tool" id="x-reset">Start over</button>
+    </div>
+  </header>
+
+  <p class="note demo-x-note"><strong>Static copy.</strong> It holds the platform&rsquo;s own answers, computed on 2026-09-29 when the copy was exported, for the page&rsquo;s six example questions and the view with no conditions. The page opens on the first of its examples, and &ldquo;Start over&rdquo; brings them all back. Any other question (a changed condition, holding period, start day, comparison or years) needs the live database.</p><p class="x-question" id="x-question" aria-live="polite"></p>
+
+  <form id="x-form" class="x-form" autocomplete="off" novalidate>
+    
+    <fieldset class="x-step" id="x-step-1">
+      <legend><span class="x-num" aria-hidden="true">1</span> Which stock-days?</legend>
+      <p class="x-step-sub">A <em>stock-day</em> is one stock on one trading day &mdash; call that
+      day <strong>day&nbsp;0</strong>. With no conditions you get every stock on every day; each
+      condition keeps (or leaves out) the stock-days that match it.</p>
+      <p class="x-start" id="x-start"><span class="x-start-dot" aria-hidden="true"></span>Every stock in
+        the universe on every trading day<span class="x-start-n mono" id="x-start-n"></span></p>
+      <ol class="x-conds" id="x-conds" aria-label="Conditions"></ol>
+
+      <div class="x-adder">
+        <button type="button" class="x-add-open" id="x-add-open" aria-expanded="false" aria-controls="x-picker">
+          <span aria-hidden="true">+</span> Add a condition</button>
+        <span class="x-limit muted" id="x-limit" hidden>That's the most conditions one question can hold.</span>
+      </div>
+      <div class="x-picker" id="x-picker" hidden>
+        <p class="x-picker-head">What should the stock-days have in common?</p>
+        <div class="x-picker-grid" role="group" aria-label="Kinds of condition">
+          <button type="button" class="x-pick" data-kind="rank">
+            <span class="x-ico x-ico-rank" aria-hidden="true"></span>
+            <strong>Model ranking</strong><span>Where the model ranked the stock that day — 1 is its favourite.</span></button>
+          <button type="button" class="x-pick" data-kind="earn">
+            <span class="x-ico x-ico-earn" aria-hidden="true"></span>
+            <strong>Earnings</strong><span>When the company reported quarterly results, and whether it beat.</span></button>
+          <button type="button" class="x-pick" data-kind="ind">
+            <span class="x-ico x-ico-ind" aria-hidden="true"></span>
+            <strong>Price or volume pattern</strong><span>Momentum, volatility, trend, volume — 25 measurements.</span></button>
+          <button type="button" class="x-pick" data-kind="sector">
+            <span class="x-ico x-ico-sector" aria-hidden="true"></span>
+            <strong>Sector</strong><span>The company&#39;s industry group, like Technology or Energy.</span></button>
+          <button type="button" class="x-pick" data-kind="liq">
+            <span class="x-ico x-ico-liq" aria-hidden="true"></span>
+            <strong>Trading volume</strong><span>How heavily the stock trades compared with the others.</span></button>
+          <button type="button" class="x-pick" data-kind="sym">
+            <span class="x-ico x-ico-sym" aria-hidden="true"></span>
+            <strong>Specific stocks</strong><span>Only certain tickers, like AAPL or NVDA.</span></button>
+          <button type="button" class="x-pick" data-kind="dow">
+            <span class="x-ico x-ico-dow" aria-hidden="true"></span>
+            <strong>Day of the week</strong><span>Which weekday day 0 falls on.</span></button>
+          <button type="button" class="x-pick" data-kind="month">
+            <span class="x-ico x-ico-month" aria-hidden="true"></span>
+            <strong>Month</strong><span>Which month day 0 falls in.</span></button>
+        </div>
+      </div>
+
+      <div class="x-examples" id="x-examples">
+        <p class="x-examples-head">Not sure where to start? Try one of these:</p>
+        <div class="x-example-grid">
+          <button type="button" data-q="c=rank:backtest:top:50&amp;hold=1&amp;lag=1"><strong>Do the model's favourites beat their sector?</strong><span>its top 50 stocks, the next day</span></button>
+          <button type="button" data-q="c=rank:backtest:top:50&amp;c=earn:day:1:1:any:any&amp;hold=1&amp;lag=1"><strong>&hellip; and when they report earnings the next day?</strong><span>top 50 and an earnings report on day 1</span></button>
+          <button type="button" data-q="c=ind:roc_v1:val::-0.1&amp;hold=5&amp;lag=1"><strong>Do stocks that just fell 10% bounce back?</strong><span>down 10% or more over 5 days, the week after</span></button>
+          <button type="button" data-q="c=ind:rvol20_v1:pct:90:100&amp;c=earn:none:5&amp;hold=5&amp;lag=1"><strong>Do the jumpiest stocks keep jumping?</strong><span>most volatile tenth, with no earnings nearby</span></button>
+          <button type="button" data-q="c=rank:backtest:bottom:50&amp;c=earn:window:any:any&amp;hold=1&amp;lag=1"><strong>How do the model's least favourites take earnings?</strong><span>bottom 50 with the earnings reaction measured</span></button>
+          <button type="button" data-q="c=dow:1&amp;hold=1&amp;lag=1&amp;ret=raw"><strong>Is Monday different?</strong><span>every stock, day 0 a Monday, raw returns</span></button>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="x-steps-2">
+      
+      <fieldset class="x-step" id="x-step-2">
+        <legend><span class="x-num" aria-hidden="true">2</span> What happens next?</legend>
+        <div class="x-row">
+          <span class="x-lab" id="x-hold-lab">Measure the return over</span>
+          <span class="seg" role="group" aria-labelledby="x-hold-lab" id="x-hold"><button type="button" data-v="1" aria-pressed="false">1 day</button><button type="button" data-v="5" aria-pressed="false">5 days (a week)</button></span>
+        </div>
+        <div class="x-row">
+          <label class="x-lab" for="x-lag">starting</label>
+          <span class="x-stepper">
+            <button type="button" data-d="-1" aria-label="One day earlier">&minus;</button>
+            <input type="number" id="x-lag" name="lag" min="0" max="20" step="1" value="1" inputmode="numeric">
+            <button type="button" data-d="1" aria-label="One day later">+</button>
+          </span>
+          <span class="x-lab">trading days after day 0</span>
+        </div>
+        <div class="x-timeline" id="x-timeline" aria-hidden="true"></div>
+        <p class="x-timeline-say" id="x-timeline-say"></p>
+        <p class="x-warn" id="x-lag-warn" hidden></p>
+
+        <p class="x-lab x-against-lab" id="x-ret-lab">Compare the return against</p>
+        <div class="x-radios" role="radiogroup" aria-labelledby="x-ret-lab">
+          <label class="x-radio"><input type="radio" name="ret" value="sector_excess" checked>
+            <span><strong>Against its sector <em>recommended</em></strong>The stock&#39;s return minus the median stock in its own sector that day, so moves that lifted or sank the whole market or sector cancel out. It is what the model is built to predict.</span></label>
+          <label class="x-radio"><input type="radio" name="ret" value="raw">
+            <span><strong>Raw return</strong>The plain change in price, dividends included. It carries whatever the whole market did that day.</span></label>
+          <label class="x-radio"><input type="radio" name="ret" value="beta_residual">
+            <span><strong>Against the market</strong>The return minus the part the S&amp;P 500&#39;s move explains, scaled by how strongly the stock usually follows it (its beta).</span></label>
+        </div>
+      </fieldset>
+
+      
+      <fieldset class="x-step" id="x-step-3">
+        <legend><span class="x-num" aria-hidden="true">3</span> Over which years?</legend>
+        <div class="x-chips x-years" id="x-years" role="group" aria-label="Date range">
+          <button type="button" data-y="model">Since 2016</button>
+          <button type="button" data-y="all">Everything since 2005</button>
+          <button type="button" data-y="5y">Last 5 years</button>
+          <button type="button" data-y="1y">Last 12 months</button>
+        </div>
+        <div class="x-dates">
+          <label>From <input type="date" name="from" min="2005-01-03" max="2026-09-28"></label>
+          <label>to <input type="date" name="to" min="2005-01-03" max="2026-09-28"></label>
+        </div>
+        <p class="x-hint" id="x-years-hint">The model's rankings start on
+          <span class="mono">2016-01-04</span>; questions about them can only look from there on.</p>
+      </fieldset>
+    </div>
+  </form>
+
+  <p class="x-status" id="x-status" role="status"></p><script type="application/json" id="x-options">{"groups": ["Recent returns", "Trend and position", "Overbought or oversold", "Volatility and risk", "Volume and liquidity", "Other"], "holds": [1, 5], "indicators": [{"fmt": "pct", "group": "Recent returns", "help": "How much the price moved over the last 5 trading days.", "id": "roc_v1", "label": "5-day return", "typical": [-0.07523625616567423, -0.018138889929917856, 0.027966109959340592]}, {"fmt": "pct", "group": "Recent returns", "help": "How much the price moved over the last 20 trading days, about a month.", "id": "roc20_v1", "label": "20-day return", "typical": [-0.14370707793564735, -0.04476744186046511, 0.10104935979472442]}, {"fmt": "num", "group": "Recent returns", "help": "The last 5 days\u0027 return measured against the stock\u0027s own last 60 days, as a z-score: +2 is an unusually strong week for this stock.", "id": "ret5_z_v1", "label": "5-day move against its own normal", "typical": [-1.2269142245502098, -0.4200321155678679, 0.490608842948036]}, {"fmt": "pct", "group": "Recent returns", "help": "The stock\u0027s 20-day return minus the median stock in its sector.", "id": "rs_sector_v1", "label": "20-day return against its sector", "typical": [-0.09762844775239247, 0.0036245834052646697, 0.12266513992385487]}, {"fmt": "pct", "group": "Recent returns", "help": "A momentum-turn gauge as a share of price: above zero, short-term momentum has been rising.", "id": "macd_hist_pct_v1", "label": "MACD histogram", "typical": [-0.012279151798177504, -0.002155126043338642, 0.009844147114725466]}, {"fmt": "pct", "group": "Trend and position", "help": "How far the price sits above (+) or below (\u2212) its 50-day moving average.", "id": "dist_sma50_pct_v1", "label": "Distance from 50-day average", "typical": [-0.1185442185954507, -0.03611271636953273, 0.08500241604825783]}, {"fmt": "pct", "group": "Trend and position", "help": "How far the price sits above (+) or below (\u2212) its 200-day moving average.", "id": "dist_sma200_pct_v1", "label": "Distance from 200-day average", "typical": [-0.20547130242520908, -0.0048736572576220105, 0.2860364206674145]}, {"fmt": "pct", "group": "Trend and position", "help": "How far below its highest price of the past year the stock sits; 0% is at the high.", "id": "high52w_prox_v1", "label": "Distance below 52-week high", "typical": [-0.46727589819192883, -0.18487358702217616, -0.04763182807219628]}, {"fmt": "num", "group": "Trend and position", "help": "How strong the current trend is, up or down, from 0 to 100; above 25 is usually called a strong trend.", "id": "adx_v1", "label": "Trend strength (ADX)", "typical": [12.36656929218711, 20.671712791761166, 34.83183174040761]}, {"fmt": "num", "group": "Trend and position", "help": "Where the price sits in its 20-day band: 0 is the lower edge, 1 the upper edge.", "id": "pctb_v1", "label": "Position in its Bollinger band (%B)", "typical": [0.062190934168358816, 0.2788568779140731, 0.8347196858689883]}, {"fmt": "num", "group": "Overbought or oversold", "help": "Relative Strength Index, 0 to 100: above 70 is often called overbought, below 30 oversold.", "id": "rsi_v1", "label": "RSI (14-day)", "typical": [31.27356576303048, 42.85736353193473, 59.6192659765308]}, {"fmt": "num", "group": "Overbought or oversold", "help": "Where the close sits within the last 14 days\u0027 high-to-low range, 0 to 100.", "id": "stoch_k_v1", "label": "Stochastic %K", "typical": [6.052601829084925, 28.206551915602528, 86.67750942223127]}, {"fmt": "num", "group": "Overbought or oversold", "help": "How far the price is from its 20-day average against its usual spread; beyond \u00b1100 is considered stretched.", "id": "cci_v1", "label": "Commodity Channel Index (CCI)", "typical": [-122.68992311141041, -45.82710311437582, 81.91150114494347]}, {"fmt": "num", "group": "Overbought or oversold", "help": "An RSI that also weighs volume, 0 to 100: above 80 is often called overbought, below 20 oversold.", "id": "mfi_v1", "label": "Money Flow Index", "typical": [21.408667205230714, 42.16194935197777, 66.8506366735447]}, {"fmt": "pct", "group": "Volatility and risk", "help": "How much the stock typically moves in a day, from the last 20 days\u0027 returns.", "id": "rvol20_v1", "label": "Daily volatility (20-day)", "typical": [0.011054897058188356, 0.019533622762440653, 0.041674324266747]}, {"fmt": "pct", "group": "Volatility and risk", "help": "The typical high-to-low swing of a day over the last 14 days, as a share of price.", "id": "atr_pct_v1", "label": "Average daily range (ATR)", "typical": [0.01988672454302194, 0.03121571559253566, 0.05799710777464654]}, {"fmt": "num", "group": "Volatility and risk", "help": "The last 5 days\u0027 volatility divided by the last 60 days\u0027: above 1, the stock has become jumpier.", "id": "rvol_ratio_5_60_v1", "label": "Volatility now against before", "typical": [0.31153983085265985, 0.6403095539855226, 1.0866013846713094]}, {"fmt": "pct", "group": "Volatility and risk", "help": "How large the stock\u0027s down days have been over the last 60 days.", "id": "downside_dev_v1", "label": "Downside volatility (60-day)", "typical": [0.00931445914629471, 0.015715685411574216, 0.03405838942848905]}, {"fmt": "num", "group": "Volatility and risk", "help": "Whether the last 60 days\u0027 big moves were mostly up (positive) or down (negative).", "id": "ret_skew_v1", "label": "Return skew (60-day)", "typical": [-0.9907672198296309, 0.19620178823542186, 1.2968452871747649]}, {"fmt": "pct", "group": "Volatility and risk", "help": "How wide the 20-day band is against the price: narrow is a squeeze, wide an expansion.", "id": "bb_width_v1", "label": "Bollinger band width", "typical": [0.068195683619594, 0.13526590814187242, 0.2904880321672776]}, {"fmt": "num", "group": "Volatility and risk", "help": "How much the stock has tended to move when the S\u0026P 500 moves, over 60 days: 1 moves with it, 2 twice as much.", "id": "beta_spy_v1", "label": "Beta to the market", "typical": [-0.33082675963582203, 0.7293524501682412, 3.225892695118461]}, {"fmt": "num", "group": "Volatility and risk", "help": "How closely the stock\u0027s daily moves tracked the S\u0026P 500 over 60 days, from \u22121 to 1.", "id": "corr_spy_v1", "label": "Correlation with the market", "typical": [-0.13801548173942269, 0.21229002775486913, 0.5303372165735424]}, {"fmt": "num", "group": "Volume and liquidity", "help": "The day\u0027s trading volume against the last 60 days, as a z-score: +2 is an unusually heavy day.", "id": "vol_z_v1", "label": "Volume against normal", "typical": [-0.9497752049685397, -0.3523853530043637, 0.7933411612193739]}, {"fmt": "num", "group": "Volume and liquidity", "help": "Whether volume has flowed in on up days (+) or on down days (\u2212) over 20 days.", "id": "obv_slope_norm_v1", "label": "On-balance volume trend", "typical": [-0.418583194665458, -0.1446673650554969, 0.21852513208561103]}, {"fmt": "num", "group": "Volume and liquidity", "help": "How far the price moves per dollar traded over 20 days: higher is harder to trade without moving it.", "id": "amihud_v1", "label": "Illiquidity (Amihud)", "typical": [0.00903463724102584, 0.03575989204014353, 0.0898511208569768]}], "max_conditions": 12, "max_lag": 20, "returns": {"beta_residual": {"help": "The return minus the part the S\u0026P 500\u0027s move explains, scaled by how strongly the stock usually follows it (its beta).", "label": "Against the market"}, "raw": {"help": "The plain change in price, dividends included. It carries whatever the whole market did that day.", "label": "Raw return"}, "sector_excess": {"help": "The stock\u0027s return minus the median stock in its own sector that day, so moves that lifted or sank the whole market or sector cancel out. It is what the model is built to predict.", "label": "Against its sector"}}, "sectors": ["BASIC MATERIALS", "COMMUNICATION SERVICES", "CONSUMER CYCLICAL", "CONSUMER DEFENSIVE", "ENERGY", "FINANCIAL SERVICES", "HEALTHCARE", "INDUSTRIALS", "NONE", "OTHER", "REAL ESTATE", "TECHNOLOGY", "UNKNOWN", "UTILITIES"], "sources": {"backtest": {"help": "The frozen model applied to every trading day from 2016, after the fact. Lots of days, but a description of the past rather than a live track record.", "label": "Every day since 2016 (backtest)"}, "committed": {"help": "Only the nights whose rankings were saved before the next day\u0027s prices existed: the only true forward evidence, and still very few days.", "label": "Live runs saved before the outcome"}, "nightly": {"help": "The rankings the model actually produced each evening since July 2026 \u2014 including 30 days that were scored late and relabelled live.", "label": "Live nightly runs"}, "shadow": {"help": "A second model scored beside the real one every night and never traded.", "label": "The shadow model"}}, "span": {"bt_first": "2016-01-04", "bt_last": "2026-09-08", "first": "2005-01-03", "last": "2026-09-28"}, "universe": "liquid500", "universe_size": 500}</script>
+  <noscript><p class="note">The question builder needs JavaScript.</p></noscript>
+</section>
+
+<section class="panel" id="x-dist" aria-busy="true">
+  <header class="panel-head">
+    <div>
+      <h2>Distribution</h2>
+      <p class="panel-sub" id="x-words">The stock-days in your question, and the return that followed each.</p>
+    </div>
+    <div class="panel-tags" id="x-evidence"></div>
+  </header>
+  <div id="x-flags" class="x-flags" aria-live="polite"></div>
+  <div class="x-strip">
+    <div class="pulse-card x-card x-dist-card">
+      <div class="x-card-head">
+        <span class="t-label">Return of your stock-days</span>
+        <span class="seg x-zoom" role="group" aria-label="How much of the range to show" id="x-zoom">
+          <button type="button" data-z="95" class="on" aria-pressed="true">Middle 95%</button><button type="button" data-z="99" aria-pressed="false">99%</button><button type="button" data-z="999" aria-pressed="false">99.9%</button><button type="button" data-z="all" aria-pressed="false">Everything</button>
+        </span>
+      </div>
+      <div class="x-dist-body">
+        <div class="x-dist-num">
+          <span class="x-big" id="x-median">&mdash;</span>
+          <span class="pulse-sub">median &middot; everyone else <span class="mono" id="x-median-rest">&mdash;</span></span>
+          <span class="pulse-sub x-card-meta mono" id="x-card-meta"></span>
+        </div>
+        <div class="x-hist-wrap" id="x-hist-wrap">
+          <svg id="x-hist" class="x-hist" viewBox="0 0 400 120" preserveAspectRatio="none" role="img"
+               aria-label="Distribution of the return across your stock-days (bars) against every other stock on the same days (outline)"></svg>
+          <div class="x-axis" id="x-axis" aria-hidden="true"></div>
+          <div class="x-tip" id="x-tip" role="tooltip" hidden></div>
+        </div>
+      </div>
+      <div class="x-hist-foot">
+        <label class="switch x-log"><input type="checkbox" id="x-log"><span class="knob"></span>Make rare returns visible <span class="muted">(log heights)</span></label>
+        <span class="x-tails" id="x-tails"></span>
+      </div>
+      <span class="pulse-sub">bars: your stock-days &middot; outline: every other stock on the same days
+        &middot; each scaled to its own peak &middot; solid line: your median &middot; dashed line:
+        everyone else's &middot; hover a bar for its counts, click it to list its stock-days</span>
+    </div>
+    <div class="pulse-card x-card x-stats">
+      <div class="tiles x-tiles" id="x-tiles">
+        <div class="tile"><span class="t-label">Stock-days</span><span class="t-value">&mdash;</span><span class="t-sub"></span></div>
+      </div>
+      <p class="x-reading" id="x-reading"></p>
+      <p class="x-looks" id="x-looks"></p>
+    </div>
+  </div>
+  <div class="x-drawer" id="x-drawer" hidden>
+    <div class="x-drawer-head">
+      <p id="x-drawer-title"></p>
+      <button type="button" class="x-tool" id="x-drawer-close">Close</button>
+    </div>
+    <div class="x-drawer-body">
+      <table class="data x-table" id="x-drawer-table"><thead></thead><tbody></tbody></table>
+    </div>
+  </div>
+  <details class="explain">
+    <summary>How to read this</summary>
+    <p>Each of your stock-days has one return: the stored target read a set number of trading
+    days after day 0. Held 1 day and starting 1 day after, it is the close of day 1 to the close of
+    day 2. <em>Against its sector</em> is the stock's return minus its sector's median that day
+    (the model's own target); <em>raw</em> is the plain return; <em>against the market</em> takes
+    out the market in proportion to the stock's beta.</p>
+    <p>The unit is the day. Each day's average over your stock-days is set against the average of
+    every other stock with the same return that day, and the figures average over days &mdash; a
+    day with one matching stock counts as much as a day with fifty. The &plusmn; is a standard
+    error from the platform's block bootstrap over those days (blocks of 5, or of the holding
+    period if longer, because a 5-day return overlaps the next four days'). <em>t</em> is the
+    average divided by its standard error: how many standard errors it sits from zero. The median,
+    the share above zero and the histogram pool the stock-days and carry no standard error.</p>
+    <p>A window that starts at day 0's own close cannot be traded when the question uses something
+    computed from that close &mdash; the model's rankings, a price pattern, the volume rank &mdash;
+    and the page says so. Earnings dates are the reported ones; most are announced weeks ahead,
+    but choosing on a report that had not happened yet is hindsight, and choosing on whether it
+    beat is knowing the outcome.</p>
+    <p class="caveat"><span class="badge badge-backtest">backtest</span> The frozen
+model scored on dates it never traded, after the fact. A description of the
+holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
+  </details>
+</section>
+
+<section class="panel" id="x-time">
+  <header class="panel-head">
+    <div>
+      <h2>Over time</h2>
+      <p class="panel-sub">Your stock-days against everyone else, year by year and added up day by
+      day &mdash; so an average carried by one year, or one month, shows as that.</p>
+    </div>
+  </header>
+  <div class="grid2">
+    <div>
+      <h3>Year by year <small class="muted">difference per day &plusmn; 1 standard error</small></h3>
+      <div id="x-chart-years" class="chart mid" role="img" aria-label="Mean daily difference between your stock-days and everyone else, by year"></div>
+    </div>
+    <div>
+      <h3>Added up <small class="muted">cumulative daily difference</small></h3>
+      <div id="x-chart-cum" class="chart mid" role="img" aria-label="Cumulative daily difference between your stock-days and everyone else"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="x-rows">
+  <header class="panel-head">
+    <div>
+      <h2>The stock-days</h2>
+      <p class="panel-sub" id="x-rows-sub">A sample of what your question caught, to check it
+      catches what you meant. Click a bar in the distribution to list every stock-day inside it.</p>
+    </div>
+    <div class="panel-tags">
+      <span class="seg" role="group" aria-label="Which stock-days" id="x-rows-pick">
+        <button type="button" data-v="largest" class="on" aria-pressed="true">largest</button><button type="button" data-v="smallest" aria-pressed="false">smallest</button><button type="button" data-v="latest" aria-pressed="false">latest</button><button type="button" data-v="random" aria-pressed="false">random</button>
+      </span>
+    </div>
+  </header>
+  <div class="table-wrap">
+    <table class="data x-table" id="x-table">
+      <thead><tr><th>Day 0</th><th>Symbol</th><th>Sector</th><th class="num">Return</th></tr></thead>
+      <tbody><tr><td colspan="4" class="muted">&mdash;</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<div class="x-toast" id="x-toast" role="status" hidden></div>
+
+</main>
+<footer><span>Snapshot of the qe research browser exported 2026-09-29. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<script src="../static/vendor/echarts.min.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-09-29T20:25-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script src="../static/fx.js"></script>
+<script src="../static/returns.js"></script>
+</body>
+</html>

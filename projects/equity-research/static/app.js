@@ -24,7 +24,8 @@
     // portfolio demo: app paths -> the static copy's folders
     const [p, hash] = path.split("#");
     const map = { "/": "index.html", "/screener": "screener/", "/model": "model/",
-                  "/research": "research/", "/health": "health/", "/lab": "lab/" };
+                  "/research": "research/", "/health": "health/", "/lab": "lab/",
+                  "/returns": "returns/" };
     return window.QE_ROOT + (p in map ? map[p] : p.replace(/^\//, "")) + (hash ? "#" + hash : "");
   };
   const symbolHref = (sym) => window.QE_ROOT + "symbol/" + encodeURIComponent(sym) + ".html";
