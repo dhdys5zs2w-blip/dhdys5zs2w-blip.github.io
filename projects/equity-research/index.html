@@ -60,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-01 from the live 30.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-02 from the live 31.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="about/">How this demo works &rarr;</a><a class="demo-back" href="../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 
@@ -111,9 +111,9 @@ try {
       <div class="st-cell">
         <dt>Live trading days since July&nbsp;1</dt>
         <dd>
-          <span class="st-big" id="hero-live-days" data-count="62">62</span><span class="st-sub" id="hero-live-days-sub">evenings with picks since
+          <span class="st-big" id="hero-live-days" data-count="63">63</span><span class="st-sub" id="hero-live-days-sub">evenings with picks since
             July 1, 2026: the first Jul 7, 2026, the latest
-            Oct 1, 2026</span>
+            Oct 2, 2026</span>
         </dd>
       </div>
       <div class="st-cell">
@@ -144,8 +144,8 @@ try {
       <div class="st-cell">
         <dt>The model's picks right now</dt>
         <dd>
-          <span class="st-big">49</span><span class="st-unit">stocks</span>
-          <span class="st-sub">chosen on Oct 1, 2026, held in equal
+          <span class="st-big">48</span><span class="st-unit">stocks</span>
+          <span class="st-sub">chosen on Oct 2, 2026, held in equal
             amounts &middot; <a href="#c-picks">see them</a></span>
           <span class="st-sub st-next">New picks each evening after a US trading day<span id="clock-sub">.</span></span>
         </dd>
@@ -195,7 +195,7 @@ try {
           favourite.</span>
       </li>
       <li class="st-step" style="--i: 4">
-        <span class="st-step-n" id="step-book">49</span>
+        <span class="st-step-n" id="step-book">48</span>
         <strong>The picks</strong>
         <span>The top tenth, held in equal amounts. It only ever buys &mdash; it never bets on a
           stock falling (what traders call selling short). A stock joins in the top 10% and stays
@@ -223,7 +223,7 @@ try {
     </div>
 
     <p class="st-example" id="idea-example" data-reveal>The latest
-      picks were made on October 1, 2026.</p>
+      picks were made on October 2, 2026.</p>
   </section>
 
   
@@ -413,7 +413,7 @@ try {
   <section class="st-ch" id="c-live" aria-labelledby="h-live">
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>04</span>Live since July&nbsp;1</p>
-      <h2 id="h-live">62 live trading days so far, from the same frozen model.</h2>
+      <h2 id="h-live">63 live trading days so far, from the same frozen model.</h2>
       <p class="st-lede">From July 1, 2026, every evening the model scored counts as
         a live trading day. It is a paper record: each evening's picks are written down and scored
         as if bought at the next open and sold at the open after, against sector peers. No real
@@ -429,9 +429,9 @@ try {
     <div class="st-tiles" data-reveal>
       <div class="st-tile">
         <span class="k">Live trading days</span>
-        <span class="v" id="live-days">62</span>
+        <span class="v" id="live-days">63</span>
         <span class="s" id="live-days-sub">counted from Jul 1, 2026;
-          the first with picks Jul 7, 2026, the latest Oct 1, 2026</span>
+          the first with picks Jul 7, 2026, the latest Oct 2, 2026</span>
       </div>
       <div class="st-tile">
         <span class="k">Ahead of sector peers, added up</span>
@@ -457,7 +457,7 @@ try {
     <figure class="st-fig" data-reveal>
       <div class="st-fig-head">
         <h3>The live days, added up</h3>
-        <span class="st-fig-meta" id="live-meta">Jul 7, 2026 &ndash; Oct 1, 2026</span>
+        <span class="st-fig-meta" id="live-meta">Jul 7, 2026 &ndash; Oct 2, 2026</span>
       </div>
       <div id="chart-live" class="st-chart tall" role="img"
            aria-label="The live days' edge over sector peers added up, beside the pace of the tested decade's average day, with each day's result below"></div>
@@ -481,16 +481,16 @@ try {
     <div class="st-meter" data-reveal>
       <div class="st-meter-head">
         <h3 class="st-h3">How long until we know</h3>
-        <span class="st-meter-count"><b>62</b> of about 250 live trading days</span>
+        <span class="st-meter-count"><b>63</b> of about 250 live trading days</span>
       </div>
       <div class="st-meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="250"
-           aria-valuenow="62" aria-label="Live trading days toward about a year">
-        <span class="st-meter-fill" style="--pct: 24.8%"></span>
+           aria-valuenow="63" aria-label="Live trading days toward about a year">
+        <span class="st-meter-fill" style="--pct: 25.2%"></span>
       </div>
       <p class="st-meter-read">About a year of trading days &mdash; roughly 250 &mdash;
         is what the live record needs before it can say much either way, and even then it will
         catch a large miss more easily than it can confirm an edge as small as the tested one.
-        188 to go: at one a weekday, about
+        187 to go: at one a weekday, about
         9 more months.</p>
     </div>
   </section>
@@ -499,7 +499,7 @@ try {
   <section class="st-ch" id="c-picks" aria-labelledby="h-picks">
     <header class="st-head" data-reveal>
       <p class="st-kicker"><span>05</span>Today's picks</p>
-      <h2 id="h-picks">49 names, picked on October 1, 2026.</h2>
+      <h2 id="h-picks">48 names, picked on October 2, 2026.</h2>
       <p class="st-lede">What the model holds after its latest run. A stock joins in the top tenth and
         stays until it drops out of the top 30%, so some of today's picks now rank below the top
         tenth, though still inside the top 30%. Each card shows the two things the model weighs
@@ -639,16 +639,16 @@ try {
     </nav>
     <p class="st-end">A research project, not investment advice. &ldquo;qe&rdquo; is short for
       quantitative equity: stock research done with numbers.
-      Prices as of October 1, 2026.</p>
+      Prices as of October 2, 2026.</p>
   </section>
 
   </div>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-10-01. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-10-02. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="about/">About this demo</a> &middot; <a href="../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-10-01T23:18-04:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
+<script>window.QE_ROOT = ""; window.QE_SNAPSHOT = {"exported_at": "2026-10-02T23:17-04:00"};</script><script src="static/demo-shim.js"></script><script src="static/app.js"></script>
 <script src="static/fx.js"></script>
 <script src="static/story.js"></script>
 </body>

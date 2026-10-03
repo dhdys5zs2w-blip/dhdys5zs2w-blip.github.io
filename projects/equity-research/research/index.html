@@ -60,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-01 from the live 30.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-02 from the live 31.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -75,7 +75,7 @@ try {
 <nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-closed">Closed directions</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
 <header class="page-intro rs-intro">
   <div class="intro-text">
-    <p class="eyebrow">Forking-paths ledger &middot; 19 registrations &middot; 9 blocks with results</p>
+    <p class="eyebrow">Forking-paths ledger &middot; 20 registrations &middot; 17 blocks with results</p>
     <h1>Research ledger</h1>
     <p class="lede">Every block was registered &mdash; hypothesis, statistic and decision rule
     fixed in a committed document &mdash; before it ran. What was committed to comes first; what
@@ -88,17 +88,17 @@ try {
   </div>
   
   <aside class="intro-aside">
-    <div class="rs-ledger" id="rs-ledger">
+    <div class="rs-ledger warn" id="rs-ledger">
       <div class="rs-ledger-top">
         <div class="ring-wrap rs-ring">
           <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
             <circle class="ring-track" cx="60" cy="60" r="52"/>
             <circle class="ring-fill" cx="60" cy="60" r="52" pathLength="100"
-                    style="--ring: 100.0"/>
+                    style="--ring: 82.4"/>
           </svg>
           <div class="ring-center">
-            <span class="ring-num" data-count="9">9</span>
-            <span class="ring-of">of 9</span>
+            <span class="ring-num" data-count="14">14</span>
+            <span class="ring-of">of 17</span>
           </div>
         </div>
         <div class="rs-ledger-text">
@@ -109,9 +109,9 @@ try {
         </div>
       </div>
       <dl class="rs-ledger-nums">
-        <div><dt>registrations</dt><dd class="mono" data-count="19">19</dd></div>
-        <div><dt>blocks</dt><dd class="mono" data-count="9">9</dd></div>
-        <div><dt>statistics</dt><dd class="mono" data-count="187">187</dd></div>
+        <div><dt>registrations</dt><dd class="mono" data-count="20">20</dd></div>
+        <div><dt>blocks</dt><dd class="mono" data-count="17">17</dd></div>
+        <div><dt>statistics</dt><dd class="mono" data-count="366">366</dd></div>
         <div><dt>closed</dt><dd class="mono" data-count="8">8</dd></div>
       </dl>
     </div>
@@ -156,8 +156,8 @@ try {
                 title="Phase R blocks"><span class="mono">R</span> <span class="rs-n"></span></button>
       </div>
     </div>
-    <p class="rs-count" id="rs-count" aria-live="polite"><span class="mono">9</span> of
-      <span class="mono">9</span> blocks</p>
+    <p class="rs-count" id="rs-count" aria-live="polite"><span class="mono">17</span> of
+      <span class="mono">17</span> blocks</p>
     <button type="button" class="rs-reset" id="rs-reset" hidden>Clear filters</button>
   </div>
   
@@ -335,7 +335,341 @@ try {
         <a class="rs-more" href="#block-Q0" data-open="block-Q0">3 statistics <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
-  <article class="rs-card" id="card-R1" style="--i: 4"
+  <article class="rs-card" id="card-Q3" style="--i: 4"
+             data-block="Q3" data-family="Q" data-outcome="pos neutral"
+             data-search="q3 do option-implied volatility features add rank information over the frozen model? docs/pre-registered-q.md no signal signal no pass atm_iv30 cp_iv_spread iv_rv_spread skew25 all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q3" data-open="block-Q3">Q3</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp " style="--k: 0">no</span>
+          
+          <span class="rs-stamp " style="--k: 1">SIGNAL</span>
+          
+          <span class="rs-stamp pos" style="--k: 2">PASS</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Do option-implied volatility features add rank information over the frozen model?</p>
+      
+      <ul class="rs-vlist" aria-label="Each verdict and the statistic it was written on">
+        <li><span class="verdict " title="incremental_ic / atm_iv30">atm_iv30: no</span></li><li><span class="verdict " title="incremental_ic / cp_iv_spread">cp_iv_spread: SIGNAL</span></li><li><span class="verdict " title="incremental_ic / iv_rv_spread">iv_rv_spread: SIGNAL</span></li><li><span class="verdict " title="incremental_ic / skew25">skew25: no</span></li><li><span class="verdict pos" title="verdict / all">all: PASS</span></li>
+      </ul>
+      
+      <div class="rs-tl"
+           data-reg="2026-09-10 09:11:09.782100" data-run="2026-10-02 16:03:44.911252">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v mono">2026-09-10 09:11</span>
+          <span class="rs-tl-sub mono">commit 67c5de05</span>
+          
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:03</span>
+          <span class="rs-tl-sub mono">run d7ac262b</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">docs/pre-registered-Q.md</span>
+        <a class="rs-more" href="#block-Q3" data-open="block-Q3">9 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q3A" style="--i: 5"
+             data-block="Q3A" data-family="Q" data-outcome="pos"
+             data-search="q3a q3 amended before it ran: do the options features add rank information on the leg the book trades, over the survivorship-complete panel, beyond the score and realised risk? docs/pre-registered-q3a.md pass all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q3A" data-open="block-Q3A">Q3A</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp pos" style="--k: 0">PASS</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Q3 amended before it ran: do the options features add rank information on the leg the book trades, over the survivorship-complete panel, beyond the score and realised risk?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl"
+           data-reg="2026-09-29 16:29:45.354144" data-run="2026-10-02 16:06:54.541420">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v mono">2026-09-29 16:29</span>
+          <span class="rs-tl-sub mono">commit 7b8eba20</span>
+          
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:06</span>
+          <span class="rs-tl-sub mono">run ce9061e5</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">docs/pre-registered-Q3A.md</span>
+        <a class="rs-more" href="#block-Q3A" data-open="block-Q3A">100 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q4" style="--i: 6"
+             data-block="Q4" data-family="Q" data-outcome="neutral"
+             data-search="q4 phase q: implied volatility as new cross-sectional information docs/pre-registered-q.md  ">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q4" data-open="block-Q4">Q4</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp none">no verdict field</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Phase Q: implied volatility as new cross-sectional information</p>
+      
+      <div class="rs-tl"
+           data-reg="2026-09-10 09:11:09.782100" data-run="2026-10-02 16:03:44.911252">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v mono">2026-09-10 09:11</span>
+          <span class="rs-tl-sub mono">commit 67c5de05</span>
+          
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:03</span>
+          <span class="rs-tl-sub mono">run d7ac262b</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">docs/pre-registered-Q.md</span>
+        <a class="rs-more" href="#block-Q4" data-open="block-Q4">3 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q5" style="--i: 7"
+             data-block="Q5" data-family="Q" data-outcome="pos"
+             data-search="q5 does option activity — volume, put share, open interest, implied-vol changes — add rank information on the traded leg beyond the score and realised risk? docs/pre-registered-q5.md pass all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q5" data-open="block-Q5">Q5</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp pos" style="--k: 0">PASS</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Does option activity — volume, put share, open interest, implied-vol changes — add rank information on the traded leg beyond the score and realised risk?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl"
+           data-reg="2026-10-02 16:39:50.148275" data-run="2026-10-02 16:56:23.462387">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v mono">2026-10-02 16:39</span>
+          <span class="rs-tl-sub mono">commit ddc932a7</span>
+          
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:56</span>
+          <span class="rs-tl-sub mono">run 314f67da</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">docs/pre-registered-Q5.md</span>
+        <a class="rs-more" href="#block-Q5" data-open="block-Q5">41 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q5-7" style="--i: 8"
+             data-block="Q5-7" data-family="Q" data-outcome="neutral"
+             data-search="q5-7 is any options construction good enough to trade — a paired net gain over the book in both halves and outside the contaminated region?  none qualifies all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q5-7" data-open="block-Q5-7">Q5-7</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp " style="--k: 0">NONE QUALIFIES</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Is any options construction good enough to trade — a paired net gain over the book in both halves and outside the contaminated region?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl missing"
+           data-reg="" data-run="2026-10-02 16:56:23.462387">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v">no matching pre-registration found</span>
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:56</span>
+          <span class="rs-tl-sub mono">run 314f67da</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">—</span>
+        <a class="rs-more" href="#block-Q5-7" data-open="block-Q5-7">5 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q6a" style="--i: 9"
+             data-block="Q6a" data-family="Q" data-outcome="neutral"
+             data-search="q6a does implied volatility forecast a stock&#39;s coming volatility better than its trailing realised volatility?  iv forecasts better all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q6a" data-open="block-Q6a">Q6a</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp " style="--k: 0">IV FORECASTS BETTER</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Does implied volatility forecast a stock&#39;s coming volatility better than its trailing realised volatility?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl missing"
+           data-reg="" data-run="2026-10-02 16:56:23.462387">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v">no matching pre-registration found</span>
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:56</span>
+          <span class="rs-tl-sub mono">run 314f67da</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">—</span>
+        <a class="rs-more" href="#block-Q6a" data-open="block-Q6a">7 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q6b" style="--i: 10"
+             data-block="Q6b" data-family="Q" data-outcome="neutral"
+             data-search="q6b does weighting the book by inverse implied volatility beat equal weight and inverse realised volatility, net?  not helps all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q6b" data-open="block-Q6b">Q6b</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp " style="--k: 0">NOT HELPS</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Does weighting the book by inverse implied volatility beat equal weight and inverse realised volatility, net?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl missing"
+           data-reg="" data-run="2026-10-02 16:56:23.462387">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v">no matching pre-registration found</span>
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:56</span>
+          <span class="rs-tl-sub mono">run 314f67da</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">—</span>
+        <a class="rs-more" href="#block-Q6b" data-open="block-Q6b">7 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-Q7" style="--i: 11"
+             data-block="Q7" data-family="Q" data-outcome="neutral"
+             data-search="q7 does a market-wide implied-dispersion gate beat the realised-dispersion gate? docs/pre-registered-q.md established all">
+      <div class="rs-card-head">
+        <div class="rs-card-id">
+          <a class="rs-id" href="#block-Q7" data-open="block-Q7">Q7</a>
+          <span class="rs-fam">Phase Q</span>
+        </div>
+        <div class="rs-stamps">
+          
+          <span class="rs-stamp " style="--k: 0">ESTABLISHED</span>
+          
+        </div>
+      </div>
+      <p class="rs-q" data-text>Does a market-wide implied-dispersion gate beat the realised-dispersion gate?</p>
+      
+      <p class="rs-vsrc mono" title="the statistic the verdict was written on">verdict / all</p>
+      
+      <div class="rs-tl"
+           data-reg="2026-09-10 09:11:09.782100" data-run="2026-10-02 16:56:23.462387">
+        <span class="rs-tl-line" aria-hidden="true"><i></i></span>
+        <span class="rs-tl-dot reg" aria-hidden="true"></span>
+        <span class="rs-tl-gap mono"></span>
+        <span class="rs-tl-dot run" aria-hidden="true"></span>
+        <div class="rs-tl-pt reg">
+          <span class="rs-tl-k">registered</span>
+          <span class="rs-tl-v mono">2026-09-10 09:11</span>
+          <span class="rs-tl-sub mono">commit 67c5de05</span>
+          
+        </div>
+        <div class="rs-tl-pt run">
+          <span class="rs-tl-k">ran</span>
+          <span class="rs-tl-v mono">2026-10-02 16:56</span>
+          <span class="rs-tl-sub mono">run 314f67da</span>
+        </div>
+      </div>
+      
+      <div class="rs-card-foot">
+        <span class="mono rs-doc">docs/pre-registered-Q.md</span>
+        <a class="rs-more" href="#block-Q7" data-open="block-Q7">7 statistics <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  <article class="rs-card" id="card-R1" style="--i: 12"
              data-block="R1" data-family="R" data-outcome="neutral"
              data-search="r1 what are the factor alphas when the market regressor is aligned to the same window as the return it explains (findings c8)? docs/pre-registered-r.md  ">
       <div class="rs-card-head">
@@ -375,7 +709,7 @@ try {
         <a class="rs-more" href="#block-R1" data-open="block-R1">60 statistics <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
-  <article class="rs-card" id="card-R2" style="--i: 5"
+  <article class="rs-card" id="card-R2" style="--i: 13"
              data-block="R2" data-family="R" data-outcome="pos"
              data-search="r2 does the book&#39;s overnight alpha survive a third night? docs/pre-registered-r.md persists persists all night3">
       <div class="rs-card-head">
@@ -419,7 +753,7 @@ try {
         <a class="rs-more" href="#block-R2" data-open="block-R2">14 statistics <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
-  <article class="rs-card" id="card-R3" style="--i: 6"
+  <article class="rs-card" id="card-R3" style="--i: 14"
              data-block="R3" data-family="R" data-outcome="neg"
              data-search="r3 does the ranking order names inside its own top — the prerequisite for holding fewer of them? docs/pre-registered-r.md gate closed gate closed within_top_ic all">
       <div class="rs-card-head">
@@ -463,7 +797,7 @@ try {
         <a class="rs-more" href="#block-R3" data-open="block-R3">18 statistics <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
-  <article class="rs-card" id="card-R4" style="--i: 7"
+  <article class="rs-card" id="card-R4" style="--i: 15"
              data-block="R4" data-family="R" data-outcome="neg"
              data-search="r4 does the calm-market result survive a null that preserves how persistent a regime label is? docs/pre-registered-r.md not established gate_family">
       <div class="rs-card-head">
@@ -505,7 +839,7 @@ try {
         <a class="rs-more" href="#block-R4" data-open="block-R4">26 statistics <span aria-hidden="true">&rarr;</span></a>
       </div>
     </article>
-  <article class="rs-card" id="card-R5" style="--i: 8"
+  <article class="rs-card" id="card-R5" style="--i: 16"
              data-block="R5" data-family="R" data-outcome="neutral"
              data-search="r5 does refitting the model on recent data, weighted toward it, beat the frozen one on identical dates? docs/pre-registered-r5.md indistinguishable indistinguishable indistinguishable w w all">
       <div class="rs-card-head">
@@ -706,7 +1040,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
   <header class="panel-head">
     <div>
       <h2>Pre-registrations</h2>
-      <p class="panel-sub">19 blocks, oldest first: the document, the items
+      <p class="panel-sub">20 blocks, oldest first: the document, the items
       committed to, and the commit that fixed them before anything ran. Where a registration's
       blocks wrote statistics to this ledger, they are linked.</p>
     </div>
@@ -891,7 +1225,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <ol class="compact small rs-items"><li>Q0 coverage gate (delisted chains &gt;= 60%, ATM IV usable &gt;= 90%)</li><li>Q2 null battery 200 draws</li><li>Q3 incremental rank IC, four features, BH q=0.10</li></ol>
         <span class="rs-itemcount small">3 items committed to</span>
         <p class="rs-linked"><span class="rs-by-k">results</span>
-          <a class="rs-tag reg mono" href="#block-Q0" data-open="block-Q0">Q0</a></p>
+          <a class="rs-tag reg mono" href="#block-Q0" data-open="block-Q0">Q0</a><a class="rs-tag reg mono" href="#block-Q3" data-open="block-Q3">Q3</a><a class="rs-tag reg mono" href="#block-Q4" data-open="block-Q4">Q4</a><a class="rs-tag reg mono" href="#block-Q7" data-open="block-Q7">Q7</a></p>
       </li>
     <li class="rs-reg has-results">
         
@@ -961,7 +1295,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <span class="rs-itemcount small">1 item committed to</span>
         
       </li>
-    <li class="rs-reg">
+    <li class="rs-reg has-results">
         
         <div class="rs-reg-head">
           <span class="rs-node" aria-hidden="true"></span>
@@ -972,7 +1306,22 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <p class="rs-reg-note">Q3 amended onto the traded leg, complete panel, realised-risk controls; recorded before the backfill restart</p>
         <ol class="compact small rs-items"><li>Q3A</li></ol>
         <span class="rs-itemcount small">1 item committed to</span>
-        
+        <p class="rs-linked"><span class="rs-by-k">results</span>
+          <a class="rs-tag reg mono" href="#block-Q3A" data-open="block-Q3A">Q3A</a></p>
+      </li>
+    <li class="rs-reg has-results">
+        <span class="rs-month">October 2026</span>
+        <div class="rs-reg-head">
+          <span class="rs-node" aria-hidden="true"></span>
+          <time class="mono">2026-10-02 16:39</time>
+          <span class="mono strong rs-reg-doc">docs/pre-registered-Q5.md</span>
+          <span class="rs-commit mono" title="the commit that fixed the document">ddc932a7b7</span>
+        </div>
+        <p class="rs-reg-note">Q5-Q7 options follow-ups and the tradeability rule (owner 2026-10-02)</p>
+        <ol class="compact small rs-items"><li>Q5</li><li>Q6a</li><li>Q6b</li><li>Q7</li><li>Q5-7 tradeability</li></ol>
+        <span class="rs-itemcount small">5 items committed to</span>
+        <p class="rs-linked"><span class="rs-by-k">results</span>
+          <a class="rs-tag reg mono" href="#block-Q5" data-open="block-Q5">Q5</a></p>
       </li>
     
     </ol>
@@ -1594,6 +1943,2481 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <td class="small">
           
           <span class="muted">gate=0.600</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  <p class="panel-foot"><span>Decision rule fixed in <span class="mono">docs/pre-registered-Q.md</span>
+    at commit <span class="mono">67c5de05</span>, 2026-09-10 09:11.</span></p>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q3" data-block="Q3"
+         data-family="Q" data-outcome="pos neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q3</h2>
+      <p class="panel-sub">Do option-implied volatility features add rank information over the frozen model?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">atm_iv30: no</span><span class="verdict ">cp_iv_spread: SIGNAL</span><span class="verdict ">iv_rv_spread: SIGNAL</span><span class="verdict ">skew25: no</span><span class="verdict pos">all: PASS</span>
+      <span class="muted">9 statistics &middot; run <span class="mono">d7ac262b</span> &middot; 2026-10-02 16:03</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The rows the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="incremental_ic">incremental ic &middot; atm_iv30</span>
+      <span class="t-value">0.013<span class="se">&plusmn; 0.009</span></span>
+      <span class="t-sub">n 557 &rarr; <span class="verdict ">no</span></span>
+    </div>
+    
+    <div class="tile boxed">
+      <span class="t-label" title="incremental_ic">incremental ic &middot; cp_iv_spread</span>
+      <span class="t-value">0.008<span class="se">&plusmn; 0.003</span></span>
+      <span class="t-sub">n 557 &rarr; <span class="verdict ">SIGNAL</span></span>
+    </div>
+    
+    <div class="tile boxed">
+      <span class="t-label" title="incremental_ic">incremental ic &middot; iv_rv_spread</span>
+      <span class="t-value">0.018<span class="se">&plusmn; 0.004</span></span>
+      <span class="t-sub">n 557 &rarr; <span class="verdict ">SIGNAL</span></span>
+    </div>
+    
+    <div class="tile boxed">
+      <span class="t-label" title="incremental_ic">incremental ic &middot; skew25</span>
+      <span class="t-value">-0.006<span class="se">&plusmn; 0.004</span></span>
+      <span class="t-sub">n 557 &rarr; <span class="verdict ">no</span></span>
+    </div>
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">1.000</span>
+      <span class="t-sub">n 557 &rarr; <span class="verdict pos">PASS</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 9 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="incremental_ic">incremental ic</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="0.013240644523895733">0.013</td>
+        <td class="mono num" data-v="0.008702634372480901">0.009</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          <span class="verdict ">no</span>
+          <span class="muted">p=0.005</span> <span class="muted">q=0.007</span> <span class="muted">null95_abs=0.004</span> <span class="muted">univariate_ic=0.014</span> <span class="muted">share_positive=0.555</span> <span class="muted">expected_sign=?</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic">incremental ic</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.008348551789379847">0.008</td>
+        <td class="mono num" data-v="0.002741139942548164">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          <span class="verdict ">SIGNAL</span>
+          <span class="muted">p=0.005</span> <span class="muted">q=0.007</span> <span class="muted">null95_abs=0.004</span> <span class="muted">univariate_ic=0.009</span> <span class="muted">share_positive=0.542</span> <span class="muted">expected_sign=+</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic">incremental ic</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.017751178460928375">0.018</td>
+        <td class="mono num" data-v="0.004114764060143312">0.004</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          <span class="verdict ">SIGNAL</span>
+          <span class="muted">p=0.005</span> <span class="muted">q=0.007</span> <span class="muted">null95_abs=0.004</span> <span class="muted">univariate_ic=0.018</span> <span class="muted">share_positive=0.567</span> <span class="muted">expected_sign=?</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic">incremental ic</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="-0.005705762114050437">-0.006</td>
+        <td class="mono num" data-v="0.0038701214942401673">0.004</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          <span class="verdict ">no</span>
+          <span class="muted">p=0.015</span> <span class="muted">q=0.015</span> <span class="muted">null95_abs=0.004</span> <span class="muted">univariate_ic=-0.006</span> <span class="muted">share_positive=0.456</span> <span class="muted">expected_sign=-</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic_h5">incremental ic h5</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="-0.0030414473716244366">-0.003</td>
+        <td class="mono num" data-v="0.008452557324975678">0.008</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic_h5">incremental ic h5</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0027907299842187465">0.003</td>
+        <td class="mono num" data-v="0.00272471228765249">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic_h5">incremental ic h5</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.00837135864354387">0.008</td>
+        <td class="mono num" data-v="0.0038998241801258067">0.004</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="incremental_ic_h5">incremental ic h5</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.011368778193569391">0.011</td>
+        <td class="mono num" data-v="0.003920552047375578">0.004</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          <span class="verdict pos">PASS</span>
+          <span class="muted">coverage=0.999</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  <p class="panel-foot"><span>Decision rule fixed in <span class="mono">docs/pre-registered-Q.md</span>
+    at commit <span class="mono">67c5de05</span>, 2026-09-10 09:11.</span></p>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q3A" data-block="Q3A"
+         data-family="Q" data-outcome="pos">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q3A</h2>
+      <p class="panel-sub">Q3 amended before it ran: do the options features add rank information on the leg the book trades, over the survivorship-complete panel, beyond the score and realised risk?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">PASS</span>
+      <span class="muted">100 statistics &middot; run <span class="mono">ce9061e5</span> &middot; 2026-10-02 16:06</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">1.000</span>
+      <span class="t-sub">n 2680 &rarr; <span class="verdict pos">PASS</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 100 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="build_guard_abs_delta">build guard abs delta</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">limit=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="build_guard_abs_delta">build guard abs delta</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">limit=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="build_guard_abs_delta">build guard abs delta</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">limit=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="build_guard_abs_delta">build guard abs delta</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">limit=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate">gate</td>
+        <td class="mono small">coverage</td>
+        <td class="mono num" data-v="0.998894337428114">0.999</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="278566">278566</td>
+        <td class="small">
+          
+          <span class="muted">summarised=278,258.000</span> <span class="muted">min=0.950</span> <span class="muted">passed=1.000</span> <span class="muted">build_a={&#39;summarised&#39;: 278258, &#39;member_weeks&#39;: 278566, &#39;coverage&#39;: 0.998894337428114}</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate">gate</td>
+        <td class="mono small">reproduction_b9ca7ceb</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="1210935">1210935</td>
+        <td class="small">
+          
+          <span class="muted">identity_cut=2025-07-28</span> <span class="muted">heal_cut=2026-08-10</span> <span class="muted">identity_rows=1,093,176.000</span> <span class="muted">identity_stored_rows=1,093,176.000</span> <span class="muted">identity_only_panel=0.000</span> <span class="muted">identity_only_stored=0.000</span> <span class="muted">enforced_rows=1,210,935.000</span> <span class="muted">max_rel_dev=0.000</span> <span class="muted">rtol=0.000</span> <span class="muted">tail_rows=10,279.000</span> <span class="muted">tail_deviating=60.000</span> <span class="muted">tail_max_rel_dev=11.618</span> <span class="muted">passed=1.000</span> <span class="muted">ruling=owner ruling 1, 2026-10-02 15:26</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="-0.1740979318317235">-0.174</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">sd_t=1.149</span> <span class="muted">in_band=1.000</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">t=[&#39;0.32282523585177547&#39;, &#39;-0.12053116075533202&#39;, &#39;1.774331828417384&#39;, &#39;-2.121639020618992&#39;, &#39;-1.278182124521727&#39;, &#39;0.5438998823778598&#39;, &#39;1.0942795209748415&#39;, &#39;-0.8377057635196306&#39;, &#39;-0.6871129141280489&#39;, &#39;-0.5361395569029835&#39;, &#39;-0.7919062982237917&#39;, &#39;-1.2484896241849557&#39;, &#39;2.851567889355719&#39;, &#39;-0.47064255837151003&#39;, &#39;0.880870181573885&#39;, &#39;-0.31529588563547556&#39;, &#39;-0.9802779800390755&#39;, &#39;-0.6865433994376815&#39;, &#39;-0.23460145323988263&#39;, &#39;-0.6406654356068487&#39;]</span> <span class="muted">decision_bearing=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="-0.09741691809996625">-0.097</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">sd_t=1.086</span> <span class="muted">in_band=1.000</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">t=[&#39;1.9451224695020906&#39;, &#39;0.7208625832828837&#39;, &#39;0.9216500130044359&#39;, &#39;0.37894822450311616&#39;, &#39;-2.427533632139178&#39;, &#39;-0.3914188066306125&#39;, &#39;0.7444727236278186&#39;, &#39;-0.0741770629332214&#39;, &#39;-0.6155757755921794&#39;, &#39;1.5703254100643447&#39;, &#39;-0.20058928397966538&#39;, &#39;-0.1771951501975128&#39;, &#39;-1.1285659069079423&#39;, &#39;1.044566741450869&#39;, &#39;-0.009191646769057163&#39;, &#39;-0.6303191349683155&#39;, &#39;-0.5991576119955552&#39;, &#39;-1.7521877198574414&#39;, &#39;-1.2609118142836593&#39;, &#39;-0.007462981180542812&#39;]</span> <span class="muted">decision_bearing=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="-0.03215319381238515">-0.032</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">sd_t=0.919</span> <span class="muted">in_band=1.000</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">t=[&#39;0.3099966515401694&#39;, &#39;-0.9482510344283445&#39;, &#39;-1.31225802440315&#39;, &#39;0.5816528611400007&#39;, &#39;-0.8393915427972307&#39;, &#39;-0.9256657051060793&#39;, &#39;0.5715168920911771&#39;, &#39;-0.8842965961936847&#39;, &#39;0.8459308546593348&#39;, &#39;0.5562669934866301&#39;, &#39;0.21008796258321383&#39;, &#39;0.5904413384897501&#39;, &#39;1.2506891696911469&#39;, &#39;-0.33087734890476256&#39;, &#39;-2.2315203726866812&#39;, &#39;0.6131330615144278&#39;, &#39;0.3514044886973268&#39;, &#39;1.2982967039297135&#39;, &#39;-0.11620445848724589&#39;, &#39;-0.23401577106341548&#39;]</span> <span class="muted">decision_bearing=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="-0.07786001590795567">-0.078</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">sd_t=0.889</span> <span class="muted">in_band=1.000</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">t=[&#39;0.6213226133973735&#39;, &#39;1.4774494608691784&#39;, &#39;-1.5008855722519545&#39;, &#39;1.1351500491387865&#39;, &#39;-0.9467332871121222&#39;, &#39;0.5034139918417586&#39;, &#39;-0.7326516417920026&#39;, &#39;0.19162536951273462&#39;, &#39;-0.7720596967999407&#39;, &#39;0.4024803291493362&#39;, &#39;0.40562967487317075&#39;, &#39;-1.6582521931389504&#39;, &#39;0.32711973893495727&#39;, &#39;-0.16542517046739505&#39;, &#39;0.27464467497250206&#39;, &#39;1.2504894702762017&#39;, &#39;-0.9591794517201182&#39;, &#39;-0.08257787966986513&#39;, &#39;-0.5210569500579217&#39;, &#39;-0.8077038481148422&#39;]</span> <span class="muted">decision_bearing=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_b_mean_ic">null b mean ic</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="3.8427843063587044e-05">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="200">200</td>
+        <td class="small">
+          
+          <span class="muted">sd=0.001</span> <span class="muted">p95_abs=0.002</span> <span class="muted">plumbing_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_b_mean_ic">null b mean ic</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="-3.823390354198626e-06">-0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="200">200</td>
+        <td class="small">
+          
+          <span class="muted">sd=0.001</span> <span class="muted">p95_abs=0.002</span> <span class="muted">plumbing_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_b_mean_ic">null b mean ic</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="2.590750335410646e-05">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="200">200</td>
+        <td class="small">
+          
+          <span class="muted">sd=0.001</span> <span class="muted">p95_abs=0.002</span> <span class="muted">plumbing_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_b_mean_ic">null b mean ic</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="-9.776547811619827e-05">-0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="200">200</td>
+        <td class="small">
+          
+          <span class="muted">sd=0.001</span> <span class="muted">p95_abs=0.002</span> <span class="muted">plumbing_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="0.0019321061892799978">0.002</td>
+        <td class="mono num" data-v="0.001277967254754683">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=1.512</span> <span class="muted">share_positive=0.518</span> <span class="muted">expected_sign=?</span> <span class="muted">decision_bearing=0.000</span> <span class="muted">null_a_mean_t=-0.174</span> <span class="muted">null_a_sd_t=1.149</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">label=vol level: a significant value restates AG-020/AG-015/AG-018</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0013240937688910918">0.001</td>
+        <td class="mono num" data-v="0.0010906533193944786">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=1.214</span> <span class="muted">share_positive=0.506</span> <span class="muted">expected_sign=+</span> <span class="muted">decision_bearing=1.000</span> <span class="muted">null_a_mean_t=-0.097</span> <span class="muted">null_a_sd_t=1.086</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">p=0.225</span> <span class="muted">q=0.225</span> <span class="muted">bh_reject=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.002903509126483031">0.003</td>
+        <td class="mono num" data-v="0.001439172611270092">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.017</span> <span class="muted">share_positive=0.515</span> <span class="muted">expected_sign=?</span> <span class="muted">decision_bearing=1.000</span> <span class="muted">null_a_mean_t=-0.032</span> <span class="muted">null_a_sd_t=0.919</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">p=0.044</span> <span class="muted">q=0.065</span> <span class="muted">bh_reject=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.0032357964652982847">0.003</td>
+        <td class="mono num" data-v="0.00122118391776797">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.650</span> <span class="muted">share_positive=0.527</span> <span class="muted">expected_sign=-</span> <span class="muted">decision_bearing=1.000</span> <span class="muted">null_a_mean_t=-0.078</span> <span class="muted">null_a_sd_t=0.889</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">p=0.008</span> <span class="muted">q=0.024</span> <span class="muted">bh_reject=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">atm_iv30:0</td>
+        <td class="mono num" data-v="0.003594873825546066">0.004</td>
+        <td class="mono num" data-v="0.0028772723408062996">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=1.249</span> <span class="muted">reported_only=1.000</span> <span class="muted">note=age 0 = Q3&#39;s weekly dates</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">atm_iv30:1</td>
+        <td class="mono num" data-v="0.0013778042732784412">0.001</td>
+        <td class="mono num" data-v="0.002609124074621018">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=0.528</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">atm_iv30:2</td>
+        <td class="mono num" data-v="0.0015455067611907778">0.002</td>
+        <td class="mono num" data-v="0.002891350474114454">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=0.535</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">atm_iv30:3</td>
+        <td class="mono num" data-v="-0.0010056613405806363">-0.001</td>
+        <td class="mono num" data-v="0.003150110020573329">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.319</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">atm_iv30:4</td>
+        <td class="mono num" data-v="0.004636234366239961">0.005</td>
+        <td class="mono num" data-v="0.0036118689404204445">0.004</td>
+        <td class="mono num" data-v="455">455</td>
+        <td class="small">
+          
+          <span class="muted">t=1.284</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">cp_iv_spread:0</td>
+        <td class="mono num" data-v="0.0057801895565869135">0.006</td>
+        <td class="mono num" data-v="0.0023922365001699374">0.002</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=2.416</span> <span class="muted">reported_only=1.000</span> <span class="muted">note=age 0 = Q3&#39;s weekly dates</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">cp_iv_spread:1</td>
+        <td class="mono num" data-v="-0.0006274650890754158">-0.001</td>
+        <td class="mono num" data-v="0.0025031336815501113">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.251</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">cp_iv_spread:2</td>
+        <td class="mono num" data-v="0.0028451307942878">0.003</td>
+        <td class="mono num" data-v="0.002363506441487375">0.002</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=1.204</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">cp_iv_spread:3</td>
+        <td class="mono num" data-v="0.002923382321349424">0.003</td>
+        <td class="mono num" data-v="0.0025238062704736894">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=1.158</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">cp_iv_spread:4</td>
+        <td class="mono num" data-v="-0.005559158209140988">-0.006</td>
+        <td class="mono num" data-v="0.00239340212387315">0.002</td>
+        <td class="mono num" data-v="455">455</td>
+        <td class="small">
+          
+          <span class="muted">t=-2.323</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">iv_rv_spread:0</td>
+        <td class="mono num" data-v="0.008312765968540366">0.008</td>
+        <td class="mono num" data-v="0.0030418375005454856">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=2.733</span> <span class="muted">reported_only=1.000</span> <span class="muted">note=age 0 = Q3&#39;s weekly dates</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">iv_rv_spread:1</td>
+        <td class="mono num" data-v="0.005319239175912303">0.005</td>
+        <td class="mono num" data-v="0.0030108007863621886">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=1.767</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">iv_rv_spread:2</td>
+        <td class="mono num" data-v="-0.0009076461202778398">-0.001</td>
+        <td class="mono num" data-v="0.0030925698051917977">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.293</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">iv_rv_spread:3</td>
+        <td class="mono num" data-v="-0.0031962686643989325">-0.003</td>
+        <td class="mono num" data-v="0.0029375948742683634">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.088</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">iv_rv_spread:4</td>
+        <td class="mono num" data-v="0.005440600995539741">0.005</td>
+        <td class="mono num" data-v="0.0035691945918902273">0.004</td>
+        <td class="mono num" data-v="455">455</td>
+        <td class="small">
+          
+          <span class="muted">t=1.524</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">skew25:0</td>
+        <td class="mono num" data-v="0.0008163881220647684">0.001</td>
+        <td class="mono num" data-v="0.0026953476619575277">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=0.303</span> <span class="muted">reported_only=1.000</span> <span class="muted">note=age 0 = Q3&#39;s weekly dates</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">skew25:1</td>
+        <td class="mono num" data-v="0.00677304047519981">0.007</td>
+        <td class="mono num" data-v="0.0026546071078438847">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=2.551</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">skew25:2</td>
+        <td class="mono num" data-v="0.002288935569304916">0.002</td>
+        <td class="mono num" data-v="0.002743881193696491">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=0.834</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">skew25:3</td>
+        <td class="mono num" data-v="0.0033130386031619426">0.003</td>
+        <td class="mono num" data-v="0.0027793626188461944">0.003</td>
+        <td class="mono num" data-v="556">556</td>
+        <td class="small">
+          
+          <span class="muted">t=1.192</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_age">partial ic by age</td>
+        <td class="mono small">skew25:4</td>
+        <td class="mono num" data-v="0.002937798239355295">0.003</td>
+        <td class="mono num" data-v="0.0030490095597869274">0.003</td>
+        <td class="mono num" data-v="455">455</td>
+        <td class="small">
+          
+          <span class="muted">t=0.964</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2016</td>
+        <td class="mono num" data-v="0.003885891521688395">0.004</td>
+        <td class="mono num" data-v="0.004311479678203775">0.004</td>
+        <td class="mono num" data-v="248">248</td>
+        <td class="small">
+          
+          <span class="muted">t=0.901</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2017</td>
+        <td class="mono num" data-v="0.009113587612698435">0.009</td>
+        <td class="mono num" data-v="0.004641086852719961">0.005</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=1.964</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2018</td>
+        <td class="mono num" data-v="-0.003937479517714387">-0.004</td>
+        <td class="mono num" data-v="0.003638344546786404">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.082</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2019</td>
+        <td class="mono num" data-v="-0.002360608604280974">-0.002</td>
+        <td class="mono num" data-v="0.0034589942351959542">0.003</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.682</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2020</td>
+        <td class="mono num" data-v="0.008446650410233294">0.008</td>
+        <td class="mono num" data-v="0.004200566183877933">0.004</td>
+        <td class="mono num" data-v="253">253</td>
+        <td class="small">
+          
+          <span class="muted">t=2.011</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2021</td>
+        <td class="mono num" data-v="-0.004975890097382827">-0.005</td>
+        <td class="mono num" data-v="0.004660078105229392">0.005</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.068</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2022</td>
+        <td class="mono num" data-v="-0.0009875687839892586">-0.001</td>
+        <td class="mono num" data-v="0.004544990700283687">0.005</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.217</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2023</td>
+        <td class="mono num" data-v="-0.0023475406846267736">-0.002</td>
+        <td class="mono num" data-v="0.003974566908907893">0.004</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.591</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2024</td>
+        <td class="mono num" data-v="0.005101650741829169">0.005</td>
+        <td class="mono num" data-v="0.0036908499829069">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=1.382</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2025</td>
+        <td class="mono num" data-v="0.006645597815945109">0.007</td>
+        <td class="mono num" data-v="0.00405567561200499">0.004</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=1.639</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">atm_iv30:2026</td>
+        <td class="mono num" data-v="0.0030275586593629363">0.003</td>
+        <td class="mono num" data-v="0.005746366436561068">0.006</td>
+        <td class="mono num" data-v="170">170</td>
+        <td class="small">
+          
+          <span class="muted">t=0.527</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2016</td>
+        <td class="mono num" data-v="-0.0008654295339425568">-0.001</td>
+        <td class="mono num" data-v="0.003722157103013934">0.004</td>
+        <td class="mono num" data-v="248">248</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.233</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2017</td>
+        <td class="mono num" data-v="0.0004880832668227776">0.000</td>
+        <td class="mono num" data-v="0.00364608793595623">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=0.134</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2018</td>
+        <td class="mono num" data-v="0.00232826883404004">0.002</td>
+        <td class="mono num" data-v="0.0029236142539583562">0.003</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=0.796</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2019</td>
+        <td class="mono num" data-v="0.002116339923307127">0.002</td>
+        <td class="mono num" data-v="0.004049273290771145">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=0.523</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2020</td>
+        <td class="mono num" data-v="0.007639976380512788">0.008</td>
+        <td class="mono num" data-v="0.003288752551147122">0.003</td>
+        <td class="mono num" data-v="253">253</td>
+        <td class="small">
+          
+          <span class="muted">t=2.323</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2021</td>
+        <td class="mono num" data-v="-0.0023800029907083253">-0.002</td>
+        <td class="mono num" data-v="0.00316466556045808">0.003</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.752</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2022</td>
+        <td class="mono num" data-v="-0.000657339405855588">-0.001</td>
+        <td class="mono num" data-v="0.0029625581653248134">0.003</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.222</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2023</td>
+        <td class="mono num" data-v="0.0040845772963465105">0.004</td>
+        <td class="mono num" data-v="0.0032993575436746337">0.003</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=1.238</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2024</td>
+        <td class="mono num" data-v="0.0029083161849337118">0.003</td>
+        <td class="mono num" data-v="0.003724180975972585">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=0.781</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2025</td>
+        <td class="mono num" data-v="-0.005453560762592401">-0.005</td>
+        <td class="mono num" data-v="0.0034715352285999857">0.003</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.571</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">cp_iv_spread:2026</td>
+        <td class="mono num" data-v="0.005671558207485937">0.006</td>
+        <td class="mono num" data-v="0.004572748894315421">0.005</td>
+        <td class="mono num" data-v="170">170</td>
+        <td class="small">
+          
+          <span class="muted">t=1.240</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2016</td>
+        <td class="mono num" data-v="0.0036345559632685">0.004</td>
+        <td class="mono num" data-v="0.004387777434463704">0.004</td>
+        <td class="mono num" data-v="248">248</td>
+        <td class="small">
+          
+          <span class="muted">t=0.828</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2017</td>
+        <td class="mono num" data-v="0.01018691100273556">0.010</td>
+        <td class="mono num" data-v="0.003897791722444672">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=2.614</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2018</td>
+        <td class="mono num" data-v="-0.006072840852854692">-0.006</td>
+        <td class="mono num" data-v="0.004065223090648555">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.494</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2019</td>
+        <td class="mono num" data-v="-0.0023507739850033523">-0.002</td>
+        <td class="mono num" data-v="0.003935307443299836">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.597</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2020</td>
+        <td class="mono num" data-v="0.00794312883571769">0.008</td>
+        <td class="mono num" data-v="0.00550876382137287">0.006</td>
+        <td class="mono num" data-v="253">253</td>
+        <td class="small">
+          
+          <span class="muted">t=1.442</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2021</td>
+        <td class="mono num" data-v="-0.0059023622832684725">-0.006</td>
+        <td class="mono num" data-v="0.005011521731893361">0.005</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=-1.178</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2022</td>
+        <td class="mono num" data-v="-0.0008693301887509255">-0.001</td>
+        <td class="mono num" data-v="0.005220514410284951">0.005</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.167</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2023</td>
+        <td class="mono num" data-v="0.0005210427840783724">0.001</td>
+        <td class="mono num" data-v="0.004503967144441505">0.005</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=0.116</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2024</td>
+        <td class="mono num" data-v="0.00835602875681559">0.008</td>
+        <td class="mono num" data-v="0.00396726986688926">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=2.106</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2025</td>
+        <td class="mono num" data-v="0.011545509020094866">0.012</td>
+        <td class="mono num" data-v="0.004672470038924893">0.005</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=2.471</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">iv_rv_spread:2026</td>
+        <td class="mono num" data-v="0.0059613317426317905">0.006</td>
+        <td class="mono num" data-v="0.006910152162569977">0.007</td>
+        <td class="mono num" data-v="170">170</td>
+        <td class="small">
+          
+          <span class="muted">t=0.863</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2016</td>
+        <td class="mono num" data-v="-0.0018499753281346052">-0.002</td>
+        <td class="mono num" data-v="0.003595624902166352">0.004</td>
+        <td class="mono num" data-v="248">248</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.515</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2017</td>
+        <td class="mono num" data-v="0.0011673359324876767">0.001</td>
+        <td class="mono num" data-v="0.0038383145643377187">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=0.304</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2018</td>
+        <td class="mono num" data-v="5.381705633871639e-05">0.000</td>
+        <td class="mono num" data-v="0.003860477813961224">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=0.014</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2019</td>
+        <td class="mono num" data-v="0.0021831763200137484">0.002</td>
+        <td class="mono num" data-v="0.003663043261584349">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=0.596</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2020</td>
+        <td class="mono num" data-v="-0.0008799637361888026">-0.001</td>
+        <td class="mono num" data-v="0.004467124862623548">0.004</td>
+        <td class="mono num" data-v="253">253</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.197</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2021</td>
+        <td class="mono num" data-v="0.012497489372367207">0.012</td>
+        <td class="mono num" data-v="0.0032660632625809306">0.003</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=3.826</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2022</td>
+        <td class="mono num" data-v="0.002300761934135564">0.002</td>
+        <td class="mono num" data-v="0.0036199854959873346">0.004</td>
+        <td class="mono num" data-v="251">251</td>
+        <td class="small">
+          
+          <span class="muted">t=0.636</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2023</td>
+        <td class="mono num" data-v="0.008488354598028533">0.008</td>
+        <td class="mono num" data-v="0.004138067795477423">0.004</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=2.051</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2024</td>
+        <td class="mono num" data-v="0.005053273116343263">0.005</td>
+        <td class="mono num" data-v="0.004068011162481544">0.004</td>
+        <td class="mono num" data-v="252">252</td>
+        <td class="small">
+          
+          <span class="muted">t=1.242</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2025</td>
+        <td class="mono num" data-v="0.0033513052785011056">0.003</td>
+        <td class="mono num" data-v="0.004443581455010262">0.004</td>
+        <td class="mono num" data-v="250">250</td>
+        <td class="small">
+          
+          <span class="muted">t=0.754</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_by_year">partial ic by year</td>
+        <td class="mono small">skew25:2026</td>
+        <td class="mono num" data-v="0.0031558296414011013">0.003</td>
+        <td class="mono num" data-v="0.005593958059425465">0.006</td>
+        <td class="mono num" data-v="170">170</td>
+        <td class="small">
+          
+          <span class="muted">t=0.564</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="0.0013792889979216286">0.001</td>
+        <td class="mono num" data-v="0.0013210690080094612">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=1.044</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0028143018394359933">0.003</td>
+        <td class="mono num" data-v="0.0010748837586853938">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.618</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.003473574779410862">0.003</td>
+        <td class="mono num" data-v="0.0014279253139174925">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.433</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.0033042512593699615">0.003</td>
+        <td class="mono num" data-v="0.0012026890685221732">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.747</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_h5_schedule">partial ic h5 schedule</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="-0.0010267656840609572">-0.001</td>
+        <td class="mono num" data-v="0.003162033290112989">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.325</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_h5_schedule">partial ic h5 schedule</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.001594318898293">0.002</td>
+        <td class="mono num" data-v="0.002598361954147143">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=0.614</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_h5_schedule">partial ic h5 schedule</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.0006264757674914012">0.001</td>
+        <td class="mono num" data-v="0.0032972154522711602">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=0.190</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_h5_schedule">partial ic h5 schedule</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.007098298791170711">0.007</td>
+        <td class="mono num" data-v="0.0028334935595848653">0.003</td>
+        <td class="mono num" data-v="557">557</td>
+        <td class="small">
+          
+          <span class="muted">t=2.505</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_score_only">partial ic score only</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="-0.0022301390921863106">-0.002</td>
+        <td class="mono num" data-v="0.00402558997209409">0.004</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=-0.554</span> <span class="muted">reported_only=1.000</span> <span class="muted">label=Q3&#39;s statistic (score-only residualisation) on the traded leg — exposed to the volatility rediscovery the controls exist to remove</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_score_only">partial ic score only</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0005099775382226792">0.001</td>
+        <td class="mono num" data-v="0.0012507748894227066">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=0.408</span> <span class="muted">reported_only=1.000</span> <span class="muted">label=Q3&#39;s statistic (score-only residualisation) on the traded leg — exposed to the volatility rediscovery the controls exist to remove</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_score_only">partial ic score only</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.003891234209698633">0.004</td>
+        <td class="mono num" data-v="0.001802574058847766">0.002</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.159</span> <span class="muted">reported_only=1.000</span> <span class="muted">label=Q3&#39;s statistic (score-only residualisation) on the traded leg — exposed to the volatility rediscovery the controls exist to remove</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_score_only">partial ic score only</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.005882827894982679">0.006</td>
+        <td class="mono num" data-v="0.0017423074763530683">0.002</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=3.376</span> <span class="muted">reported_only=1.000</span> <span class="muted">label=Q3&#39;s statistic (score-only residualisation) on the traded leg — exposed to the volatility rediscovery the controls exist to remove</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">atm_iv30</td>
+        <td class="mono num" data-v="0.0024427057422677935">0.002</td>
+        <td class="mono num" data-v="0.001303249160887756">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=1.874</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">cp_iv_spread</td>
+        <td class="mono num" data-v="0.0011572558458864148">0.001</td>
+        <td class="mono num" data-v="0.001135324833534728">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=1.019</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">iv_rv_spread</td>
+        <td class="mono num" data-v="0.004213915089709599">0.004</td>
+        <td class="mono num" data-v="0.0014735204143232457">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.860</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">skew25</td>
+        <td class="mono num" data-v="0.0030860427613364477">0.003</td>
+        <td class="mono num" data-v="0.0012224854651206247">0.001</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=2.524</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="survivor_accounting">survivor accounting</td>
+        <td class="mono small">by_year</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">by_year=[{&#39;year&#39;: 2016, &#39;member_sessions&#39;: 123944, &#39;no_indicator_rows&#39;: 15, &#39;survivor&#39;: 102191, &#39;nan_routed&#39;: 21690, &#39;nan_routed_delisted&#39;: 19940, &#39;excluded_other_feature&#39;: 48, &#39;scored_with_chain&#39;: 110602, &#39;routed_with_chain&#39;: 18217}, {&#39;year&#39;: 2017, &#39;member_sessions&#39;: 125382, &#39;no_indicator_rows&#39;: 0, &#39;survivor&#39;: 105251, &#39;nan_routed&#39;: 20048, &#39;nan_routed_delisted&#39;: 18166, &#39;excluded_other_feature&#39;: 83, &#39;scored_with_chain&#39;: 113447, &#39;routed_with_chain&#39;: 17329}, {&#39;year&#39;: 2018, &#39;member_sessions&#39;: 125304, &#39;no_indicator_rows&#39;: 2, &#39;survivor&#39;: 109023, &#39;nan_routed&#39;: 16272, &#39;nan_routed_delisted&#39;: 14365, &#39;excluded_other_feature&#39;: 7, &#39;scored_with_chain&#39;: 113511, &#39;routed_with_chain&#39;: 13665}, {&#39;year&#39;: 2019, &#39;member_sessions&#39;: 125815, &#39;no_indicator_rows&#39;: 20, &#39;survivor&#39;: 112488, &#39;nan_routed&#39;: 13293, &#39;nan_routed_delisted&#39;: 11673, &#39;excluded_other_feature&#39;: 14, &#39;scored_with_chain&#39;: 115787, &#39;routed_with_chain&#39;: 11570}, {&#39;year&#39;: 2020, &#39;member_sessions&#39;: 126295, &#39;no_indicator_rows&#39;: 0, &#39;survivor&#39;: 115896, &#39;nan_routed&#39;: 10395, &#39;nan_routed_delisted&#39;: 8852, &#39;excluded_other_feature&#39;: 4, &#39;scored_with_chain&#39;: 118472, &#39;routed_with_chain&#39;: 9079}, {&#39;year&#39;: 2021, &#39;member_sessions&#39;: 125913, &#39;no_indicator_rows&#39;: 4, &#39;survivor&#39;: 117676, &#39;nan_routed&#39;: 8227, &#39;nan_routed_delisted&#39;: 6538, &#39;excluded_other_feature&#39;: 6, &#39;scored_with_chain&#39;: 118764, &#39;routed_with_chain&#39;: 7065}, {&#39;year&#39;: 2022, &#39;member_sessions&#39;: 125440, &#39;no_indicator_rows&#39;: 80, &#39;survivor&#39;: 119030, &#39;nan_routed&#39;: 6204, &#39;nan_routed_delisted&#39;: 4828, &#39;excluded_other_feature&#39;: 126, &#39;scored_with_chain&#39;: 119971, &#39;routed_with_chain&#39;: 5887}, {&#39;year&#39;: 2023, &#39;member_sessions&#39;: 124930, &#39;no_indicator_rows&#39;: 27, &#39;survivor&#39;: 119799, &#39;nan_routed&#39;: 4845, &#39;nan_routed_delisted&#39;: 3554, &#39;excluded_other_feature&#39;: 259, &#39;scored_with_chain&#39;: 120185, &#39;routed_with_chain&#39;: 4728}, {&#39;year&#39;: 2024, &#39;member_sessions&#39;: 125946, &#39;no_indicator_rows&#39;: 61, &#39;survivor&#39;: 122434, &#39;nan_routed&#39;: 3034, &#39;nan_routed_delisted&#39;: 1938, &#39;excluded_other_feature&#39;: 417, &#39;scored_with_chain&#39;: 120778, &#39;routed_with_chain&#39;: 2871}, {&#39;year&#39;: 2025, &#39;member_sessions&#39;: 124925, &#39;no_indicator_rows&#39;: 6162, &#39;survivor&#39;: 116818, &#39;nan_routed&#39;: 1735, &#39;nan_routed_delisted&#39;: 1124, &#39;excluded_other_feature&#39;: 210, &#39;scored_with_chain&#39;: 114787, &#39;routed_with_chain&#39;: 1623}, {&#39;year&#39;: 2026, &#39;member_sessions&#39;: 86841, &#39;no_indicator_rows&#39;: 6459, &#39;survivor&#39;: 79517, &#39;nan_routed&#39;: 712, &#39;nan_routed_delisted&#39;: 328, &#39;excluded_other_feature&#39;: 153, &#39;scored_with_chain&#39;: 77936, &#39;routed_with_chain&#39;: 584}]</span> <span class="muted">lost_to_controls={&#39;2016&#39;: 0, &#39;2017&#39;: 0, &#39;2018&#39;: 0, &#39;2019&#39;: 0, &#39;2020&#39;: 0, &#39;2021&#39;: 0, &#39;2022&#39;: 0, &#39;2023&#39;: 0, &#39;2024&#39;: 0, &#39;2025&#39;: 0, &#39;2026&#39;: 0}</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          <span class="verdict pos">PASS</span>
+          <span class="muted">band_ok=1.000</span> <span class="muted">p_finite=1.000</span> <span class="muted">q3_verdict=PASS</span> <span class="muted">joint_reading=Q3 PASS, Q3A PASS: Q3A alone governs any follow-on; neither is quoted as confirming the other</span> <span class="muted">fail_wording=None</span> <span class="muted">params={&#39;block&#39;: &#39;Q3A&#39;, &#39;model&#39;: &#39;09d8c916-37bb-4807-a2b6-266c46d0950d&#39;, &#39;p1_run&#39;: &#39;b9ca7ceb-3a78-4ff9-9fc7-b9a50636ca74&#39;, &#39;prereg&#39;: &#39;ce9061e5-3a72-4e24-9f29-09451c744ffc&#39;, &#39;registered_text_sha256&#39;: &#39;b8f43e25e2d3427ca5e8128cf7c7a11fe2d62ae304894331ed0c8943b217fcb9&#39;, &#39;registered_blob&#39;: &#39;e45c74add3d6a7eaf7f85d9e362fa888496129d4&#39;, &#39;script_blob_sha&#39;: &#39;7fdfbcd654555be3b7db0776ada55ce630b5083c&#39;, &#39;script_committed&#39;: &#39;2026-10-02 16:02:36&#39;, &#39;q3_started&#39;: &#39;2026-10-02 16:03&#39;, &#39;git&#39;: &#39;4e8476313c57575252e5cf311a15c69263f68bb1&#39;, &#39;build_a&#39;: &#39;logs/q3a/build-A-20261002-160413&#39;, &#39;build_b&#39;: &#39;logs/q3a/build-B-20261002-160413&#39;, &#39;panel_sha256&#39;: &#39;47dd5171c9cf5ce575cd01fbfbeef03b826f17156ae317836f0aac55877c3346&#39;, &#39;weekly_sha256&#39;: &#39;cbad93c04785e59bb89a98df169ca9d7eb37dc35bfb4b1da971d57ee09fc5997&#39;, &#39;build_a_built_at&#39;: &#39;2026-10-02 16:04:38&#39;, &#39;build_b_built_at&#39;: &#39;2026-10-02 16:05:07&#39;, &#39;price_max_a&#39;: &#39;2026-10-01&#39;, &#39;price_max_b&#39;: &#39;2026-10-01&#39;, &#39;compute_dirs&#39;: [&#39;logs/q3a/compute-1-20261002-160413&#39;, &#39;logs/q3a/compute-2-20261002-160413&#39;], &#39;compute_digests&#39;: {&#39;daily.csv&#39;: &#39;805ba42e97970882686384e0729f9a224090d4173524b80cfc643efe96f49c7d&#39;, &#39;report.txt&#39;: &#39;da4a4cf3907e529407451a2910561ee002b2a9929a4e4d0ba0d447bbd0d01217&#39;, &#39;results.json&#39;: &#39;1c675541868a1efcaa828a920b2cd3d1fa94ef1689bd846ca934569cbe511984&#39;}, &#39;n_null_a&#39;: 20, &#39;n_null_b&#39;: 200, &#39;seed&#39;: 42, &#39;perm_seed&#39;: 24263, &#39;fdr_q&#39;: 0.1, &#39;min_names&#39;: 100, &#39;band_sd&#39;: [0.7, 1.4], &#39;band_mean&#39;: [-0.7, 0.7], &#39;coverage&#39;: 0.998894337428114, &#39;summarize_chain_sha&#39;: &#39;458eb5baed545b9b4bc02896f287b9ea6731dd140b5456297af8a568cefc4603&#39;, &#39;parse_reduce_sha&#39;: &#39;8ccf682f7cc2455a53bf7a54d5ec4688c96e2957f6ff3145e414e17452a7eee3&#39;, &#39;sklearn&#39;: &#39;1.9.0&#39;}</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  <p class="panel-foot"><span>Decision rule fixed in <span class="mono">docs/pre-registered-Q3A.md</span>
+    at commit <span class="mono">7b8eba20</span>, 2026-09-29 16:29.</span></p>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q4" data-block="Q4"
+         data-family="Q" data-outcome="neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q4</h2>
+      <p class="panel-sub">Phase Q: implied volatility as new cross-sectional information</p>
+    </div>
+    <div class="panel-tags">
+      
+      <span class="muted">3 statistics &middot; run <span class="mono">d7ac262b</span> &middot; 2026-10-02 16:03</span>
+    </div>
+  </header>
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 3 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="walk_forward_ic">walk forward ic</td>
+        <td class="mono small">frozen_gbm</td>
+        <td class="mono num" data-v="0.014483259591821944">0.014</td>
+        <td class="mono num" data-v="0.004466009849468737">0.004</td>
+        <td class="mono num" data-v="453">453</td>
+        <td class="small">
+          
+          <span class="muted">top_decile_bps=3.023</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="walk_forward_ic">walk forward ic</td>
+        <td class="mono small">gbm19_wf</td>
+        <td class="mono num" data-v="0.0007128645255956074">0.001</td>
+        <td class="mono num" data-v="0.005264541713483221">0.005</td>
+        <td class="mono num" data-v="453">453</td>
+        <td class="small">
+          
+          <span class="muted">top_decile_bps=8.700</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="walk_forward_ic">walk forward ic</td>
+        <td class="mono small">gbm23_wf</td>
+        <td class="mono num" data-v="0.002525669889347705">0.003</td>
+        <td class="mono num" data-v="0.00534298969933206">0.005</td>
+        <td class="mono num" data-v="453">453</td>
+        <td class="small">
+          
+          <span class="muted">top_decile_bps=9.634</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  <p class="panel-foot"><span>Decision rule fixed in <span class="mono">docs/pre-registered-Q.md</span>
+    at commit <span class="mono">67c5de05</span>, 2026-09-10 09:11.</span></p>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q5" data-block="Q5"
+         data-family="Q" data-outcome="pos">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q5</h2>
+      <p class="panel-sub">Does option activity — volume, put share, open interest, implied-vol changes — add rank information on the traded leg beyond the score and realised risk?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict pos">PASS</span>
+      <span class="muted">41 statistics &middot; run <span class="mono">314f67da</span> &middot; 2026-10-02 16:56</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">1.000</span>
+      <span class="t-sub">n 2675 &rarr; <span class="verdict pos">PASS</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 41 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="clause3_paired_net_diff_bps">clause3 paired net diff bps</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="-0.9674743859392559">-0.967</td>
+        <td class="mono num" data-v="0.48091987246805445">0.481</td>
+        <td class="mono num" data-v="2681">2681</td>
+        <td class="small">
+          
+          <span class="muted">adverse_end=bottom quintile (observed IC &gt; 0)</span> <span class="muted">clause3_met=0.000</span> <span class="muted">construction={&#39;gross_mean&#39;: 4.0811886485673625, &#39;n_held_mean&#39;: 36.129429317418875, &#39;net_mean&#39;: 1.8393772357625116, &#39;turnover_mean&#39;: 0.2241811412804851}</span> <span class="muted">cost_bps_per_unit_turnover=10.000</span> <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2026-09-08&#39;]</span> <span class="muted">ex_c10={&#39;mean&#39;: -0.9912851746816378, &#39;n&#39;: 2379, &#39;p&#39;: 0.04258452666935073, &#39;se&#39;: 0.4888567246649992, &#39;t&#39;: -2.0277621737962996}</span> <span class="muted">halves={&#39;first&#39;: {&#39;mean&#39;: -0.9885046636042831, &#39;n&#39;: 1340, &#39;p&#39;: 0.06570283698269327, &#39;se&#39;: 0.5371007097308947, &#39;t&#39;: -1.8404456477064735}, &#39;first_dates&#39;: [&#39;2016-01-08&#39;, &#39;2021-05-05&#39;], &#39;second&#39;: {&#39;mean&#39;: -0.9464597908079091, &#39;n&#39;: 1341, &#39;p&#39;: 0.21187251931907558, &#39;se&#39;: 0.7581181913906027, &#39;t&#39;: -1.248433030042235}, &#39;second_dates&#39;: [&#39;2021-05-06&#39;, &#39;2026-09-08&#39;]}</span> <span class="muted">production={&#39;gross_mean&#39;: 4.829791275374525, &#39;n_held_mean&#39;: 45.06415516598284, &#39;net_mean&#39;: 2.806851621701768, &#39;turnover_mean&#39;: 0.20229396536727576}</span> <span class="muted">t=-2.012</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="clause3_paired_net_diff_bps">clause3 paired net diff bps</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.09652071187363497">0.097</td>
+        <td class="mono num" data-v="0.39035990369567913">0.390</td>
+        <td class="mono num" data-v="2681">2681</td>
+        <td class="small">
+          
+          <span class="muted">adverse_end=bottom quintile (observed IC &gt; 0)</span> <span class="muted">clause3_met=0.000</span> <span class="muted">construction={&#39;gross_mean&#39;: 5.273391338810665, &#39;n_held_mean&#39;: 38.143976128310335, &#39;net_mean&#39;: 2.903372333575402, &#39;turnover_mean&#39;: 0.23700190052352613}</span> <span class="muted">cost_bps_per_unit_turnover=10.000</span> <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2026-09-08&#39;]</span> <span class="muted">ex_c10={&#39;mean&#39;: -0.025399936590044365, &#39;n&#39;: 2379, &#39;p&#39;: 0.9494002327604311, &#39;se&#39;: 0.4002513053207356, &#39;t&#39;: -0.06345997190362813}</span> <span class="muted">halves={&#39;first&#39;: {&#39;mean&#39;: -0.2357332310051178, &#39;n&#39;: 1340, &#39;p&#39;: 0.6462457609123755, &#39;se&#39;: 0.5135980908244191, &#39;t&#39;: -0.458983853749773}, &#39;first_dates&#39;: [&#39;2016-01-08&#39;, &#39;2021-05-05&#39;], &#39;second&#39;: {&#39;mean&#39;: 0.42852688894860047, &#39;n&#39;: 1341, &#39;p&#39;: 0.4589328314397443, &#39;se&#39;: 0.578617146157622, &#39;t&#39;: 0.7406052374947506}, &#39;second_dates&#39;: [&#39;2021-05-06&#39;, &#39;2026-09-08&#39;]}</span> <span class="muted">production={&#39;gross_mean&#39;: 4.829791275374525, &#39;n_held_mean&#39;: 45.06415516598284, &#39;net_mean&#39;: 2.806851621701768, &#39;turnover_mean&#39;: 0.20229396536727576}</span> <span class="muted">t=0.247</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate">gate</td>
+        <td class="mono small">coverage</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="278566">278566</td>
+        <td class="small">
+          
+          <span class="muted">min=0.950</span> <span class="muted">passed=1.000</span> <span class="muted">q5_schedule={&#39;coverage&#39;: 0.9999964294130669, &#39;member_weeks&#39;: 280066, &#39;summarised&#39;: 280065}</span> <span class="muted">summarised=278,566.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate">gate</td>
+        <td class="mono small">reproduction_b9ca7ceb</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="1210935">1210935</td>
+        <td class="small">
+          
+          <span class="muted">enforced_rows=1,210,935.000</span> <span class="muted">heal_cut=2026-08-10</span> <span class="muted">identity_cut=2025-07-28</span> <span class="muted">identity_only_panel=0.000</span> <span class="muted">identity_only_stored=0.000</span> <span class="muted">identity_rows=1,093,176.000</span> <span class="muted">identity_stored_rows=1,093,176.000</span> <span class="muted">max_rel_dev=0.000</span> <span class="muted">passed=1.000</span> <span class="muted">rtol=0.000</span> <span class="muted">ruling=Q3A owner ruling 1, 2026-10-02 15:26</span> <span class="muted">tail_deviating=64.000</span> <span class="muted">tail_max_rel_dev=11.618</span> <span class="muted">tail_rows=10,776.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="-0.021914211091021346">-0.022</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">in_band=1.000</span> <span class="muted">sd_t=1.303</span> <span class="muted">t=[-1.4043011055479035, -0.2281908942803271, 1.610032979629181, -0.4508084145679816, 1.733941929269845, -0.3997725875856025, -1.5394346290091536, 0.8482257493612418, 1.5245288689030498, 0.0478655901328368, 0.16955431523500095, 0.055866433837786875, -2.6221647190158244, 0.32956862299848033, -0.11411503578512065, -0.6648197379059251, 2.464881305680106, -2.1160825904790963, -0.46186753773318534, 0.7788072350421643]</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="0.18726004126390217">0.187</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">in_band=1.000</span> <span class="muted">sd_t=0.951</span> <span class="muted">t=[1.585288591417686, 0.6893789929968873, -1.0238756319503743, -0.9994654410673516, 1.042003743375761, 0.2615080532525225, -0.2300345924948983, 2.2487037375771286, -0.860317503764535, 0.32907428146821044, 0.6168124631659727, -0.27290400525479286, 0.9054255453003233, 0.015508676770734028, 1.5106304458782542, 0.14732826590564702, 0.1897490512164405, -0.46548857819483414, -1.0854113273013772, -0.8587139430193625]</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.17075276605161452">0.171</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">in_band=1.000</span> <span class="muted">sd_t=0.921</span> <span class="muted">t=[1.3181694980230496, 1.2762025488444246, 1.5240834599764725, 0.47819799848244127, 1.704159454601486, -0.9395388186392419, 0.4219147509027379, 0.11155062157217172, -0.06385385031658948, 1.7153351143656106, -0.24360325519940462, 0.1467625429124123, -0.831461283840156, -0.9640784507223719, 0.03804644782586628, -0.33912121318371663, -0.6083131779207858, -1.245288579719921, 0.1949738544313151, -0.27908234136351096]</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="null_a_t">null a t</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0030321622302620253">0.003</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="20">20</td>
+        <td class="small">
+          
+          <span class="muted">band_mean=[-0.7, 0.7]</span> <span class="muted">band_sd=[0.7, 1.4]</span> <span class="muted">in_band=1.000</span> <span class="muted">sd_t=1.251</span> <span class="muted">t=[1.4325512429178555, -0.5613613472989992, -1.6509999299739238, 2.749200518876184, 0.17770227520515275, 2.429859441997294, -0.6131868651213273, -0.7285833474972747, -0.6412301387934779, -1.802757067168012, -0.720256585994154, -1.7196755655970135, -0.4304910006515616, 0.579810204789596, 0.7261092948073605, 0.03929281959845663, -0.4599648529053031, 0.02337769329763477, -0.11709678489758936, 1.3483432390143433]</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0011978193967877209">0.001</td>
+        <td class="mono num" data-v="0.0010101873059384112">0.001</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          
+          <span class="muted">bh_reject=0.000</span> <span class="muted">literature_sign=+</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">null_a_mean_t=-0.022</span> <span class="muted">null_a_sd_t=1.303</span> <span class="muted">p=0.236</span> <span class="muted">q=0.314</span> <span class="muted">share_positive=0.510</span> <span class="muted">t=1.186</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.00019593981284498472">-0.000</td>
+        <td class="mono num" data-v="0.001384315520087085">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">bh_reject=0.000</span> <span class="muted">literature_sign=-</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">null_a_mean_t=0.187</span> <span class="muted">null_a_sd_t=0.951</span> <span class="muted">p=0.887</span> <span class="muted">q=0.887</span> <span class="muted">share_positive=0.503</span> <span class="muted">t=-0.142</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.0033018136788435554">0.003</td>
+        <td class="mono num" data-v="0.0011007440555512171">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">bh_reject=1.000</span> <span class="muted">literature_sign=?</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">null_a_mean_t=0.171</span> <span class="muted">null_a_sd_t=0.921</span> <span class="muted">p=0.003</span> <span class="muted">q=0.008</span> <span class="muted">share_positive=0.523</span> <span class="muted">t=3.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic">partial ic</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0028460024587913463">0.003</td>
+        <td class="mono num" data-v="0.0009940672780582068">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">bh_reject=1.000</span> <span class="muted">literature_sign=-</span> <span class="muted">null_a_in_band=1.000</span> <span class="muted">null_a_mean_t=0.003</span> <span class="muted">null_a_sd_t=1.251</span> <span class="muted">p=0.004</span> <span class="muted">q=0.008</span> <span class="muted">share_positive=0.519</span> <span class="muted">t=2.863</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_block20">partial ic block20</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0011978193967877209">0.001</td>
+        <td class="mono num" data-v="0.0009938478472873516">0.001</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          
+          <span class="muted">label=full series, block_se at block 20</span> <span class="muted">p=0.228</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.205</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_block20">partial ic block20</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.00019593981284498472">-0.000</td>
+        <td class="mono num" data-v="0.0013068320641595177">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=full series, block_se at block 20</span> <span class="muted">p=0.881</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-0.150</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_block20">partial ic block20</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.0033018136788435554">0.003</td>
+        <td class="mono num" data-v="0.001136351382347744">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=full series, block_se at block 20</span> <span class="muted">p=0.004</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.906</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_block20">partial ic block20</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0028460024587913463">0.003</td>
+        <td class="mono num" data-v="0.0010102163233882805">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=full series, block_se at block 20</span> <span class="muted">p=0.005</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.817</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0016687561788016228">0.002</td>
+        <td class="mono num" data-v="0.000987600049819373">0.001</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          
+          <span class="muted">label=credited close-to-close h=1 (stored fwd_ret_sector_excess)</span> <span class="muted">p=0.091</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.690</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="9.825845624118057e-05">0.000</td>
+        <td class="mono num" data-v="0.0014020835158928434">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=credited close-to-close h=1 (stored fwd_ret_sector_excess)</span> <span class="muted">p=0.944</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=0.070</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.003539563927097785">0.004</td>
+        <td class="mono num" data-v="0.0011444709573838793">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=credited close-to-close h=1 (stored fwd_ret_sector_excess)</span> <span class="muted">p=0.002</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=3.093</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_credited">partial ic credited</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0030477034835471113">0.003</td>
+        <td class="mono num" data-v="0.0010129667567037631">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=credited close-to-close h=1 (stored fwd_ret_sector_excess)</span> <span class="muted">p=0.003</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=3.009</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_ex_c10">partial ic ex c10</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0014110173978162902">0.001</td>
+        <td class="mono num" data-v="0.0010784006499318204">0.001</td>
+        <td class="mono num" data-v="2360">2360</td>
+        <td class="small">
+          
+          <span class="muted">label=ex-C10 (sessions before 2025-06-26)</span> <span class="muted">p=0.191</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.308</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_ex_c10">partial ic ex c10</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.000744542319093778">-0.001</td>
+        <td class="mono num" data-v="0.0014273504383854438">0.001</td>
+        <td class="mono num" data-v="2379">2379</td>
+        <td class="small">
+          
+          <span class="muted">label=ex-C10 (sessions before 2025-06-26)</span> <span class="muted">p=0.602</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-0.522</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_ex_c10">partial ic ex c10</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.003232843172371663">0.003</td>
+        <td class="mono num" data-v="0.0011946908211806595">0.001</td>
+        <td class="mono num" data-v="2379">2379</td>
+        <td class="small">
+          
+          <span class="muted">label=ex-C10 (sessions before 2025-06-26)</span> <span class="muted">p=0.007</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.706</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_ex_c10">partial ic ex c10</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.003111352917786873">0.003</td>
+        <td class="mono num" data-v="0.0011170008198396275">0.001</td>
+        <td class="mono num" data-v="2379">2379</td>
+        <td class="small">
+          
+          <span class="muted">label=ex-C10 (sessions before 2025-06-26)</span> <span class="muted">p=0.005</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.785</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_1">partial ic half 1</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0034429242193675723">0.003</td>
+        <td class="mono num" data-v="0.0014394328192448137">0.001</td>
+        <td class="mono num" data-v="1337">1337</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2016-02-05&#39;, &#39;2021-05-27&#39;]</span> <span class="muted">label=first chronological half (first n // 2 sessions of each series)</span> <span class="muted">p=0.017</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.392</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_1">partial ic half 1</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.0027707373555180565">-0.003</td>
+        <td class="mono num" data-v="0.0018694668119115423">0.002</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2021-05-14&#39;]</span> <span class="muted">label=first chronological half (first n // 2 sessions of each series)</span> <span class="muted">p=0.138</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-1.482</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_1">partial ic half 1</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.003684520739200694">0.004</td>
+        <td class="mono num" data-v="0.0015922535668348864">0.002</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2021-05-14&#39;]</span> <span class="muted">label=first chronological half (first n // 2 sessions of each series)</span> <span class="muted">p=0.021</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.314</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_1">partial ic half 1</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.002422967884921198">0.002</td>
+        <td class="mono num" data-v="0.0014855062850459295">0.001</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2021-05-14&#39;]</span> <span class="muted">label=first chronological half (first n // 2 sessions of each series)</span> <span class="muted">p=0.103</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.631</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_2">partial ic half 2</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="-0.0010456074700203966">-0.001</td>
+        <td class="mono num" data-v="0.0014031797570938005">0.001</td>
+        <td class="mono num" data-v="1338">1338</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2021-05-28&#39;, &#39;2026-09-25&#39;]</span> <span class="muted">label=second chronological half</span> <span class="muted">p=0.456</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-0.745</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_2">partial ic half 2</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="0.002378857729828087">0.002</td>
+        <td class="mono num" data-v="0.001963608006723095">0.002</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2021-05-17&#39;, &#39;2026-09-25&#39;]</span> <span class="muted">label=second chronological half</span> <span class="muted">p=0.226</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.211</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_2">partial ic half 2</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.0029191066184864165">0.003</td>
+        <td class="mono num" data-v="0.0016013446958124489">0.002</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2021-05-17&#39;, &#39;2026-09-25&#39;]</span> <span class="muted">label=second chronological half</span> <span class="muted">p=0.068</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.823</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_half_2">partial ic half 2</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0032690370326614944">0.003</td>
+        <td class="mono num" data-v="0.001490918320237904">0.001</td>
+        <td class="mono num" data-v="1347">1347</td>
+        <td class="small">
+          
+          <span class="muted">dates=[&#39;2021-05-17&#39;, &#39;2026-09-25&#39;]</span> <span class="muted">label=second chronological half</span> <span class="muted">p=0.028</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.193</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_plus_skew25_iv_rv">partial ic plus skew25 iv rv</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.0020194100595647803">0.002</td>
+        <td class="mono num" data-v="0.0010920507907084783">0.001</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          
+          <span class="muted">label=with Q3A&#39;s skew25 and iv_rv_spread added to the controls (decile dummies)</span> <span class="muted">p=0.064</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=1.849</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_plus_skew25_iv_rv">partial ic plus skew25 iv rv</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.0009090026239418567">-0.001</td>
+        <td class="mono num" data-v="0.0013800525784584481">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=with Q3A&#39;s skew25 and iv_rv_spread added to the controls (decile dummies)</span> <span class="muted">p=0.510</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-0.659</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_plus_skew25_iv_rv">partial ic plus skew25 iv rv</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.004031227241588303">0.004</td>
+        <td class="mono num" data-v="0.0011427735087881949">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=with Q3A&#39;s skew25 and iv_rv_spread added to the controls (decile dummies)</span> <span class="muted">p=0.000</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=3.528</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_plus_skew25_iv_rv">partial ic plus skew25 iv rv</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.0028574908914164748">0.003</td>
+        <td class="mono num" data-v="0.0009988807710286306">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=with Q3A&#39;s skew25 and iv_rv_spread added to the controls (decile dummies)</span> <span class="muted">p=0.004</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.861</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">d4_cp_iv_spread</td>
+        <td class="mono num" data-v="0.000482715197633253">0.000</td>
+        <td class="mono num" data-v="0.0010401931562684435">0.001</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          
+          <span class="muted">label=survivor-only panel (all 19 features finite)</span> <span class="muted">p=0.643</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=0.464</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">os_volume</td>
+        <td class="mono num" data-v="-0.0007244173348961833">-0.001</td>
+        <td class="mono num" data-v="0.0014315811649151028">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=survivor-only panel (all 19 features finite)</span> <span class="muted">p=0.613</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=-0.506</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="0.0036007868445269435">0.004</td>
+        <td class="mono num" data-v="0.0011517207960230207">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=survivor-only panel (all 19 features finite)</span> <span class="muted">p=0.002</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=3.126</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="partial_ic_survivor">partial ic survivor</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.002336999033290147">0.002</td>
+        <td class="mono num" data-v="0.0010363160068506782">0.001</td>
+        <td class="mono num" data-v="2694">2694</td>
+        <td class="small">
+          
+          <span class="muted">label=survivor-only panel (all 19 features finite)</span> <span class="muted">p=0.024</span> <span class="muted">reported_only=1.000</span> <span class="muted">t=2.255</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2675">2675</td>
+        <td class="small">
+          <span class="verdict pos">PASS</span>
+          <span class="muted">band_ok=1.000</span> <span class="muted">bh_rejected=[&#39;put_vol_share&#39;, &#39;pc_oi_ratio&#39;]</span> <span class="muted">clause3={&#39;pc_oi_ratio&#39;: False, &#39;put_vol_share&#39;: False}</span> <span class="muted">fail_wording=None</span> <span class="muted">p_finite=1.000</span> <span class="muted">tradeability_note=clause 3 is not met by either BH-rejected feature&#39;s registered construction, so no Q5 construction can meet the tradeability rule whatever clause 2 returns</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  <p class="panel-foot"><span>Decision rule fixed in <span class="mono">docs/pre-registered-Q5.md</span>
+    at commit <span class="mono">ddc932a7</span>, 2026-10-02 16:39.</span></p>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q5-7" data-block="Q5-7"
+         data-family="Q" data-outcome="neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q5-7</h2>
+      <p class="panel-sub">Is any options construction good enough to trade — a paired net gain over the book in both halves and outside the contaminated region?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">NONE QUALIFIES</span>
+      <span class="muted">5 statistics &middot; run <span class="mono">314f67da</span> &middot; 2026-10-02 16:56</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">0.000</span>
+      <span class="t-sub">n — &rarr; <span class="verdict ">NONE QUALIFIES</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 5 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="Q5:clause3_paired_net_diff_bps">Q5:clause3 paired net diff bps</td>
+        <td class="mono small">pc_oi_ratio</td>
+        <td class="mono num" data-v="-0.9674743859392559">-0.967</td>
+        <td class="mono num" data-v="0.48091987246805445">0.481</td>
+        <td class="mono num" data-v="2681">2681</td>
+        <td class="small">
+          
+          <span class="muted">adverse_end=bottom quintile (observed IC &gt; 0)</span> <span class="muted">clause3_met=0.000</span> <span class="muted">construction={&#39;gross_mean&#39;: 4.0811886485673625, &#39;n_held_mean&#39;: 36.129429317418875, &#39;net_mean&#39;: 1.8393772357625116, &#39;turnover_mean&#39;: 0.2241811412804851}</span> <span class="muted">cost_bps_per_unit_turnover=10.000</span> <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2026-09-08&#39;]</span> <span class="muted">ex_c10={&#39;mean&#39;: -0.9912851746816378, &#39;n&#39;: 2379, &#39;p&#39;: 0.04258452666935073, &#39;se&#39;: 0.4888567246649992, &#39;t&#39;: -2.0277621737962996}</span> <span class="muted">halves={&#39;first&#39;: {&#39;mean&#39;: -0.9885046636042831, &#39;n&#39;: 1340, &#39;p&#39;: 0.06570283698269327, &#39;se&#39;: 0.5371007097308947, &#39;t&#39;: -1.8404456477064735}, &#39;first_dates&#39;: [&#39;2016-01-08&#39;, &#39;2021-05-05&#39;], &#39;second&#39;: {&#39;mean&#39;: -0.9464597908079091, &#39;n&#39;: 1341, &#39;p&#39;: 0.21187251931907558, &#39;se&#39;: 0.7581181913906027, &#39;t&#39;: -1.248433030042235}, &#39;second_dates&#39;: [&#39;2021-05-06&#39;, &#39;2026-09-08&#39;]}</span> <span class="muted">production={&#39;gross_mean&#39;: 4.829791275374525, &#39;n_held_mean&#39;: 45.06415516598284, &#39;net_mean&#39;: 2.806851621701768, &#39;turnover_mean&#39;: 0.20229396536727576}</span> <span class="muted">t=-2.012</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="Q5:clause3_paired_net_diff_bps">Q5:clause3 paired net diff bps</td>
+        <td class="mono small">put_vol_share</td>
+        <td class="mono num" data-v="0.09652071187363497">0.097</td>
+        <td class="mono num" data-v="0.39035990369567913">0.390</td>
+        <td class="mono num" data-v="2681">2681</td>
+        <td class="small">
+          
+          <span class="muted">adverse_end=bottom quintile (observed IC &gt; 0)</span> <span class="muted">clause3_met=0.000</span> <span class="muted">construction={&#39;gross_mean&#39;: 5.273391338810665, &#39;n_held_mean&#39;: 38.143976128310335, &#39;net_mean&#39;: 2.903372333575402, &#39;turnover_mean&#39;: 0.23700190052352613}</span> <span class="muted">cost_bps_per_unit_turnover=10.000</span> <span class="muted">dates=[&#39;2016-01-08&#39;, &#39;2026-09-08&#39;]</span> <span class="muted">ex_c10={&#39;mean&#39;: -0.025399936590044365, &#39;n&#39;: 2379, &#39;p&#39;: 0.9494002327604311, &#39;se&#39;: 0.4002513053207356, &#39;t&#39;: -0.06345997190362813}</span> <span class="muted">halves={&#39;first&#39;: {&#39;mean&#39;: -0.2357332310051178, &#39;n&#39;: 1340, &#39;p&#39;: 0.6462457609123755, &#39;se&#39;: 0.5135980908244191, &#39;t&#39;: -0.458983853749773}, &#39;first_dates&#39;: [&#39;2016-01-08&#39;, &#39;2021-05-05&#39;], &#39;second&#39;: {&#39;mean&#39;: 0.42852688894860047, &#39;n&#39;: 1341, &#39;p&#39;: 0.4589328314397443, &#39;se&#39;: 0.578617146157622, &#39;t&#39;: 0.7406052374947506}, &#39;second_dates&#39;: [&#39;2021-05-06&#39;, &#39;2026-09-08&#39;]}</span> <span class="muted">production={&#39;gross_mean&#39;: 4.829791275374525, &#39;n_held_mean&#39;: 45.06415516598284, &#39;net_mean&#39;: 2.806851621701768, &#39;turnover_mean&#39;: 0.20229396536727576}</span> <span class="muted">t=0.247</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="Q6b:clause3_paired_net_bps">Q6b:clause3 paired net bps</td>
+        <td class="mono small">iv_minus_ew</td>
+        <td class="mono num" data-v="-1.9241080466915719">-1.924</td>
+        <td class="mono num" data-v="0.8284379296675146">0.828</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=-2.323</span> <span class="muted">met=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="Q7:clause3_paired_net_bps">Q7:clause3 paired net bps</td>
+        <td class="mono small">gated_minus_every_day</td>
+        <td class="mono num" data-v="0.5741896774">0.574</td>
+        <td class="mono num" data-v="1.5027090292">1.503</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          
+          <span class="muted">t=0.382</span> <span class="muted">first_half=1.432</span> <span class="muted">second_half=-0.283</span> <span class="muted">ex_c10=1.453</span> <span class="muted">gross=-3.091</span> <span class="muted">met=0.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="small">
+          <span class="verdict ">NONE QUALIFIES</span>
+          <span class="muted">note=clause 3 fails for every construction (Q5 vetoes, Q6b IV-weighted, Q7 gated), so no construction is good enough to trade and no live track starts</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q6a" data-block="Q6a"
+         data-family="Q" data-outcome="neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q6a</h2>
+      <p class="panel-sub">Does implied volatility forecast a stock&#39;s coming volatility better than its trailing realised volatility?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">IV FORECASTS BETTER</span>
+      <span class="muted">7 statistics &middot; run <span class="mono">314f67da</span> &middot; 2026-10-02 16:56</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">1.000</span>
+      <span class="t-sub">n 2680 &rarr; <span class="verdict ">IV FORECASTS BETTER</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 7 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="d_spearman_iv_minus_rv">d spearman iv minus rv</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="0.13060226891853247">0.131</td>
+        <td class="mono num" data-v="0.0050449729150179945">0.005</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=25.888</span> <span class="muted">block=21.000</span> <span class="muted">rule=IV FORECASTS BETTER iff mean d &gt; 0 and t &gt;= 2</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">ex_c10</td>
+        <td class="mono num" data-v="0.13247884260094145">0.132</td>
+        <td class="mono num" data-v="0.0055401554951755565">0.006</td>
+        <td class="mono num" data-v="2379">2379</td>
+        <td class="small">
+          
+          <span class="muted">t=23.912</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">half_1</td>
+        <td class="mono num" data-v="0.1326793138805453">0.133</td>
+        <td class="mono num" data-v="0.007748884824415872">0.008</td>
+        <td class="mono num" data-v="1340">1340</td>
+        <td class="small">
+          
+          <span class="muted">t=17.122</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">half_2</td>
+        <td class="mono num" data-v="0.12852522395651966">0.129</td>
+        <td class="mono num" data-v="0.006361280088260945">0.006</td>
+        <td class="mono num" data-v="1340">1340</td>
+        <td class="small">
+          
+          <span class="muted">t=20.204</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">rho_iv</td>
+        <td class="mono num" data-v="0.7968496720568706">0.797</td>
+        <td class="mono num" data-v="0.006049894252591609">0.006</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=131.713</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">rho_rv</td>
+        <td class="mono num" data-v="0.6662474031383382">0.666</td>
+        <td class="mono num" data-v="0.008176531768695029">0.008</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=81.483</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          <span class="verdict ">IV FORECASTS BETTER</span>
+          
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q6b" data-block="Q6b"
+         data-family="Q" data-outcome="neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q6b</h2>
+      <p class="panel-sub">Does weighting the book by inverse implied volatility beat equal weight and inverse realised volatility, net?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">NOT HELPS</span>
+      <span class="muted">7 statistics &middot; run <span class="mono">314f67da</span> &middot; 2026-10-02 16:56</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">0.000</span>
+      <span class="t-sub">n 2680 &rarr; <span class="verdict ">NOT HELPS</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 7 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="delta_ir">delta ir</td>
+        <td class="mono small">iv_minus_ew</td>
+        <td class="mono num" data-v="-0.24328453020047958">-0.243</td>
+        <td class="mono num" data-v="0.12441575992143249">0.124</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">p_one_sided=0.975</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="delta_ir">delta ir</td>
+        <td class="mono small">iv_minus_rv</td>
+        <td class="mono num" data-v="0.02745615394275039">0.027</td>
+        <td class="mono num" data-v="0.07665826383507891">0.077</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">p_one_sided=0.333</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="net_ir">net ir</td>
+        <td class="mono small">ew</td>
+        <td class="mono num" data-v="0.4458996775750943">0.446</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">cost_bps_per_turnover=10.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="net_ir">net ir</td>
+        <td class="mono small">iv</td>
+        <td class="mono num" data-v="0.20261514737461472">0.203</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">cost_bps_per_turnover=10.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="net_ir">net ir</td>
+        <td class="mono small">rv</td>
+        <td class="mono num" data-v="0.17515899343186433">0.175</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">cost_bps_per_turnover=10.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="paired_net_mean_bps">paired net mean bps</td>
+        <td class="mono small">iv_minus_ew</td>
+        <td class="mono num" data-v="-1.9241080466915719">-1.924</td>
+        <td class="mono num" data-v="0.8284379296675146">0.828</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">t=-2.323</span> <span class="muted">margin_bps=-1.624</span> <span class="muted">clauses={&#39;1_dir_iv_ew_pos_p_le_0.05&#39;: False, &#39;2_dir_iv_rv_pos_p_le_0.05&#39;: False, &#39;3_noninferior_mean&#39;: False, &#39;noninferiority_margin_bps&#39;: -1.6237383421483287}</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="0.0">0.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          <span class="verdict ">NOT HELPS</span>
+          <span class="muted">r3_trials=3.000</span> 
+        </td>
+      </tr>
+      
+      </tbody>
+    </table>
+    </div>
+  </details>
+  
+</section>
+
+<section class="panel rs-result" id="block-Q7" data-block="Q7"
+         data-family="Q" data-outcome="neutral">
+  <header class="panel-head">
+    <div>
+      <h2>Block Q7</h2>
+      <p class="panel-sub">Does a market-wide implied-dispersion gate beat the realised-dispersion gate?</p>
+    </div>
+    <div class="panel-tags">
+      <span class="verdict ">ESTABLISHED</span>
+      <span class="muted">7 statistics &middot; run <span class="mono">314f67da</span> &middot; 2026-10-02 16:56</span>
+    </div>
+  </header>
+  <p class="rs-decide-k">The row the verdict was written on</p>
+  <div class="tiles wide rs-decide">
+    
+    <div class="tile boxed">
+      <span class="t-label" title="verdict">verdict &middot; all</span>
+      <span class="t-value">1.000</span>
+      <span class="t-sub">n 2680 &rarr; <span class="verdict ">ESTABLISHED</span></span>
+    </div>
+    
+  </div>
+  
+  <details class="rs-raw">
+    <summary><span class="rs-raw-k">All 7 statistics</span>
+      <span class="muted">value, SE, n and the run's own metadata &middot; sortable</span></summary>
+    <div class="tablewrap">
+    <table class="data sortable">
+      <thead><tr><th>Statistic</th><th>Label</th><th class="num">Value</th><th class="num">SE</th><th class="num">n</th><th>Detail</th></tr></thead>
+      <tbody>
+      
+      <tr>
+        <td class="small" title="family_p">family p</td>
+        <td class="mono small">studentized_max</td>
+        <td class="mono num" data-v="0.014919806">0.015</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">z_max=2.757</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate_delta_bps">gate delta bps</td>
+        <td class="mono small">I</td>
+        <td class="mono num" data-v="15.2617656075">15.262</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">z=2.757</span> <span class="muted">p_one_sided_rotation=0.011</span> <span class="muted">block_t=1.513</span> <span class="muted">on_days=330.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="gate_delta_bps">gate delta bps</td>
+        <td class="mono small">R</td>
+        <td class="mono num" data-v="11.3176863051">11.318</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          
+          <span class="muted">z=2.742</span> <span class="muted">p_one_sided_rotation=0.004</span> <span class="muted">block_t=2.470</span> <span class="muted">on_days=977.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reported">reported</td>
+        <td class="mono small">implied_correlation_gate</td>
+        <td class="mono num" data-v="8.4359957472">8.436</td>
+        <td class="mono num" data-v="6.7080543162">6.708</td>
+        <td class="mono num" data-v="579">579</td>
+        <td class="small">
+          
+          <span class="muted">p_one_sided_rotation=0.014</span> <span class="muted">reported_only=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="reproduction">reproduction</td>
+        <td class="mono small">ag007</td>
+        <td class="mono num" data-v="11.2977890369">11.298</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="977">977</td>
+        <td class="small">
+          
+          <span class="muted">recorded=11.316</span> <span class="muted">guard_bps=0.500</span> <span class="muted">holds=1.000</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="spy_coverage">spy coverage</td>
+        <td class="mono small">weeks</td>
+        <td class="mono num" data-v="0.9928571429">0.993</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="560">560</td>
+        <td class="small">
+          
+          <span class="muted">usable=556.000</span> <span class="muted">unusable_weeks=[&#39;2019-04-26&#39;, &#39;2020-02-21&#39;, &#39;2021-08-13&#39;, &#39;2022-01-14&#39;]</span> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td class="small" title="verdict">verdict</td>
+        <td class="mono small">all</td>
+        <td class="mono num" data-v="1.0">1.000</td>
+        <td class="mono num" data-v="">—</td>
+        <td class="mono num" data-v="2680">2680</td>
+        <td class="small">
+          <span class="verdict ">ESTABLISHED</span>
+          <span class="muted">delta_I=15.262</span> <span class="muted">delta_R=11.318</span> <span class="muted">p_family=0.015</span> 
         </td>
       </tr>
       
@@ -3622,9 +6446,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-10-01. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-10-02. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-01T23:18-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-02T23:17-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/research.js"></script>
 </body>

@@ -60,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-01 from the live 30.4 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-02 from the live 31.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -94,7 +94,7 @@ try {
       <div><dt>Trained through</dt><dd class="mono">2015-12-31 <span class="muted">&middot; never refit</span></dd></div>
       <div><dt>Exit buffer</dt><dd class="mono">30%</dd></div>
       
-      <div><dt>Latest book</dt><dd><span class="mono">2026-10-01</span> &middot; 49 names
+      <div><dt>Latest book</dt><dd><span class="mono">2026-10-02</span> &middot; 48 names
         <span class="badge badge-live">live</span></dd></div>
       
     </dl>
@@ -111,7 +111,7 @@ try {
     </div>
     <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
       <span class="muted">latest scored day</span>
-      <span class="mono">2026-10-01</span>
+      <span class="mono">2026-10-02</span>
       <span class="badge badge-live">live</span></div>
   </header>
   <div class="split glance">
@@ -120,26 +120,26 @@ try {
       <div class="glance-hero" id="glance-hero">
         <div class="ring-wrap glance-ring" id="glance-ring" role="progressbar"
              aria-label="Days committed in advance toward the ~100 needed"
-             aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"
-             aria-valuetext="32 of ~100 needed">
+             aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"
+             aria-valuetext="33 of ~100 needed">
           <svg class="ring live" viewBox="0 0 120 120" aria-hidden="true">
             <circle class="ring-track" cx="60" cy="60" r="52"/>
             <circle class="ring-fill" cx="60" cy="60" r="52" pathLength="100"
-                    style="--ring: 32.0"/>
+                    style="--ring: 33.0"/>
             
             <line class="ring-tick" x1="60" y1="102" x2="60" y2="106"/>
             <line class="ring-tick" x1="18" y1="60" x2="14" y2="60"/>
             <line class="ring-tick" x1="60" y1="18" x2="60" y2="14"/>
           </svg>
           <div class="ring-center" aria-hidden="true">
-            <span class="ring-num" data-count="32">32</span>
+            <span class="ring-num" data-count="33">33</span>
             <span class="ring-of">of ~100 needed</span>
           </div>
         </div>
         <div class="glance-words">
           <span class="glance-label">Committed in advance</span>
-          <p class="glance-count"><span class="mono strong">68</span> more before the record carries information</p>
-          <p class="glance-aside"><span class="mono">62</span> days carry the live stamp;
+          <p class="glance-count"><span class="mono strong">67</span> more before the record carries information</p>
+          <p class="glance-aside"><span class="mono">63</span> days carry the live stamp;
             <span class="mono">30</span> of them were scored in arrears and
             restamped live on 2026-09-12 (FINDINGS C20).</p>
           <p class="glance-aside"><span class="mono">0</span> backfilled days,
@@ -209,29 +209,78 @@ try {
     </div>
     
     
-    <div class="stamp-card tone-pos"
+    <div class="stamp-card"
          style="--i: 4">
+      <dt><a href="../research/#block-Q3">Q3</a></dt>
+      <dd><span class="verdict stamp " title="incremental_ic / atm_iv30">atm_iv30: no</span><span class="verdict stamp " title="incremental_ic / cp_iv_spread">cp_iv_spread: SIGNAL</span><span class="verdict stamp " title="incremental_ic / iv_rv_spread">iv_rv_spread: SIGNAL</span><span class="verdict stamp " title="incremental_ic / skew25">skew25: no</span><span class="verdict stamp pos" title="verdict / all">all: PASS</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card tone-pos"
+         style="--i: 5">
+      <dt><a href="../research/#block-Q3A">Q3A</a></dt>
+      <dd><span class="verdict stamp pos" title="verdict / all">PASS</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card tone-pos"
+         style="--i: 6">
+      <dt><a href="../research/#block-Q5">Q5</a></dt>
+      <dd><span class="verdict stamp pos" title="verdict / all">PASS</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card"
+         style="--i: 7">
+      <dt><a href="../research/#block-Q5-7">Q5-7</a></dt>
+      <dd><span class="verdict stamp " title="verdict / all">NONE QUALIFIES</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card"
+         style="--i: 8">
+      <dt><a href="../research/#block-Q6a">Q6a</a></dt>
+      <dd><span class="verdict stamp " title="verdict / all">IV FORECASTS BETTER</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card"
+         style="--i: 9">
+      <dt><a href="../research/#block-Q6b">Q6b</a></dt>
+      <dd><span class="verdict stamp " title="verdict / all">NOT HELPS</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card"
+         style="--i: 10">
+      <dt><a href="../research/#block-Q7">Q7</a></dt>
+      <dd><span class="verdict stamp " title="verdict / all">ESTABLISHED</span></dd>
+    </div>
+    
+    
+    <div class="stamp-card tone-pos"
+         style="--i: 11">
       <dt><a href="../research/#block-R2">R2</a></dt>
       <dd><span class="verdict stamp pos" title="night3_over_overnight_next / all">all: PERSISTS</span><span class="verdict stamp pos" title="verdict / night3">night3: PERSISTS</span></dd>
     </div>
     
     
     <div class="stamp-card tone-neg"
-         style="--i: 5">
+         style="--i: 12">
       <dt><a href="../research/#block-R3">R3</a></dt>
       <dd><span class="verdict stamp neg" title="verdict / within_top_ic">within_top_ic: GATE CLOSED</span><span class="verdict stamp neg" title="within_top_ic / all">all: GATE CLOSED</span></dd>
     </div>
     
     
     <div class="stamp-card tone-neg"
-         style="--i: 6">
+         style="--i: 13">
       <dt><a href="../research/#block-R4">R4</a></dt>
       <dd><span class="verdict stamp neg" title="verdict / gate_family">NOT ESTABLISHED</span></dd>
     </div>
     
     
     <div class="stamp-card"
-         style="--i: 7">
+         style="--i: 14">
       <dt><a href="../research/#block-R5">R5</a></dt>
       <dd><span class="verdict stamp " title="delta_bps / W">W: INDISTINGUISHABLE</span><span class="verdict stamp " title="delta_ic / W">W: INDISTINGUISHABLE</span><span class="verdict stamp " title="verdict / all">all: INDISTINGUISHABLE</span></dd>
     </div>
@@ -591,9 +640,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-10-01. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-10-02. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-01T23:18-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-02T23:17-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/model.js"></script>
 </body>
