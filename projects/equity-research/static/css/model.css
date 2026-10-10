@@ -136,6 +136,11 @@ dl.verdict-list.stamps {
   border-color: var(--accent); background: var(--accent-soft);
 }
 
+/* ---- risk and return: the cost switch sits above the table it redraws ------- */
+.risk-costs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin: 0.2rem 0 0.4rem; }
+#risk-cost-note { flex: 1 1 20rem; min-width: 0; }
+#risk-table td.num .n { white-space: normal; }
+
 /* ---- shadows of this model: a long note scrolls sideways in its wrapper
  * instead of stretching one row to a phone's full height ------------------- */
 #s-shadow td.shadow-note { min-width: 24rem; }
@@ -146,6 +151,22 @@ dl.verdict-list.stamps {
 .load-failed { color: var(--muted); font-size: 0.85rem; }
 
 @media (max-width: 560px) {
+  /* the risk table stacks: each measure's name on its own line, the two figures
+     side by side under it, each named by its column. The names stay muted: the
+     evidence hues belong to the badges in the panel head, never to this layer */
+  #risk-table thead { display: none; }
+  #risk-table, #risk-table tbody { display: block; }
+  #risk-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 0.8rem;
+                   padding: 0.55rem 0; border-bottom: 1px solid var(--line-2); }
+  #risk-table td { padding: 0; border: 0; }
+  #risk-table td.label { grid-column: 1 / -1; }
+  #risk-table td.label .sub { max-width: none; }
+  #risk-table td.num { text-align: left; white-space: normal; }
+  #risk-table td.num::before { display: block; font-size: 0.64rem; letter-spacing: 0.07em;
+                               text-transform: uppercase; font-weight: 600; color: var(--muted); }
+  #risk-table td[data-col="backtest"]::before { content: "Backtest 2016\2013 2026"; }
+  #risk-table td[data-col="live_committed"]::before { content: "Committed in advance"; }
+  #risk-table td.num .se { margin-left: 0.2rem; }
   .glance-hero { justify-content: flex-start; }
   .glance-ring.ring-wrap { width: 118px; height: 118px; }
   .glance-ring .ring-num { font-size: 2.1rem; }

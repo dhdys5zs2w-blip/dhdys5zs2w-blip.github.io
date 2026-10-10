@@ -1,6 +1,7 @@
 /* Model dashboard: overview tiles, paper equity curve (live vs backfill drawn
  * differently, SPY overlay), rank profile and daily IC, the P1/P3 timing
- * comparison, the P2 regime map, book quintiles, positions and trades.
+ * comparison, the risk readouts of the same leg (Sharpe and the rest, with a
+ * cost switch), the P2 regime map, book quintiles, positions and trades.
  *
  * The interaction layer on top (css/model.css): a section rail under the
  * subnav, keys 1–9 to jump to a section, the committed ring filling and the
@@ -369,6 +370,7 @@
 
   async function loadExecution() {
     const rep = await qe.fetch("/api/model/" + MODEL + "/execution");
+    initRisk(rep);
     const verdicts = document.getElementById("timing-verdicts");
     const note = document.getElementById("execution-note");
     note.textContent = rep.notes.execution;
@@ -421,6 +423,159 @@
       series: [
         { name: "implementable, open→open (backtest)", type: "line", data: b.implementable_cum_bps,
           showSymbol: false, itemStyle: { color: C.accent }, lineStyle: { width: 2, color: C.accent } },
+      ],
+    });
+  }
+
+  /* CH-006: the same leg against its risk. The payload carries one row of
+   * figures per cost level, so the switch only picks a row and redraws the
+   * cells — it never refetches and never computes a figure here. Each cell
+   * says why it is empty rather than showing a zero. The stamped-live Sharpe
+   * goes in the note under the table, labelled as including the C20 restamps,
+   * exactly as the timing panel does with its mean. */
+  const ratio = (v) => v.toFixed(2);
+  const pctOf = (bpsVal, d) => (bpsVal / 100).toFixed(d) + "%";
+  const RISK_CELLS = {
+    sharpe: (r, n) => (r.sharpe == null ? null :
+      '<span class="v">' + ratio(r.sharpe) + '</span><span class="se">± ' +
+      (r.sharpe_se == null ? UNDEFINED_SE : r.sharpe_se.toFixed(2)) + "</span>" +
+      '<span class="n">' + qe.fmtNum(n, 0) + " days</span>"),
+    ann_return: (r) => (r.ann_return_bps == null ? null :
+      '<span class="v">' + qe.fmtPct(r.ann_return_bps / 1e4) + "</span>" +
+      '<span class="n">' + bps(r.mean_bps) + " a day</span>"),
+    ann_vol: (r) => (r.ann_vol_bps == null ? null : '<span class="v">' + pctOf(r.ann_vol_bps, 1) + "</span>"),
+    sortino: (r) => (r.sortino == null ? null : '<span class="v">' + ratio(r.sortino) + "</span>"),
+    max_dd: (r) => (r.max_drawdown_bps == null ? null :
+      '<span class="v">' + qe.fmtNum(r.max_drawdown_bps, 0) + " bps</span>" +
+      (r.dd_trough_date == null ? "" : '<span class="n">' +
+        qe.esc(r.dd_peak_date == null ? "from the first day" : r.dd_peak_date) + " → " +
+        qe.esc(r.dd_trough_date) + " · " +
+        (r.dd_recovered_date == null ? "not yet recovered" : "recovered " + qe.esc(r.dd_recovered_date)) +
+        "</span>")),
+    calmar: (r) => (r.calmar == null ? null : '<span class="v">' + ratio(r.calmar) + "</span>"),
+    hit_rate: (r) => (r.hit_rate == null ? null : '<span class="v">' + (r.hit_rate * 100).toFixed(1) + "%</span>"),
+    es5: (r) => (r.es5_bps == null ? null : '<span class="v">' + bps(r.es5_bps, 1) + '</span><span class="n">per day</span>'),
+  };
+  /* why a cell is empty, from the row itself */
+  function riskWhy(col, key, n) {
+    if (!n) return col === "backtest" ? "no backtest series for this model" : "no days yet";
+    if ((key === "sharpe" || key === "ann_vol") && n < 2) return "needs 2 days";
+    if (key === "sortino") return "no losing day";
+    if (key === "calmar") return "no drawdown";
+    if (key === "es5") return "needs 20 days";
+    return "—";
+  }
+
+  function initRisk(rep) {
+    const risk = rep.risk;
+    const costs = document.getElementById("risk-cost");
+    const note = document.getElementById("risk-cost-note");
+    if (!costs || !note) return;
+    if (!risk) {
+      note.textContent = "These figures are not in this copy of the data.";
+      return;
+    }
+    const levels = risk.cost_levels_bps;
+    const replaced = risk.turnover.replaced;
+    let at = 0;
+
+    function cell(col, key, series) {
+      const td = document.querySelector('#risk-table td[data-k="' + key + '"][data-col="' + col + '"]');
+      if (!td) return;
+      const n = series ? series.n_days : 0;
+      const r = series && series.by_cost[at];
+      const html = n && r ? RISK_CELLS[key](r, n) : null;
+      if (html != null) { td.innerHTML = html; return; }
+      td.innerHTML = '<span class="muted small">' +
+        (col === "live_committed" && key === "sharpe" && !n
+          ? "no day committed in advance carries a realized open-to-open return yet"
+          : riskWhy(col, key, n)) + "</span>";
+    }
+
+    function draw() {
+      for (const key of Object.keys(RISK_CELLS)) {
+        cell("backtest", key, risk.backtest);
+        cell("live_committed", key, risk.live_committed);
+      }
+      const s = risk.live, sr = s && s.n_days ? s.by_cost[at] : null;
+      document.getElementById("risk-stamped").textContent = sr && sr.sharpe != null
+        ? ratio(sr.sharpe) + " ± " + (sr.sharpe_se == null ? UNDEFINED_SE : sr.sharpe_se.toFixed(2)) +
+          " over " + s.n_days + " days"
+        : "— (no live-stamped day carries the leg yet)";
+      let text;
+      if (replaced == null) {
+        text = "No night-to-night turnover is recorded for this book yet, so only the before-costs figures exist.";
+      } else if (replaced === 0) {
+        text = "The live book has not replaced a name between scored nights, so no cost applies.";
+      } else {
+        const perDay = levels[at] * replaced;
+        text = "Charged on the live book's measured turnover: " + qe.fmtPct(replaced).replace("+", "") +
+          " of its names replaced each night, over " + risk.turnover.n_pairs + " nights." +
+          (at ? " " + levels[at] + " bps a round trip on that share is " + perDay.toFixed(2) +
+                " bps a day." : "") +
+          (risk.breakeven_bps != null
+            ? " At about " + risk.breakeven_bps.toFixed(0) + " bps a round trip the backtest's whole return is gone."
+            : "");
+      }
+      note.textContent = text;
+    }
+
+    costs.innerHTML = levels.map((lvl, i) =>
+      '<button type="button" data-i="' + i + '"' + (i === 0 ? ' class="on" aria-pressed="true"' : ' aria-pressed="false"') +
+      ">" + (lvl === 0 ? "none" : lvl + " bps") + "</button>").join("");
+    costs.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button[data-i]");
+      if (!btn) return;
+      at = Number(btn.dataset.i);
+      pressOne(costs, btn);
+      draw();
+    });
+    draw();
+
+    /* how long the live column needs, at the backtest's own Sharpe */
+    const b = risk.backtest, g = b.n_days ? b.by_cost[0] : null;
+    const power = document.getElementById("risk-power");
+    const lc = risk.live_committed ? risk.live_committed.n_days : 0;
+    if (power && g && g.sharpe != null && b.days_to_t2 && b.days_to_t2.days != null) {
+      power.textContent = "If the true Sharpe ratio is the backtest's " + ratio(g.sharpe) +
+        " before costs, the record needs about " + qe.fmtNum(b.days_to_t2.days, 0) +
+        " days committed in advance (" + b.days_to_t2.years.toFixed(1) +
+        " years) before its Sharpe ratio could be told from zero. It has " + lc + ".";
+    }
+
+    if (!b.n_days) return;
+    const dates = rep.backtest.dates;
+    const whole = g && g.sharpe != null ? g.sharpe : null;
+    qe.chart("chart-risk-rolling").setOption({
+      animation: false,
+      tooltip: { trigger: "axis", valueFormatter: (x) => (x == null ? "—" : x.toFixed(2)) },
+      legend: { data: ["rolling one-year (backtest)", "whole decade"] },
+      grid: { left: 52, right: 20, top: 54, bottom: 46 },
+      xAxis: { type: "category", data: dates, boundaryGap: false },
+      yAxis: { type: "value", name: "Sharpe ratio", nameTextStyle: { fontSize: 10 } },
+      dataZoom: [{ type: "inside" }, { type: "slider", bottom: 6, height: 18 }],
+      series: [
+        { name: "rolling one-year (backtest)", type: "line", data: b.rolling_sharpe, showSymbol: false,
+          connectNulls: false, itemStyle: { color: C.accent }, lineStyle: { width: 1.6, color: C.accent },
+          markLine: { silent: true, symbol: "none", label: { show: false },
+                      lineStyle: { color: C.muted, width: 1, type: "solid" }, data: [{ yAxis: 0 }] } },
+        { name: "whole decade", type: "line", data: dates.map(() => whole), showSymbol: false,
+          itemStyle: { color: C.ink2 }, lineStyle: { width: 1, type: "dashed", color: C.ink2 } },
+      ],
+    });
+    qe.chart("chart-risk-drawdown").setOption({
+      animation: false,
+      tooltip: { trigger: "axis", valueFormatter: (x) => (x == null ? "—" : qe.fmtNum(x, 0) + " bps") },
+      legend: { data: ["drawdown (backtest)"] },
+      grid: { left: 64, right: 20, top: 54, bottom: 46 },
+      xAxis: { type: "category", data: dates, boundaryGap: false },
+      yAxis: { type: "value", name: "below the previous high, bps", nameTextStyle: { fontSize: 10 },
+               max: 0 },
+      dataZoom: [{ type: "inside" }, { type: "slider", bottom: 6, height: 18 }],
+      series: [
+        { name: "drawdown (backtest)", type: "line", data: b.drawdown_bps, showSymbol: false,
+          connectNulls: false, itemStyle: { color: C.accent }, lineStyle: { width: 1.2, color: C.accent },
+          areaStyle: { color: C.accent, opacity: 0.18 } },
       ],
     });
   }
@@ -709,7 +864,11 @@
     () => setTile("ov-value", "—", "the paper record did not load")));
   loadDeciles("live").catch(showFail("decile-warning", "The book's quintiles"));
   loadRankProfile().catch(showFail("rank-profile-meta", "The rank profile"));
-  loadExecution().catch(showFail("timing-verdicts", "The timing figures"));
+  loadExecution().catch(showFail("timing-verdicts", "The timing figures", () => {
+    // the risk panel reads the same payload, so it failed with it
+    const note = document.getElementById("risk-cost-note");
+    if (note) note.innerHTML = failNote(new Error("the timing payload failed"), "The risk figures");
+  }));
   loadCompanion().catch(showFail("companion-summary", "The companion figures", () => {
     const power = document.getElementById("companion-power");
     if (power) power.textContent = "";

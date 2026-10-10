@@ -60,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-08 from the live 36.3 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-10 from the live 37.2 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -72,7 +72,7 @@ try {
 </aside>
 <div id="content" class="skip-target" tabindex="-1"></div>
 <main>
-<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-overview">At a glance</a><a href="#s-shadow">Shadow lane</a><a href="#s-paper">Paper record</a><a href="#s-rank">Rank test</a><a href="#s-timing">Timing</a><a href="#s-companion">Companion book</a><a href="#s-regimes">Regimes</a><a href="#s-book">The book</a></nav>
+<nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-overview">At a glance</a><a href="#s-shadow">Shadow lane</a><a href="#s-paper">Paper record</a><a href="#s-rank">Rank test</a><a href="#s-timing">Timing</a><a href="#s-risk">Risk and return</a><a href="#s-companion">Companion book</a><a href="#s-regimes">Regimes</a><a href="#s-book">The book</a></nav>
 
 
 
@@ -94,7 +94,7 @@ try {
       <div><dt>Trained through</dt><dd class="mono">2015-12-31 <span class="muted">&middot; never refit</span></dd></div>
       <div><dt>Exit buffer</dt><dd class="mono">30%</dd></div>
       
-      <div><dt>Latest book</dt><dd><span class="mono">2026-10-08</span> &middot; 47 names
+      <div><dt>Latest book</dt><dd><span class="mono">2026-10-09</span> &middot; 47 names
         <span class="badge badge-live">live</span></dd></div>
       
     </dl>
@@ -111,7 +111,7 @@ try {
     </div>
     <div class="panel-tags"><span class="badge badge-changed">changed 2026-09-20</span>
       <span class="muted">latest scored day</span>
-      <span class="mono">2026-10-08</span>
+      <span class="mono">2026-10-09</span>
       <span class="badge badge-live">live</span></div>
   </header>
   <div class="split glance">
@@ -120,26 +120,26 @@ try {
       <div class="glance-hero" id="glance-hero">
         <div class="ring-wrap glance-ring" id="glance-ring" role="progressbar"
              aria-label="Days committed in advance toward the ~100 needed"
-             aria-valuenow="36" aria-valuemin="0" aria-valuemax="100"
-             aria-valuetext="36 of ~100 needed">
+             aria-valuenow="37" aria-valuemin="0" aria-valuemax="100"
+             aria-valuetext="37 of ~100 needed">
           <svg class="ring live" viewBox="0 0 120 120" aria-hidden="true">
             <circle class="ring-track" cx="60" cy="60" r="52"/>
             <circle class="ring-fill" cx="60" cy="60" r="52" pathLength="100"
-                    style="--ring: 36.0"/>
+                    style="--ring: 37.0"/>
             
             <line class="ring-tick" x1="60" y1="102" x2="60" y2="106"/>
             <line class="ring-tick" x1="18" y1="60" x2="14" y2="60"/>
             <line class="ring-tick" x1="60" y1="18" x2="60" y2="14"/>
           </svg>
           <div class="ring-center" aria-hidden="true">
-            <span class="ring-num" data-count="36">36</span>
+            <span class="ring-num" data-count="37">37</span>
             <span class="ring-of">of ~100 needed</span>
           </div>
         </div>
         <div class="glance-words">
           <span class="glance-label">Committed in advance</span>
-          <p class="glance-count"><span class="mono strong">64</span> more before the record carries information</p>
-          <p class="glance-aside"><span class="mono">66</span> days carry the live stamp;
+          <p class="glance-count"><span class="mono strong">63</span> more before the record carries information</p>
+          <p class="glance-aside"><span class="mono">67</span> days carry the live stamp;
             <span class="mono">30</span> of them were scored in arrears and
             restamped live on 2026-09-12 (FINDINGS C20).</p>
           <p class="glance-aside"><span class="mono">1</span> backfilled days,
@@ -473,6 +473,115 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
   </details>
 </section>
 
+
+
+<section class="panel" id="s-risk">
+  <header class="panel-head">
+    <div>
+      <h2>Return for the risk taken</h2>
+      <p class="panel-sub">The same open-to-open return, set against how much it swings from day to
+      day. The Sharpe ratio is the yearly return divided by the yearly volatility: higher means more
+      return for each unit of risk. Read the &plusmn; before the number &mdash; a Sharpe ratio takes
+      years of days to pin down.</p>
+    </div>
+    <div class="panel-tags"><span class="badge badge-changed">changed 2026-10-10</span><span class="badge badge-backtest">backtest</span><span class="badge badge-live">live</span></div>
+  </header>
+  <div class="risk-costs">
+    <span class="muted small" id="risk-cost-label">Trading cost per round trip</span>
+    <span class="seg" id="risk-cost" role="group" aria-labelledby="risk-cost-label"></span>
+    <span class="muted small" id="risk-cost-note"><span class="loading">loading</span></span>
+  </div>
+  <div class="tablewrap">
+  <table class="compare" id="risk-table">
+    <thead><tr><th>Measure</th>
+      <th class="num">Holdout 2016&ndash;2026 <span class="badge badge-backtest">backtest</span></th>
+      <th class="num">Committed in advance <span class="badge badge-live">live</span></th></tr></thead>
+    <tbody>
+      
+      <tr><td class="label">Sharpe ratio<span class="sub">yearly return &divide; yearly volatility, &plusmn; one standard error</span></td>
+          <td class="num" data-k="sharpe" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="sharpe" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Yearly return<span class="sub">the average day &times; 252, over the stock&rsquo;s sector peers</span></td>
+          <td class="num" data-k="ann_return" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="ann_return" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Yearly volatility<span class="sub">how much the daily return swings, &times; &radic;252</span></td>
+          <td class="num" data-k="ann_vol" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="ann_vol" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Sortino ratio<span class="sub">like the Sharpe, but only losing days count as risk</span></td>
+          <td class="num" data-k="sortino" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="sortino" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Deepest drawdown<span class="sub">the largest fall of the summed return from an earlier high</span></td>
+          <td class="num" data-k="max_dd" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="max_dd" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Return &divide; deepest drawdown<span class="sub">the yearly return over the deepest drawdown (Calmar ratio)</span></td>
+          <td class="num" data-k="calmar" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="calmar" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Days up<span class="sub">share of days with a positive return</span></td>
+          <td class="num" data-k="hit_rate" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="hit_rate" data-col="live_committed">&mdash;</td></tr>
+      
+      <tr><td class="label">Worst 5% of days, average<span class="sub">the mean of the worst day in twenty (expected shortfall)</span></td>
+          <td class="num" data-k="es5" data-col="backtest">&mdash;</td>
+          <td class="num" data-k="es5" data-col="live_committed">&mdash;</td></tr>
+      
+    </tbody>
+  </table>
+  </div>
+  <p class="note">The live column counts only days committed before the outcome existed. Over
+  every day carrying the live stamp the Sharpe ratio reads
+  <span id="risk-stamped" class="mono">&mdash;</span> &mdash; that series includes the 30
+  days scored in arrears and restamped live on 2026-09-12 (<span class="mono">docs/FINDINGS.md</span>
+  C20), so it is <strong>not out-of-sample evidence</strong>.</p>
+  <p class="note" id="risk-power"></p>
+  <div class="grid2">
+    <div>
+      <h3>Rolling one-year Sharpe ratio</h3>
+      <div id="chart-risk-rolling" class="chart" role="img" aria-label="Sharpe ratio of the trailing 252 holdout days, before costs, with the whole decade's Sharpe ratio as a dashed line"></div>
+    </div>
+    <div>
+      <h3>Drawdown</h3>
+      <div id="chart-risk-drawdown" class="chart" role="img" aria-label="How far the summed holdout return sat below its previous high, in bps, before costs"></div>
+    </div>
+  </div>
+  <p class="chart-caption">Both charts: the backtest holdout, before costs. Left, the Sharpe ratio
+  of the trailing 252 trading days, with the whole decade&rsquo;s as a dashed line. Right, how far
+  the summed return sat below its previous high, in bps.</p>
+  <details class="explain">
+    <summary>How these are computed</summary>
+    <p>Every figure is read off the implementable leg the timing panel reports: the next
+    session&rsquo;s open to the open after, each name&rsquo;s return over its own sector&rsquo;s
+    median, the book averaged per day. Yearly figures assume 252 trading days: the yearly return
+    is the daily mean &times; 252, the yearly volatility the daily standard deviation &times;
+    &radic;252, and the Sharpe ratio is the first divided by the second. No cash rate is
+    subtracted. The return is already measured against the stock&rsquo;s own sector, so it is a
+    spread rather than money that could have sat in cash; a fund would call this Sharpe ratio an
+    information ratio.</p>
+    <p>The &plusmn; on the Sharpe ratio is the site&rsquo;s block bootstrap &mdash; 2,000 resamples
+    of five-day blocks, the same draws that give the mean its SE in the timing table &mdash;
+    applied to the ratio itself, and it is undefined below 6 days. The Sortino ratio divides by
+    the downside deviation instead: the root-mean-square of the losing days, with every day in the
+    count. Drawdowns are measured on the summed series, the cumulative line in the timing panel,
+    from a starting level of zero. The worst-5% average needs at least 20 days.</p>
+    <p>Costs at the open are not measured, so the switch lets you choose one. It charges the
+    round-trip cost on the share of the book the live record has actually replaced each night,
+    as the same amount every day: a cost lowers the return and the ratios and deepens the
+    drawdowns, and leaves the volatility unchanged. The breakeven is the cost at which the whole
+    return is gone. The charts stay before costs.</p>
+    <p class="note">The paper account above is marked on the record&rsquo;s close-to-close
+    return, which no execution following an 18:30 signal could obtain; the site stopped reporting
+    it as a result on 2026-09-12. No Sharpe ratio is computed from it.</p>
+    <p class="caveat"><span class="badge badge-backtest">backtest</span> The frozen
+model scored on dates it never traded, after the fact. A description of the
+holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
+  </details>
+</section>
+
 <section class="panel" id="s-companion">
   <header class="panel-head">
     <div>
@@ -640,9 +749,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-10-08. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-10-10. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-08T23:16-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-10T09:25-05:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/model.js"></script>
 </body>
