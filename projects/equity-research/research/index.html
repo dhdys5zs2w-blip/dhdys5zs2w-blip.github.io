@@ -60,7 +60,7 @@ try {
     <button id="palette-open" class="kbd-btn" type="button" title="Command palette" aria-label="Open the command palette"><kbd>&#8984;K</kbd></button>
     <button id="theme-toggle" class="theme-toggle" type="button" title="Theme: follows the system; click to cycle" aria-label="Toggle colour theme"><span class="dot"></span><span class="label">auto</span></button>
   </div>
-</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-10 from the live 37.2 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
+</header><div class="demo-banner"><span class="demo-tag">Portfolio demo</span><span>A static snapshot of a personal quant research platform — 500 current members of a liquid500 universe, daily history since 2016, exported 2026-10-12 from the live 40.2 GB DuckDB. Every chart and table is the real tool's own output.</span><a href="../about/">How this demo works &rarr;</a><a class="demo-back" href="../../../">&larr; Ben Meyer's portfolio</a></div>
 <div id="fetch-bar" class="fetch-bar" aria-hidden="true"></div>
 <div id="busy-banner" class="busy-banner" hidden></div>
 <aside class="underhood" aria-label="Where you are">
@@ -75,7 +75,7 @@ try {
 <nav class="subnav" aria-label="On this page"><span class="subnav-label">On this page</span><a href="#s-summary">Blocks at a glance</a><a href="#s-closed">Closed directions</a><a href="#s-registrations">Pre-registrations</a><a href="#s-results">Results by block</a></nav>
 <header class="page-intro rs-intro">
   <div class="intro-text">
-    <p class="eyebrow">Forking-paths ledger &middot; 27 registrations &middot; 17 blocks with results</p>
+    <p class="eyebrow">Forking-paths ledger &middot; 29 registrations &middot; 17 blocks with results</p>
     <h1>Research ledger</h1>
     <p class="lede">Every block was registered &mdash; hypothesis, statistic and decision rule
     fixed in a committed document &mdash; before it ran. What was committed to comes first; what
@@ -109,7 +109,7 @@ try {
         </div>
       </div>
       <dl class="rs-ledger-nums">
-        <div><dt>registrations</dt><dd class="mono" data-count="27">27</dd></div>
+        <div><dt>registrations</dt><dd class="mono" data-count="29">29</dd></div>
         <div><dt>blocks</dt><dd class="mono" data-count="17">17</dd></div>
         <div><dt>statistics</dt><dd class="mono" data-count="366">366</dd></div>
         <div><dt>closed</dt><dd class="mono" data-count="8">8</dd></div>
@@ -1040,7 +1040,7 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
   <header class="panel-head">
     <div>
       <h2>Pre-registrations</h2>
-      <p class="panel-sub">27 blocks, oldest first: the document, the items
+      <p class="panel-sub">29 blocks, oldest first: the document, the items
       committed to, and the commit that fixed them before anything ran. Where a registration's
       blocks wrote statistics to this ledger, they are linked.</p>
     </div>
@@ -1412,6 +1412,32 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
         <p class="rs-reg-note">Owner-authorized offline within-stock five-session variance forecast pilot. Reviewed fixed source committed before any real fit; two fresh complete runs required, no vendor or network use.</p>
         <ol class="compact small rs-items"><li>AG-029-within-stock-vs-baseline</li><li>AG-029-within-stock-vs-raw</li></ol>
         <span class="rs-itemcount small">2 items committed to</span>
+        
+      </li>
+    <li class="rs-reg">
+        
+        <div class="rs-reg-head">
+          <span class="rs-node" aria-hidden="true"></span>
+          <time class="mono">2026-10-10 10:55</time>
+          <span class="mono strong rs-reg-doc">research/agent-ledger/AG-030/registration.md</span>
+          <span class="rs-commit mono" title="the commit that fixed the document">a337f113fe</span>
+        </div>
+        <p class="rs-reg-note">AG-030 SPY index options: S1 hedged short straddle, S2 put-write excess, S3 timed put-write; owner instruction 2026-10-10</p>
+        <ol class="compact small rs-items"><li>AG-030-S1</li><li>AG-030-S2</li><li>AG-030-S3</li></ol>
+        <span class="rs-itemcount small">3 items committed to</span>
+        
+      </li>
+    <li class="rs-reg">
+        
+        <div class="rs-reg-head">
+          <span class="rs-node" aria-hidden="true"></span>
+          <time class="mono">2026-10-10 11:14</time>
+          <span class="mono strong rs-reg-doc">research/agent-ledger/AG-031/registration.md</span>
+          <span class="rs-commit mono" title="the commit that fixed the document">31c04f53cc</span>
+        </div>
+        <p class="rs-reg-note">AG-031 earnings straddles: E1 long, E2 short, E3 side from implied vs own-history move; owner instruction 2026-10-10</p>
+        <ol class="compact small rs-items"><li>AG-031-E1</li><li>AG-031-E2</li><li>AG-031-E3</li></ol>
+        <span class="rs-itemcount small">3 items committed to</span>
         
       </li>
     
@@ -6537,9 +6563,9 @@ holdout, <strong>not evidence</strong> &mdash; only live days are evidence.</p>
 </div>
 
 </main>
-<footer><span>Snapshot of the qe research browser exported 2026-10-10. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
+<footer><span>Snapshot of the qe research browser exported 2026-10-12. The real app is a read-only FastAPI + DuckDB service on a single Mac; it never writes, and neither does this copy. <a href="../about/">About this demo</a> &middot; <a href="../../../">Portfolio</a></span><span class="mono">qe.duckdb &middot; snapshot</span></footer>
 <script src="../static/vendor/echarts.min.js"></script>
-<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-10T09:25-05:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
+<script>window.QE_ROOT = "../"; window.QE_SNAPSHOT = {"exported_at": "2026-10-12T23:16-04:00"};</script><script src="../static/demo-shim.js"></script><script src="../static/app.js"></script>
 <script src="../static/fx.js"></script>
 <script src="../static/research.js"></script>
 </body>
