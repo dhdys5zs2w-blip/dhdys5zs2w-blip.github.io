@@ -1,0 +1,63 @@
+/* Dashboard — one screen: two return cards side by side, the research card
+   under them. Tokens only; the evidence hues stay on the badges qe.css draws. */
+
+.dash-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+.dash-cards .panel { margin: 0; }
+.dash-card { display: flex; flex-direction: column; gap: 0.55rem; }
+
+.dash-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.3rem 0.7rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--line-2); }
+.dash-head h2 { margin: 0; font-size: 1.15rem; }
+
+/* the two figures each return card leads with */
+.dash-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+.dash-fig { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.dash-fig .t-label { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.07em;
+  text-transform: uppercase; line-height: 1.35; }
+.dash-big { font-family: var(--font-mono); font-size: 1.45rem; font-weight: 500; color: var(--ink); }
+.dash-big .se { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+.dash-sub { color: var(--muted); font-size: 0.8rem; }
+.dash-line { margin: 0; font-size: 0.86rem; line-height: 1.5; color: var(--ink-2); }
+.dash-chart { height: 170px; }
+.dash-chart.is-empty { height: auto; }
+.dash-more { margin-top: auto; font-size: 0.86rem; }
+
+/* the risk card's three measures, live first */
+.dash-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.dash-table th, .dash-table td { padding: 0.45rem 0.4rem; border-bottom: 1px solid var(--line-2);
+  vertical-align: top; text-align: left; }
+.dash-table thead th { color: var(--muted); font-size: 0.66rem; font-weight: 600; letter-spacing: 0.07em;
+  text-transform: uppercase; border-bottom-color: var(--line); }
+.dash-table th[scope="row"] { font-weight: 600; color: var(--ink); }
+.dash-table th[scope="row"] .sub { display: block; font-weight: 400; color: var(--muted); font-size: 0.76rem; }
+.dash-table .num { text-align: right; }
+.dash-table td .v { font-family: var(--font-mono); font-size: 1rem; color: var(--ink); }
+.dash-table td .se { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.dash-table td .n { display: block; font-size: 0.72rem; color: var(--muted); }
+
+/* the research card: a verdict line, then one row per question */
+.dash-research .dash-head .badge { margin-left: 0; }
+.dash-verdict { margin: 0.1rem 0 0.2rem; font-size: 0.95rem; line-height: 1.5; max-width: 80ch; }
+.research-rows { list-style: none; margin: 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0.7rem; }
+.research-row { border: 1px solid var(--line-2); border-radius: var(--radius); padding: 0.65rem 0.75rem;
+  background: var(--panel-2); display: flex; flex-direction: column; gap: 0.35rem; }
+.research-row.is-open { border-style: dashed; background: transparent; }
+/* the verdict sits under its question: beside it, a long verdict squeezed the
+   question to a word a line */
+.rr-head { display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+.rr-q { font-weight: 600; font-size: 0.9rem; line-height: 1.35; color: var(--ink); }
+.rr-head .verdict { font-size: 0.66rem; }
+.dash-table td .n .dd-date { white-space: nowrap; }
+.rr-a { margin: 0; font-size: 0.85rem; line-height: 1.45; color: var(--ink-2); }
+.rr-more summary { cursor: pointer; font-size: 0.78rem; color: var(--muted); }
+.rr-more p { margin: 0.35rem 0 0; font-size: 0.8rem; line-height: 1.45; color: var(--ink-2); }
+.rr-more .rr-src { color: var(--muted); font-family: var(--font-mono); font-size: 0.72rem; }
+.load-failed { color: var(--muted); font-size: 0.85rem; }
+
+@media (max-width: 860px) {
+  .dash-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  .dash-pair { grid-template-columns: 1fr; }
+}

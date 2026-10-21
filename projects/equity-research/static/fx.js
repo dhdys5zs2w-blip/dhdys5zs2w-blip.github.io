@@ -1,6 +1,6 @@
 /* The interaction layer: the site nav's two disclosures ("Under the hood"
  * and, on a phone, the menu), command palette (⌘K), keyboard navigation (g o,
- * g s, g l, g m, g r, g h; ? for help; t for theme), the fetch bar, numbers
+ * g s, g d, g l, g m, g r, g h; ? for help; t for theme), the fetch bar, numbers
  * that count up once when they first scroll into view, panels that rise in,
  * and a cursor spotlight on panels.
  *
@@ -183,6 +183,7 @@
   const PAGES = [
     { label: "The story", hint: "g o", also: "home start front", href: qe.href("/") },
     { label: "Explore stocks", hint: "g s", also: "screener universe symbols", href: qe.href("/screener") },
+    ...(qe.snapshot ? [] : [{ label: "Dashboard", hint: "g d", also: "summary sharpe risk options volatility", href: qe.href("/dashboard") }]),
     { label: "Research notebook", hint: "g l", also: "lab overview pulse", href: qe.href("/lab") },
     { label: "Model dashboard", hint: "g m", also: "record book", href: qe.href("/model") },
     { label: "Return explorer", hint: "g e", also: "slice distribution earnings histogram returns", href: qe.href("/returns") },
