@@ -39,8 +39,6 @@ W, H = 1200, 675
 #   image:  a local screenshot (path under the site root); `crop` and `crop_w` as for page, no browser
 #   colors: optional; quantize the saved PNG to this many colours (keeps flat, photo-free shots small)
 THUMBS: dict[str, dict] = {
-    "afterimage": {"image": "projects/afterimage/screenshots/home.jpg", "crop": (0, 0), "crop_w": 1440,
-                   "colors": 256},
     "equity-research": {"page": "projects/equity-research/symbol/NVDA.html", "window": (1400, 1000),
                         "crop": (0, 120), "crop_w": 1400, "wait": 9000},
     # the "Every hour of 2025" chart card, with the next card's heading below it
